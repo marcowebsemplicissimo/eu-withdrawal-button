@@ -117,7 +117,7 @@ class EUWB_Withdrawal {
         $order = wc_get_order( $order_id );
         if ( $order ) {
             $order->update_status(
-                apply_filters( 'euwb_order_status_after_withdrawal', 'refund-requested' ),
+                apply_filters( 'euwb_order_status_after_withdrawal', 'cancelled' ),
                 sprintf(
                     __( 'Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673 (ID recesso: %d).', 'eu-withdrawal-button' ),
                     $withdrawal_id
@@ -153,7 +153,7 @@ class EUWB_Withdrawal {
             $order = wc_get_order( $order_id );
             if ( $order ) {
                 $order->update_status(
-                    apply_filters( 'euwb_order_status_after_withdrawal', 'refund-requested' ),
+                    apply_filters( 'euwb_order_status_after_withdrawal', 'cancelled' ),
                     __( 'Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673.', 'eu-withdrawal-button' )
                 );
             }
