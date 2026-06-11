@@ -7,11 +7,20 @@ class EUWB_Admin {
         add_action( 'admin_menu',            array( $this, 'register_menu' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
         add_filter( 'set-screen-option',     array( $this, 'set_screen_option' ), 10, 3 );
+        add_action( 'wp_ajax_euwb_revoke',   array( $this, 'ajax_revoke' ) );
     }
 
     public function enqueue( $hook ) {
         if ( strpos( $hook, 'eu-withdrawal' ) === false ) return;
         wp_enqueue_style( 'euwb-admin', EUWB_PLUGIN_URL . 'assets/css/euwb-admin.css', array(), EUWB_VERSION );
+        wp_enqueue_script( 'euwb-script', EUWB_PLUGIN_URL . 'assets/js/euwb.js', array( 'jquery' ), EUWB_VERSION, true );
+        wp_localize_script( 'euwb-script', 'euwbAdminData', array(
+            'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+            'nonce'          => wp_create_nonce( 'euwb_revoke_nonce' ),
+            'confirmMessage' => __( 'Eliminare questo record di recesso e aggiungere una nota di revoca all\'ordine?', 'eu-withdrawal-button' ),
+            'revokedLabel'   => __( 'Revocato', 'eu-withdrawal-button' ),
+            'errorMessage'   => __( 'Errore durante la revoca. Riprova.', 'eu-withdrawal-button' ),
+        ) );
     }
 
     public function register_menu() {
@@ -92,6 +101,7 @@ class EUWB_Admin {
                         <th><?php esc_html_e( 'Stato', 'eu-withdrawal-button' ); ?></th>
                         <th><?php esc_html_e( 'Data richiesta', 'eu-withdrawal-button' ); ?></th>
                         <th><?php esc_html_e( 'Data conferma', 'eu-withdrawal-button' ); ?></th>
+                        <th><?php esc_html_e( 'Azioni', 'eu-withdrawal-button' ); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,9 +115,17 @@ class EUWB_Admin {
                         <td><span class="euwb-status euwb-status--<?php echo esc_attr( $row->status ); ?>"><?php echo esc_html( $row->status === 'confirmed' ? 'Confermato' : 'In attesa' ); ?></span></td>
                         <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->created_at ) ) ); ?></td>
                         <td><?php echo $row->confirmed_at ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->confirmed_at ) ) ) : '—'; ?></td>
+                        <td>
+                            <button type="button"
+                                class="button euwb-revoke-btn"
+                                data-id="<?php echo absint( $row->id ); ?>"
+                                data-order-id="<?php echo absint( $row->order_id ); ?>">
+                                <?php esc_html_e( 'Revoca', 'eu-withdrawal-button' ); ?>
+                            </button>
+                        </td>
                     </tr>
                 <?php endforeach; else : ?>
-                    <tr><td colspan="8"><?php esc_html_e( 'Nessun recesso trovato.', 'eu-withdrawal-button' ); ?></td></tr>
+                    <tr><td colspan="9"><?php esc_html_e( 'Nessun recesso trovato.', 'eu-withdrawal-button' ); ?></td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
@@ -130,6 +148,43 @@ class EUWB_Admin {
             <?php endif; ?>
         </div>
         <?php
+    }
+
+    // -----------------------------------------------------------------------
+    // AJAX: revoke a withdrawal record
+    // -----------------------------------------------------------------------
+    public function ajax_revoke() {
+        check_ajax_referer( 'euwb_revoke_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'Permessi insufficienti.', 'eu-withdrawal-button' ) );
+        }
+
+        $id = absint( $_POST['id'] ?? 0 );
+        if ( ! $id ) {
+            wp_send_json_error( __( 'ID non valido.', 'eu-withdrawal-button' ) );
+        }
+
+        $row = EUWB_Withdrawal::delete( $id );
+        if ( ! $row ) {
+            wp_send_json_error( __( 'Record non trovato o già eliminato.', 'eu-withdrawal-button' ) );
+        }
+
+        $order = wc_get_order( $row->order_id );
+        if ( $order ) {
+            $order->add_order_note(
+                sprintf(
+                    __( 'Recesso (ID: %d) revocato manualmente dall\'amministratore. Cliente: %s %s <%s>. Richiesta originale del: %s.', 'eu-withdrawal-button' ),
+                    $id,
+                    $row->first_name,
+                    $row->last_name,
+                    $row->email,
+                    date_i18n( get_option( 'date_format' ), strtotime( $row->created_at ) )
+                )
+            );
+        }
+
+        wp_send_json_success();
     }
 
     // -----------------------------------------------------------------------

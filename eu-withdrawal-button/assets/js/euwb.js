@@ -129,3 +129,46 @@
     }
 
 }(jQuery));
+
+/* EU Withdrawal Button – admin log page */
+(function ($) {
+    'use strict';
+
+    if ( typeof euwbAdminData === 'undefined' ) return;
+
+    $(document).on('click', '.euwb-revoke-btn', function () {
+        var $btn     = $(this);
+        var id       = $btn.data('id');
+        var orderId  = $btn.data('order-id');
+
+        if ( ! window.confirm( euwbAdminData.confirmMessage ) ) return;
+
+        $btn.prop('disabled', true).text('…');
+
+        $.ajax({
+            url:    euwbAdminData.ajaxUrl,
+            method: 'POST',
+            data: {
+                action:   'euwb_revoke',
+                nonce:    euwbAdminData.nonce,
+                id:       id,
+                order_id: orderId
+            },
+            success: function (response) {
+                if ( response.success ) {
+                    $btn.closest('tr').fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                } else {
+                    alert( response.data || euwbAdminData.errorMessage );
+                    $btn.prop('disabled', false).text( euwbAdminData.revokedLabel );
+                }
+            },
+            error: function () {
+                alert( euwbAdminData.errorMessage );
+                $btn.prop('disabled', false).text('Revoca');
+            }
+        });
+    });
+
+}(jQuery));

@@ -152,6 +152,21 @@ class EUWB_Withdrawal {
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table" );
     }
 
+    /**
+     * Delete a withdrawal record by its ID.
+     * Returns the deleted row data (for logging), or false on failure.
+     */
+    public static function delete( $id ) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'euwb_withdrawals';
+
+        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE id = %d LIMIT 1", $id ) );
+        if ( ! $row ) return false;
+
+        $deleted = $wpdb->delete( $table, array( 'id' => absint( $id ) ), array( '%d' ) );
+        return $deleted ? $row : false;
+    }
+
     private static function get_client_ip() {
         $keys = array( 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' );
         foreach ( $keys as $key ) {
