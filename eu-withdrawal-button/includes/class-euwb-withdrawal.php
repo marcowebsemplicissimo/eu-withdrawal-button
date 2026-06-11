@@ -86,7 +86,53 @@ class EUWB_Withdrawal {
     }
 
     /**
+     * Create and immediately confirm a withdrawal in one atomic step (step 2).
+     */
+    public static function create_and_confirm( $order_id, $data ) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'euwb_withdrawals';
+
+        $now = current_time( 'mysql', true );
+
+        $inserted = $wpdb->insert(
+            $table,
+            array(
+                'order_id'     => absint( $order_id ),
+                'user_id'      => get_current_user_id(),
+                'first_name'   => sanitize_text_field( $data['first_name'] ?? '' ),
+                'last_name'    => sanitize_text_field( $data['last_name'] ?? '' ),
+                'email'        => sanitize_email( $data['email'] ?? '' ),
+                'reason'       => sanitize_textarea_field( $data['reason'] ?? '' ),
+                'status'       => 'confirmed',
+                'ip_address'   => self::get_client_ip(),
+                'created_at'   => $now,
+                'confirmed_at' => $now,
+            ),
+            array( '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
+        );
+
+        if ( ! $inserted ) return false;
+
+        $withdrawal_id = $wpdb->insert_id;
+        $order = wc_get_order( $order_id );
+        if ( $order ) {
+            $order->update_status(
+                apply_filters( 'euwb_order_status_after_withdrawal', 'refund-requested' ),
+                sprintf(
+                    __( 'Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673 (ID recesso: %d).', 'eu-withdrawal-button' ),
+                    $withdrawal_id
+                )
+            );
+        }
+
+        do_action( 'euwb_withdrawal_confirmed', $order_id );
+
+        return $withdrawal_id;
+    }
+
+    /**
      * Confirm a withdrawal (step 2 – confirmation click).
+     * @deprecated Use create_and_confirm() instead.
      */
     public static function confirm( $order_id ) {
         global $wpdb;

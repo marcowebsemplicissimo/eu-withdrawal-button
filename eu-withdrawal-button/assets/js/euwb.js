@@ -2,11 +2,12 @@
 (function ($) {
     'use strict';
 
-    var orderId     = null;
-    var $section    = null;
-    var $step1      = null;
-    var $step2      = null;
-    var $result     = null;
+    var orderId      = null;
+    var formData     = {};
+    var $section     = null;
+    var $step1       = null;
+    var $step2       = null;
+    var $result      = null;
     var $btnInitiate = null;
     var $btnConfirm  = null;
     var $btnCancel   = null;
@@ -37,6 +38,15 @@
                 return;
             }
 
+            // Snapshot form data here so step 2 confirm can send the same values
+            // even after step 1 is hidden.
+            formData = {
+                first_name: firstName,
+                last_name:  lastName,
+                email:      email,
+                reason:     $('#euwb_reason').val()
+            };
+
             $btnInitiate.prop('disabled', true).text(euwbData.i18n.processing);
 
             $.ajax({
@@ -46,25 +56,26 @@
                     action:     'euwb_initiate',
                     nonce:      euwbData.nonce,
                     order_id:   orderId,
-                    first_name: firstName,
-                    last_name:  lastName,
-                    email:      email,
-                    reason:     $('#euwb_reason').val()
+                    first_name: formData.first_name,
+                    last_name:  formData.last_name,
+                    email:      formData.email,
+                    reason:     formData.reason
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Move to step 2
                         $step1.fadeOut(200, function () {
                             $step2.fadeIn(200);
                         });
                     } else {
                         showResult('error', response.data || euwbData.i18n.error_generic);
                         $btnInitiate.prop('disabled', false).text(euWithdrawalLabel('initiate'));
+                        formData = {};
                     }
                 },
                 error: function () {
                     showResult('error', euwbData.i18n.error_generic);
                     $btnInitiate.prop('disabled', false).text(euWithdrawalLabel('initiate'));
+                    formData = {};
                 }
             });
         });
@@ -80,9 +91,13 @@
                 url:    euwbData.ajaxUrl,
                 method: 'POST',
                 data: {
-                    action:   'euwb_confirm',
-                    nonce:    euwbData.nonce,
-                    order_id: orderId
+                    action:     'euwb_confirm',
+                    nonce:      euwbData.nonce,
+                    order_id:   orderId,
+                    first_name: formData.first_name,
+                    last_name:  formData.last_name,
+                    email:      formData.email,
+                    reason:     formData.reason
                 },
                 success: function (response) {
                     $step2.fadeOut(200);
@@ -106,6 +121,7 @@
         // Cancel: go back to step 1
         // ----------------------------------------------------------------
         $btnCancel.on('click', function () {
+            formData = {};
             $step2.fadeOut(200, function () {
                 $step1.fadeIn(200);
                 $btnInitiate.prop('disabled', false);

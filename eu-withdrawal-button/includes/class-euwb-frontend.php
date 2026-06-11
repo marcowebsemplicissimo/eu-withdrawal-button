@@ -127,9 +127,34 @@ class EUWB_Frontend {
     }
 
     // -----------------------------------------------------------------------
-    // AJAX: step 1 – initiate
+    // AJAX: step 1 – validate only, no DB write
     // -----------------------------------------------------------------------
     public function ajax_initiate() {
+        check_ajax_referer( 'euwb_nonce', 'nonce' );
+
+        $order_id = absint( $_POST['order_id'] ?? 0 );
+        $order    = wc_get_order( $order_id );
+
+        if ( ! $order ) wp_send_json_error( __( 'Ordine non trovato.', 'eu-withdrawal-button' ) );
+        if ( ! EUWB_Withdrawal::is_within_window( $order ) ) wp_send_json_error( __( 'Il periodo di recesso è scaduto.', 'eu-withdrawal-button' ) );
+        if ( EUWB_Withdrawal::order_has_withdrawal( $order_id ) ) wp_send_json_error( __( 'Hai già richiesto il recesso per questo ordine.', 'eu-withdrawal-button' ) );
+
+        $first_name = sanitize_text_field( $_POST['first_name'] ?? '' );
+        $last_name  = sanitize_text_field( $_POST['last_name'] ?? '' );
+        $email      = sanitize_email( $_POST['email'] ?? '' );
+
+        if ( empty( $first_name ) || empty( $last_name ) || empty( $email ) ) {
+            wp_send_json_error( __( 'Compila tutti i campi obbligatori.', 'eu-withdrawal-button' ) );
+        }
+
+        // Validation passed — no DB write yet. The confirm step will create the record.
+        wp_send_json_success();
+    }
+
+    // -----------------------------------------------------------------------
+    // AJAX: step 2 – create record and confirm in one atomic step
+    // -----------------------------------------------------------------------
+    public function ajax_confirm() {
         check_ajax_referer( 'euwb_nonce', 'nonce' );
 
         $order_id = absint( $_POST['order_id'] ?? 0 );
@@ -150,24 +175,7 @@ class EUWB_Frontend {
             wp_send_json_error( __( 'Compila tutti i campi obbligatori.', 'eu-withdrawal-button' ) );
         }
 
-        $withdrawal_id = EUWB_Withdrawal::create( $order_id, $data );
-        if ( ! $withdrawal_id ) wp_send_json_error( __( 'Errore durante la registrazione. Riprova.', 'eu-withdrawal-button' ) );
-
-        wp_send_json_success( array( 'withdrawal_id' => $withdrawal_id ) );
-    }
-
-    // -----------------------------------------------------------------------
-    // AJAX: step 2 – confirm
-    // -----------------------------------------------------------------------
-    public function ajax_confirm() {
-        check_ajax_referer( 'euwb_nonce', 'nonce' );
-
-        $order_id = absint( $_POST['order_id'] ?? 0 );
-        $order    = wc_get_order( $order_id );
-
-        if ( ! $order ) wp_send_json_error( __( 'Ordine non trovato.', 'eu-withdrawal-button' ) );
-
-        $confirmed = EUWB_Withdrawal::confirm( $order_id );
+        $confirmed = EUWB_Withdrawal::create_and_confirm( $order_id, $data );
         if ( ! $confirmed ) wp_send_json_error( __( 'Impossibile confermare il recesso. Riprova o contatta il supporto.', 'eu-withdrawal-button' ) );
 
         wp_send_json_success( array(
