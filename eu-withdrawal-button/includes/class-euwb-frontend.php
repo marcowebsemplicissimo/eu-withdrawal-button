@@ -29,10 +29,14 @@ class EUWB_Frontend {
             EUWB_VERSION,
             true
         );
+        $order      = wc_get_order( absint( get_query_var( 'view-order' ) ) );
+        $order_key  = ( $order instanceof WC_Order ) ? $order->get_order_key() : '';
+
         wp_localize_script( 'euwb-script', 'euwbData', array(
-            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'euwb_nonce' ),
-            'i18n'    => array(
+            'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( 'euwb_nonce' ),
+            'orderKey' => $order_key,
+            'i18n'     => array(
                 'confirm_prompt' => __( 'Confermare il recesso dal contratto? Questa azione non può essere annullata.', 'eu-withdrawal-button' ),
                 'processing'     => __( 'Elaborazione in corso…', 'eu-withdrawal-button' ),
                 'error_generic'  => __( 'Si è verificato un errore. Riprova o contatta il supporto.', 'eu-withdrawal-button' ),
@@ -168,6 +172,18 @@ class EUWB_Frontend {
         $order    = wc_get_order( $order_id );
 
         if ( ! $order ) wp_send_json_error( __( 'Ordine non trovato.', 'eu-withdrawal-button' ) );
+
+        $current_user_id = get_current_user_id();
+        if ( $current_user_id && (int) $order->get_customer_id() !== $current_user_id ) {
+            wp_send_json_error( __( 'Non autorizzato.', 'eu-withdrawal-button' ) );
+        }
+        if ( ! $current_user_id ) {
+            $order_key = sanitize_text_field( wp_unslash( $_POST['order_key'] ?? '' ) );
+            if ( ! hash_equals( $order->get_order_key(), $order_key ) ) {
+                wp_send_json_error( __( 'Non autorizzato.', 'eu-withdrawal-button' ) );
+            }
+        }
+
         if ( ! EUWB_Withdrawal::is_within_window( $order ) ) wp_send_json_error( __( 'Il periodo di recesso è scaduto.', 'eu-withdrawal-button' ) );
         if ( EUWB_Withdrawal::order_has_withdrawal( $order_id ) ) wp_send_json_error( __( 'Hai già richiesto il recesso per questo ordine.', 'eu-withdrawal-button' ) );
 
@@ -193,6 +209,18 @@ class EUWB_Frontend {
         $order    = wc_get_order( $order_id );
 
         if ( ! $order ) wp_send_json_error( __( 'Ordine non trovato.', 'eu-withdrawal-button' ) );
+
+        $current_user_id = get_current_user_id();
+        if ( $current_user_id && (int) $order->get_customer_id() !== $current_user_id ) {
+            wp_send_json_error( __( 'Non autorizzato.', 'eu-withdrawal-button' ) );
+        }
+        if ( ! $current_user_id ) {
+            $order_key = sanitize_text_field( wp_unslash( $_POST['order_key'] ?? '' ) );
+            if ( ! hash_equals( $order->get_order_key(), $order_key ) ) {
+                wp_send_json_error( __( 'Non autorizzato.', 'eu-withdrawal-button' ) );
+            }
+        }
+
         if ( ! EUWB_Withdrawal::is_within_window( $order ) ) wp_send_json_error( __( 'Il periodo di recesso è scaduto.', 'eu-withdrawal-button' ) );
         if ( EUWB_Withdrawal::order_has_withdrawal( $order_id ) ) wp_send_json_error( __( 'Hai già richiesto il recesso per questo ordine.', 'eu-withdrawal-button' ) );
 
