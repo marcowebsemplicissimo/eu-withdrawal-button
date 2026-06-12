@@ -29,6 +29,7 @@ This plugin adds a fully compliant electronic withdrawal function to your WooCom
 * Automatic email sent to the customer on intent (standard flow) and on confirmation (both flows)
 * Automatic notification sent to the shop admin on confirmed withdrawal
 * Customisable email subject and body for both email types, with placeholders (`{order_number}`, `{order_date}`, `{customer_name}`, `{withdrawal_date}`)
+* **Return instructions box** automatically shown in the withdrawal form and in all customer emails when the order contains physical (shippable) products — hidden for virtual, digital, and service orders
 * Customisable frontend texts: intro paragraph, form instructions, button label
 * Works for both registered customers and **guest orders** (authenticated via WooCommerce order key)
 * WooCommerce order status updated automatically after withdrawal
@@ -52,6 +53,7 @@ Navigate to **EU Withdrawal > Settings** in your WordPress admin. Settings are o
 
 * **Withdrawal flow mode** — *Standard*: the customer submits a request and the admin confirms it manually; the customer receives an intent email first, then a confirmation email. *Direct*: the withdrawal is confirmed immediately on customer click; the order moves to "Pending refund" right away and the customer receives the confirmation email instantly.
 * **Withdrawal window (days)** — default 14, minimum required by the directive. Only increase it, never decrease below 14.
+* **Return window (days)** — days the customer has to return the physical goods after confirming withdrawal (default 14). Used in the default return instructions text.
 * **Admin notification email** — address that receives a notification on every confirmed withdrawal.
 
 === Frontend texts ===
@@ -68,6 +70,8 @@ Customise subject and body for both customer emails:
 * **Customer email – Withdrawal confirmed** (both flows)
 
 Available placeholders: `{order_number}`, `{order_date}`, `{customer_name}`, `{withdrawal_date}`.
+
+* **Return instructions** — textarea shown as the third block in this tab. The text appears as a styled box in HTML emails and as a delimited section in plain-text emails, but only when the order contains physical products. Leave empty to disable.
 
 == How it works ==
 
@@ -92,6 +96,12 @@ The two-step flow (intent + confirmation) mirrors the German "2-click Widerrufsb
 **This plugin does not constitute legal advice.** You should verify compliance requirements with a qualified lawyer in each EU member state where you operate.
 
 == Changelog ==
+
+= 1.2.0 =
+* Add return instructions for physical products: configurable textarea in Settings > Email tab
+* Return instructions box displayed in the withdrawal form and in all customer emails (HTML styled box + plain-text section), only when the order contains shippable products
+* Add separate "Return window (days)" setting (`euwb_return_window`) used in the default return instructions text
+* Detection based on WooCommerce native `WC_Product::needs_shipping()` — virtual, digital and service products are automatically excluded
 
 = 1.1.0 =
 * Add dual flow mode: standard (admin-confirmed) and direct (auto-confirmed)
@@ -121,3 +131,9 @@ In the standard flow the customer's request is logged as "pending" and the admin
 
 = Can I revoke a withdrawal? =
 Yes. An admin can click "Revoke" on any non-refunded withdrawal in the log table. The record is deleted and an order note is added automatically.
+
+= Are return instructions shown for virtual or digital products? =
+No. The plugin checks each order item using WooCommerce's native `needs_shipping()` method. If the order contains only virtual products, downloadable files, or services, the return instructions box is suppressed entirely — both in the frontend form and in all customer emails.
+
+= Can I disable the return instructions box even for physical products? =
+Yes. Leave the "Return instructions" textarea empty in Settings > Email and nothing will be shown.

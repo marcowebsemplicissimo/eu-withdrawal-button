@@ -123,6 +123,15 @@ class EUWB_Frontend {
                 max( 1, (int) $days_left )
             ) ) . '</p>';
 
+            // Return instructions box (physical products only)
+            $return_instructions = EUWB_Withdrawal::get_return_instructions( $order );
+            if ( $return_instructions !== '' ) {
+                echo '<div class="euwb-notice euwb-notice--info euwb-return-instructions">';
+                echo '<p><strong>' . esc_html__( 'Istruzioni per la restituzione del bene', 'eu-withdrawal-button' ) . '</strong></p>';
+                echo '<p>' . nl2br( wp_kses_post( $return_instructions ) ) . '</p>';
+                echo '</div>';
+            }
+
             // Step 1 form
             echo '<div id="euwb-step-1">';
             echo '<p>' . esc_html( get_option( 'euwb_form_instructions', __( 'Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante.', 'eu-withdrawal-button' ) ) ) . '</p>';

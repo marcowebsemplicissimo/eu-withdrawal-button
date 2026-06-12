@@ -59,7 +59,21 @@
 
 ---
 
-## Feature 6 – Email admin come WC_Email nativa
+## ~~Feature 6 – Istruzioni di restituzione per prodotti fisici~~ ✅ COMPLETATA
+
+**Implementato (2026-06-12):**
+
+- `EUWB_Withdrawal::order_needs_shipping($order)` — verifica se almeno un prodotto dell'ordine richiede spedizione fisica (tramite `WC_Product::needs_shipping()`).
+- `EUWB_Withdrawal::get_return_instructions($order)` — restituisce il testo delle istruzioni solo se l'ordine ha prodotti fisici, altrimenti stringa vuota.
+- **Impostazioni admin** — tab **Email**, nuovo blocco "Istruzioni per la restituzione del bene": textarea con testo default precompilato (giorni, indirizzo placeholder, spese, tracciamento). I giorni si leggono dalla nuova option `euwb_return_window` (configurabile in tab Generale, separata da `euwb_withdrawal_window`).
+- **Frontend** — box giallo-ambra con titolo in grassetto visualizzato nel form di recesso tra l'intro e lo step 1, solo per ordini con prodotti fisici.
+- **Email HTML** (intent + confirmation) — box stilizzato (`background:#fff8e1`, bordo `#f0a500`) inserito tra il corpo del messaggio e la tabella riepilogativa.
+- **Email plain-text** (intent + confirmation) — sezione delimitata da `---` con titolo in maiuscolo.
+- Il box non compare affatto per ordini con soli prodotti virtuali/digitali/servizi.
+
+---
+
+## Feature 7 – Email admin come WC_Email nativa
 
 ### Obiettivo
 

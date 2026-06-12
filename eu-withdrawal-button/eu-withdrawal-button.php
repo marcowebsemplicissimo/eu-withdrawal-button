@@ -4,7 +4,7 @@
  * Plugin URI:  https://example.com/eu-withdrawal-button
  * Description: Implements the EU mandatory withdrawal button as required by Directive (EU) 2023/2673, effective 19 June 2026. Adds a compliant withdrawal function to WooCommerce order pages with email notifications and a full audit log.
  * Version:     1.1.0
- * Author:      Marco D'Agostino
+ * Author:      Marco D'Agostino, ContrattiDigitaliOnline
  * License:     GPL-2.0+
  * Text Domain: eu-withdrawal-button
  * Domain Path: /languages

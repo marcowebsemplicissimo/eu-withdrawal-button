@@ -264,6 +264,33 @@ class EUWB_Withdrawal {
         return $deleted ? $row : false;
     }
 
+    /**
+     * Returns true if at least one item in the order requires physical shipping.
+     */
+    public static function order_needs_shipping( $order ) {
+        if ( ! $order instanceof WC_Order ) {
+            $order = wc_get_order( $order );
+        }
+        if ( ! $order ) return false;
+
+        foreach ( $order->get_items() as $item ) {
+            $product = $item->get_product();
+            if ( $product && $product->needs_shipping() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the return-instructions text if configured and the order needs shipping,
+     * or an empty string otherwise.
+     */
+    public static function get_return_instructions( $order ) {
+        if ( ! self::order_needs_shipping( $order ) ) return '';
+        return (string) get_option( 'euwb_return_instructions', '' );
+    }
+
     private static function get_client_ip() {
         $keys = array( 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' );
         foreach ( $keys as $key ) {

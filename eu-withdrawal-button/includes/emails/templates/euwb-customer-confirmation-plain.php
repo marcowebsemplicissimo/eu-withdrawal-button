@@ -11,6 +11,15 @@ $body         = EUWB_Emails::replace_placeholders(
 
 echo wp_strip_all_tags( $body ) . "\n\n";
 
+$return_instructions = EUWB_Withdrawal::get_return_instructions( $order );
+if ( $return_instructions !== '' ) {
+    echo str_repeat( '-', 40 ) . "\n";
+    echo strtoupper( esc_html__( 'Istruzioni per la restituzione del bene', 'eu-withdrawal-button' ) ) . "\n";
+    echo str_repeat( '-', 40 ) . "\n";
+    echo wp_strip_all_tags( $return_instructions ) . "\n";
+    echo str_repeat( '-', 40 ) . "\n\n";
+}
+
 echo esc_html__( 'Ordine', 'eu-withdrawal-button' ) . ': #' . $order->get_order_number() . "\n";
 
 if ( $withdrawal ) {

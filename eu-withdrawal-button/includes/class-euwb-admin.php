@@ -378,7 +378,9 @@ class EUWB_Admin {
         if ( isset( $_POST['euwb_save_settings'] ) && check_admin_referer( 'euwb_settings' ) ) {
             update_option( 'euwb_flow_mode', in_array( $_POST['euwb_flow_mode'] ?? '', array( 'standard', 'direct' ), true ) ? $_POST['euwb_flow_mode'] : 'standard' );
             update_option( 'euwb_withdrawal_window', absint( $_POST['euwb_withdrawal_window'] ?? 14 ) );
+            update_option( 'euwb_return_window', absint( $_POST['euwb_return_window'] ?? 14 ) );
             update_option( 'euwb_admin_email', sanitize_email( $_POST['euwb_admin_email'] ?? get_option( 'admin_email' ) ) );
+            update_option( 'euwb_return_instructions', wp_kses_post( $_POST['euwb_return_instructions'] ?? '' ) );
             update_option( 'euwb_intro_text', wp_kses_post( $_POST['euwb_intro_text'] ?? $default_intro ) );
             update_option( 'euwb_btn_label', sanitize_text_field( $_POST['euwb_btn_label'] ?? $default_btn_label ) );
             update_option( 'euwb_form_instructions', sanitize_text_field( $_POST['euwb_form_instructions'] ?? $default_form_instr ) );
@@ -440,6 +442,13 @@ class EUWB_Admin {
                             <td>
                                 <input type="number" id="euwb_withdrawal_window" name="euwb_withdrawal_window" value="<?php echo esc_attr( $window ); ?>" min="1" max="30" class="small-text">
                                 <p class="description"><?php esc_html_e( 'La direttiva UE 2023/2673 prevede 14 giorni come minimo.', 'eu-withdrawal-button' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="euwb_return_window"><?php esc_html_e( 'Giorni per la restituzione del bene', 'eu-withdrawal-button' ); ?></label></th>
+                            <td>
+                                <input type="number" id="euwb_return_window" name="euwb_return_window" value="<?php echo esc_attr( get_option( 'euwb_return_window', 14 ) ); ?>" min="1" max="30" class="small-text">
+                                <p class="description"><?php esc_html_e( 'Giorni entro cui il cliente deve rispedire il prodotto dopo la conferma del recesso. Usato nel testo default delle istruzioni di restituzione.', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
                         <tr>
@@ -507,6 +516,26 @@ class EUWB_Admin {
                             <tr>
                                 <th><label for="euwb_confirmation_email_body"><?php esc_html_e( 'Corpo', 'eu-withdrawal-button' ); ?></label></th>
                                 <td><textarea id="euwb_confirmation_email_body" name="euwb_confirmation_email_body" rows="7" class="large-text"><?php echo esc_textarea( get_option( 'euwb_confirmation_email_body', $default_confirm_body ) ); ?></textarea></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="euwb-email-block">
+                        <h2 class="euwb-email-title"><?php esc_html_e( 'Istruzioni per la restituzione del bene (prodotti fisici)', 'eu-withdrawal-button' ); ?></h2>
+                        <p class="description"><?php esc_html_e( 'Mostrato nel form di recesso e nelle email solo se l\'ordine contiene prodotti fisici che richiedono spedizione. Lasciare vuoto per non mostrarlo.', 'eu-withdrawal-button' ); ?></p>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="euwb_return_instructions"><?php esc_html_e( 'Testo istruzioni', 'eu-withdrawal-button' ); ?></label></th>
+                                <td>
+                                    <?php
+                                    $default_return = sprintf(
+                                        /* translators: %d: return window in days */
+                                        __( "Per completare il recesso è necessario restituire il prodotto entro %d giorni dalla data di conferma del recesso.\n\nSpedire il pacco a:\n[Ragione sociale / Nome]\n[Indirizzo]\n[CAP – Città (Provincia)]\n\nLe spese di restituzione sono a carico del cliente, salvo diverso accordo. Si consiglia di utilizzare un servizio con tracciamento della spedizione.", 'eu-withdrawal-button' ),
+                                        (int) get_option( 'euwb_return_window', 14 )
+                                    );
+                                    ?>
+                                    <textarea id="euwb_return_instructions" name="euwb_return_instructions" rows="8" class="large-text"><?php echo esc_textarea( get_option( 'euwb_return_instructions', $default_return ) ); ?></textarea>
+                                </td>
                             </tr>
                         </table>
                     </div>

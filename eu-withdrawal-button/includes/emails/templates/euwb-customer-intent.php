@@ -14,6 +14,19 @@ do_action( 'woocommerce_email_header', $email_heading, $email );
 
 <p><?php echo nl2br( wp_kses_post( $body ) ); ?></p>
 
+<?php
+$return_instructions = EUWB_Withdrawal::get_return_instructions( $order );
+if ( $return_instructions !== '' ) : ?>
+<table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;margin:20px 0;">
+    <tr>
+        <td style="background:#fff8e1;border:2px solid #f0a500;border-radius:4px;padding:16px 20px;">
+            <p style="margin:0 0 8px;font-weight:600;color:#7a5300;"><?php esc_html_e( 'Istruzioni per la restituzione del bene', 'eu-withdrawal-button' ); ?></p>
+            <p style="margin:0;color:#333;"><?php echo nl2br( wp_kses_post( $return_instructions ) ); ?></p>
+        </td>
+    </tr>
+</table>
+<?php endif; ?>
+
 <table cellspacing="0" cellpadding="6" style="width:100%;border-collapse:collapse;margin:20px 0;">
     <tr>
         <th style="text-align:left;padding:10px;border:1px solid #e5e5e5;background:#f8f8f8;"><?php esc_html_e( 'Ordine', 'eu-withdrawal-button' ); ?></th>
