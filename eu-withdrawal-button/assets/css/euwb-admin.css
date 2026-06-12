@@ -22,7 +22,7 @@
 ----------------------------------------------------------------------- */
 
 .euwb-admin-wrap {
-    max-width: 1400px;
+    max-width: 1900px;
 }
 
 .euwb-table {
@@ -42,7 +42,7 @@
 }
 
 .euwb-table thead th {
-    padding: 11px 16px;
+    padding: 20px 16px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -177,7 +177,7 @@
     color: #444;
 }
 
-.euwb-order-status--pending-withdrawal,
+.euwb-order-status--pending-withdraw,
 .euwb-order-status--pending-refund {
     background: #fff8e1;
     color: #6b4c00;
@@ -202,6 +202,19 @@
 .euwb-order-status--completed {
     background: #edfaef;
     color: #1e6422;
+}
+
+.euwb-order-status--deleted {
+    background: #f0f0f1;
+    color: #787c82;
+}
+
+.euwb-order-deleted {
+    color: #787c82;
+}
+
+.euwb-order-deleted em {
+    font-size: 11px;
 }
 
 /* -----------------------------------------------------------------------

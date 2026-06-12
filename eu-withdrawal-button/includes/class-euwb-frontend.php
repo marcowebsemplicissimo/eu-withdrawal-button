@@ -87,7 +87,7 @@ class EUWB_Frontend {
                     esc_html( $date )
                 ) . '</p>';
                 echo '</div>';
-            } elseif ( in_array( $order_status, array( 'pending-withdrawal' ), true ) ) {
+            } elseif ( in_array( $order_status, array( 'pending-withdraw' ), true ) ) {
                 echo '<div class="euwb-notice euwb-notice--warning">';
                 echo '<p>' . sprintf(
                     esc_html__( 'Hai richiesto il recesso per questo ordine il %s. La richiesta è in attesa di conferma da parte dell\'amministratore.', 'eu-withdrawal-button' ),

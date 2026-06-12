@@ -196,36 +196,56 @@ class EUWB_Admin {
                     </tr>
                 </thead>
                 <tbody>
-                <?php if ( $items ) : foreach ( $items as $row ) : ?>
+                <?php
+                $all_statuses = wc_get_order_statuses();
+                if ( $items ) : foreach ( $items as $row ) :
+                    $order_obj = empty( $row->order_deleted ) ? wc_get_order( $row->order_id ) : null;
+                ?>
                     <tr>
                         <td><?php echo absint( $row->id ); ?></td>
-                        <td><a target="_blank" href="<?php echo esc_url( admin_url( 'post.php?post=' . $row->order_id . '&action=edit' ) ); ?>">#<?php echo absint( $row->order_id ); ?></a></td>
+                        <td>
+                            <?php if ( ! empty( $row->order_deleted ) ) : ?>
+                                <span class="euwb-order-deleted" title="<?php esc_attr_e( 'Ordine eliminato definitivamente', 'eu-withdrawal-button' ); ?>">#<?php echo absint( $row->order_id ); ?> <em>(<?php esc_html_e( 'eliminato', 'eu-withdrawal-button' ); ?>)</em></span>
+                            <?php else : ?>
+                                <a target="_blank" href="<?php echo esc_url( admin_url( 'post.php?post=' . $row->order_id . '&action=edit' ) ); ?>">#<?php echo absint( $row->order_id ); ?></a>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo esc_html( $row->first_name . ' ' . $row->last_name ); ?></td>
                         <td><?php echo esc_html( $row->email ); ?></td>
                         <td class="euwb-reason-td"><?php echo esc_html( $row->reason ?: '—' ); ?></td>
                         <td><span class="euwb-status euwb-status--<?php echo esc_attr( $row->status ); ?>"><?php echo esc_html( $row->status === 'confirmed' ? 'Confermato' : 'In attesa' ); ?></span></td>
                         <td><?php
-                            $order_obj    = wc_get_order( $row->order_id );
-                            $order_status = $order_obj ? wc_get_order_status_name( $order_obj->get_status() ) : '—';
-                            echo '<span class="euwb-order-status euwb-order-status--' . esc_attr( $order_obj ? $order_obj->get_status() : '' ) . '">' . esc_html( $order_status ) . '</span>';
+                            if ( ! empty( $row->order_deleted ) ) {
+                                echo '<span class="euwb-order-status euwb-order-status--deleted">' . esc_html__( 'Eliminato', 'eu-withdrawal-button' ) . '</span>';
+                            } elseif ( $order_obj ) {
+                                $slug         = $order_obj->get_status();
+                                $order_status = $all_statuses[ 'wc-' . $slug ] ?? $slug;
+                                echo '<span class="euwb-order-status euwb-order-status--' . esc_attr( $slug ) . '">' . esc_html( $order_status ) . '</span>';
+                            } else {
+                                echo '<span class="euwb-order-status">—</span>';
+                            }
                         ?></td>
                         <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->created_at ) ) ); ?></td>
                         <td><?php echo $row->confirmed_at ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->confirmed_at ) ) ) : '—'; ?></td>
                         <td class="euwb-actions">
-                            <?php if ( $row->status === 'pending' ) : ?>
-                            <button type="button"
-                                class="button button-primary euwb-confirm-btn"
-                                data-order-id="<?php echo absint( $row->order_id ); ?>">
-                                <?php esc_html_e( 'Conferma', 'eu-withdrawal-button' ); ?>
-                            </button>
-                            <?php endif; ?>
-                            <?php if ( ! $order_obj || $order_obj->get_status() !== 'refunded' ) : ?>
-                            <button type="button"
-                                class="button euwb-revoke-btn"
-                                data-id="<?php echo absint( $row->id ); ?>"
-                                data-order-id="<?php echo absint( $row->order_id ); ?>">
-                                <?php esc_html_e( 'Revoca', 'eu-withdrawal-button' ); ?>
-                            </button>
+                            <?php if ( empty( $row->order_deleted ) ) : ?>
+                                <?php if ( $row->status === 'pending' ) : ?>
+                                <button type="button"
+                                    class="button button-primary euwb-confirm-btn"
+                                    data-order-id="<?php echo absint( $row->order_id ); ?>">
+                                    <?php esc_html_e( 'Conferma', 'eu-withdrawal-button' ); ?>
+                                </button>
+                                <?php endif; ?>
+                                <?php if ( ! $order_obj || $order_obj->get_status() !== 'refunded' ) : ?>
+                                <button type="button"
+                                    class="button euwb-revoke-btn"
+                                    data-id="<?php echo absint( $row->id ); ?>"
+                                    data-order-id="<?php echo absint( $row->order_id ); ?>">
+                                    <?php esc_html_e( 'Revoca', 'eu-withdrawal-button' ); ?>
+                                </button>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <span class="description">—</span>
                             <?php endif; ?>
                         </td>
                     </tr>

@@ -31,11 +31,21 @@ require_once EUWB_PLUGIN_DIR . 'includes/class-euwb-frontend.php';
 
 register_activation_hook( __FILE__, array( 'EUWB_Install', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'EUWB_Install', 'deactivate' ) );
+add_action( 'plugins_loaded', array( 'EUWB_Install', 'maybe_upgrade' ), 5 );
+
+add_action( 'woocommerce_delete_order', 'euwb_on_order_deleted' );
+add_action( 'before_delete_post',       'euwb_on_order_deleted' );
+
+function euwb_on_order_deleted( $order_id ) {
+    if ( function_exists( 'wc_get_order' ) ) {
+        EUWB_Withdrawal::mark_order_deleted( $order_id );
+    }
+}
 
 add_action( 'init', 'euwb_register_order_status' );
 
 function euwb_register_order_status() {
-    register_post_status( 'wc-pending-withdrawal', array(
+    register_post_status( 'wc-pending-withdraw', array(
         'label'                     => _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' ),
         'public'                    => true,
         'exclude_from_search'       => false,
@@ -60,12 +70,12 @@ function euwb_add_order_status_to_wc( $statuses ) {
     foreach ( $statuses as $key => $label ) {
         $new[ $key ] = $label;
         if ( 'wc-processing' === $key ) {
-            $new['wc-pending-withdrawal'] = _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' );
+            $new['wc-pending-withdraw'] = _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' );
             $new['wc-pending-refund']     = _x( 'In attesa di rimborso', 'Order status', 'eu-withdrawal-button' );
         }
     }
-    if ( ! isset( $new['wc-pending-withdrawal'] ) ) {
-        $new['wc-pending-withdrawal'] = _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' );
+    if ( ! isset( $new['wc-pending-withdraw'] ) ) {
+        $new['wc-pending-withdraw'] = _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' );
     }
     if ( ! isset( $new['wc-pending-refund'] ) ) {
         $new['wc-pending-refund'] = _x( 'In attesa di rimborso', 'Order status', 'eu-withdrawal-button' );

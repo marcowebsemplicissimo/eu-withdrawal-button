@@ -72,7 +72,7 @@ class EUWB_Withdrawal {
             $order = wc_get_order( $order_id );
             if ( $order ) {
                 $order->update_status(
-                    'pending-withdrawal',
+                    'pending-withdraw',
                     sprintf(
                         __( 'Recesso richiesto dal cliente (ID recesso: %d). In attesa di conferma da parte dell\'amministratore.', 'eu-withdrawal-button' ),
                         $withdrawal_id
@@ -197,6 +197,21 @@ class EUWB_Withdrawal {
             return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table WHERE status = %s", $status ) );
         }
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table" );
+    }
+
+    /**
+     * Mark all withdrawal records for an order as orphaned when the order is permanently deleted.
+     */
+    public static function mark_order_deleted( $order_id ) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'euwb_withdrawals';
+        $wpdb->update(
+            $table,
+            array( 'order_deleted' => 1 ),
+            array( 'order_id' => absint( $order_id ) ),
+            array( '%d' ),
+            array( '%d' )
+        );
     }
 
     /**

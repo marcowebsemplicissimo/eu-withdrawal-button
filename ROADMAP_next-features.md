@@ -9,7 +9,7 @@
 Il flusso attuale ha **due step** lato cliente:
 
 1. **Step 1** (`euwb-btn-initiate`) – il cliente compila il modulo e clicca il primo pulsante. L'AJAX handler `ajax_initiate()` esegue solo validazione, **nessuna scrittura su DB**.
-2. **Step 2** (`euwb-btn-confirm`) – il cliente clicca "Conferma recesso qui". L'AJAX handler `ajax_confirm()` chiama `EUWB_Withdrawal::create()` che scrive il record su DB con status `pending` e porta l'ordine in `pending-withdrawal`.
+2. **Step 2** (`euwb-btn-confirm`) – il cliente clicca "Conferma recesso qui". L'AJAX handler `ajax_confirm()` chiama `EUWB_Withdrawal::create()` che scrive il record su DB con status `pending` e porta l'ordine in `pending-withdraw`.
 
 ~~Attualmente nessuna email viene inviata al cliente in questo momento. Le email (`send_customer_confirmation` + `send_admin_confirmation`) vengono inviate solo all'hook `euwb_withdrawal_confirmed`, che scatta quando l'**admin** conferma il recesso (non il cliente).~~
 
@@ -73,7 +73,7 @@ Il metodo `send_customer_intent( $order_id )` deve:
 - Opzione `euwb_flow_mode` (`standard` | `direct`, default `standard`) nelle impostazioni (`EU Withdrawal > Impostazioni`), prima riga della form-table.
 - `ajax_confirm()` in `includes/class-euwb-frontend.php` legge `euwb_flow_mode` e chiama:
   - `EUWB_Withdrawal::create_and_confirm()` in flusso `direct` → ordine passa in `pending-refund`, hook `euwb_withdrawal_confirmed` scatta, email `customer_confirmation` + `admin_notification` inviate immediatamente.
-  - `EUWB_Withdrawal::create()` in flusso `standard` → comportamento invariato, ordine va in `pending-withdrawal`, hook `euwb_withdrawal_intent_created` scatta → email intent al cliente.
+  - `EUWB_Withdrawal::create()` in flusso `standard` → comportamento invariato, ordine va in `pending-withdraw`, hook `euwb_withdrawal_intent_created` scatta → email intent al cliente.
 - Messaggio di successo JSON differenziato per modalità.
 - `euwb_withdrawal_intent_created` **non scatta** in flusso diretto (perché `create_and_confirm()` non lo chiama) — by design.
 
@@ -95,7 +95,7 @@ Le email del plugin (`send_customer_confirmation`, `send_customer_intent`, `send
 Creare **due classi email WooCommerce native** (`WC_Email`) e aggiungere nei **settings del plugin** (`EU Withdrawal > Impostazioni`) campi textarea per personalizzare il corpo di ciascuna email. I template leggono i valori tramite `get_option()`, così l'admin può modificare i testi senza toccare il codice.
 
 Le due email:
-1. **`EUWB_Email_Customer_Intent`** — inviata al cliente quando l'ordine passa in `wc-pending-withdrawal` (flusso standard)
+1. **`EUWB_Email_Customer_Intent`** — inviata al cliente quando l'ordine passa in `wc-pending-withdraw` (flusso standard)
 2. **`EUWB_Email_Customer_Confirmation`** — inviata al cliente quando il recesso è confermato definitivamente (hook `euwb_withdrawal_confirmed`, sia flusso standard che diretto)
 
 ### Cosa implementare
@@ -164,7 +164,7 @@ class EUWB_Email_Customer_Intent extends WC_Email {
         $this->heading        = __( 'Abbiamo ricevuto la tua richiesta di recesso', 'eu-withdrawal-button' );
         $this->subject        = get_option( 'euwb_intent_email_subject', 'Richiesta di recesso ricevuta – Ordine #{order_number}' );
 
-        add_action( 'woocommerce_order_status_pending-withdrawal_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_pending-withdraw_notification', array( $this, 'trigger' ), 10, 2 );
 
         parent::__construct();
     }
@@ -300,5 +300,5 @@ Permette al tema di sovrascrivere i template copiandoli in `wp-content/themes/<t
 - La email `customer_intent` (Feature 1) deve essere inviata **solo in flusso standard**. Verificare che l'hook `euwb_withdrawal_intent_created` sia chiamato esclusivamente da `create()` e non da `create_and_confirm()`.
 - Entrambe le feature sono **indipendenti** ma correlate: la Feature 1 completa il flusso standard, la Feature 2 aggiunge il flusso alternativo.
 - La Feature 3 **dipende** dalle Feature 1 e 2: va implementata dopo aver definito i trigger dei due flussi. Una volta completata, i metodi `send_customer_confirmation()`, `send_customer_intent()` e `send_admin_confirmation()` in `EUWB_Emails` possono essere rimossi o mantenuti solo come fallback.
-- L'hook WooCommerce per il cambio status ha la forma `woocommerce_order_status_{slug}_notification` dove `{slug}` è lo status **senza prefisso `wc-`** (es. `pending-withdrawal`, non `wc-pending-withdrawal`). Verificare che WooCommerce generi questo hook per gli status custom: è necessario che lo status sia registrato con `register_post_status()` **prima** che venga aggiunto l'action listener, quindi va bene perché il plugin li registra su `init`.
-- `EUWB_Email_Customer_Intent` si trigga sul cambio di status ordine (`wc-pending-withdrawal`), quindi funziona automaticamente in flusso standard. In flusso diretto l'ordine non passa mai per `wc-pending-withdrawal`, quindi questa email non verrà inviata — comportamento corretto by design.
+- L'hook WooCommerce per il cambio status ha la forma `woocommerce_order_status_{slug}_notification` dove `{slug}` è lo status **senza prefisso `wc-`** (es. `pending-withdraw`, non `wc-pending-withdraw`). Verificare che WooCommerce generi questo hook per gli status custom: è necessario che lo status sia registrato con `register_post_status()` **prima** che venga aggiunto l'action listener, quindi va bene perché il plugin li registra su `init`.
+- `EUWB_Email_Customer_Intent` si trigga sul cambio di status ordine (`wc-pending-withdraw`), quindi funziona automaticamente in flusso standard. In flusso diretto l'ordine non passa mai per `wc-pending-withdraw`, quindi questa email non verrà inviata — comportamento corretto by design.
