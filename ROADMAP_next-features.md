@@ -73,7 +73,7 @@ Il flusso attuale è **a due stadi**:
 - Il cliente conferma → record in DB con status `pending` → ordine va in `pending-withdrawal`
 - L'admin deve poi cliccare "Conferma richiesta di recesso" → `EUWB_Withdrawal::confirm()` → ordine va in `pending-refund` + hook `euwb_withdrawal_confirmed` + email `customer_confirmation` + `admin_notification`
 
-La funzione `EUWB_Withdrawal::create_and_confirm()` esiste già in `includes/class-euwb-withdrawal.php` ed esegue tutto in un solo step atomico: inserisce il record con status `confirmed`, cambia lo stato ordine direttamente in `cancelled` (o il valore filtrato da `euwb_order_status_after_withdrawal`), e scatta l'hook `euwb_withdrawal_confirmed`.
+La funzione `EUWB_Withdrawal::create_and_confirm()` esiste già in `includes/class-euwb-withdrawal.php` ed esegue tutto in un solo step automatico: inserisce il record con status `confirmed`, cambia lo stato ordine direttamente in `cancelled` (o il valore filtrato da `euwb_order_status_after_withdrawal`), e scatta l'hook `euwb_withdrawal_confirmed`.
 
 ### Obiettivo
 

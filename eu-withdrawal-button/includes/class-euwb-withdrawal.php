@@ -87,7 +87,7 @@ class EUWB_Withdrawal {
     }
 
     /**
-     * Create and immediately confirm a withdrawal in one atomic step (step 2).
+     * Create and immediately confirm a withdrawal in one automatic step (step 2).
      */
     public static function create_and_confirm( $order_id, $data ) {
         global $wpdb;
@@ -118,7 +118,7 @@ class EUWB_Withdrawal {
         $order = wc_get_order( $order_id );
         if ( $order ) {
             $order->update_status(
-                apply_filters( 'euwb_order_status_after_withdrawal', 'cancelled' ),
+                apply_filters( 'euwb_order_status_after_withdrawal', 'pending-refund' ),
                 sprintf(
                     __( 'Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673 (ID recesso: %d).', 'eu-withdrawal-button' ),
                     $withdrawal_id

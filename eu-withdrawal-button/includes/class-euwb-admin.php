@@ -303,6 +303,7 @@ class EUWB_Admin {
         $default_form_instr   = __( 'Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante.', 'eu-withdrawal-button' );
 
         if ( isset( $_POST['euwb_save_settings'] ) && check_admin_referer( 'euwb_settings' ) ) {
+            update_option( 'euwb_flow_mode', in_array( $_POST['euwb_flow_mode'] ?? '', array( 'standard', 'direct' ), true ) ? $_POST['euwb_flow_mode'] : 'standard' );
             update_option( 'euwb_withdrawal_window', absint( $_POST['euwb_withdrawal_window'] ?? 14 ) );
             update_option( 'euwb_admin_email', sanitize_email( $_POST['euwb_admin_email'] ?? get_option( 'admin_email' ) ) );
             update_option( 'euwb_intro_text', wp_kses_post( $_POST['euwb_intro_text'] ?? $default_intro ) );
@@ -321,6 +322,25 @@ class EUWB_Admin {
             <form method="post">
                 <?php wp_nonce_field( 'euwb_settings' ); ?>
                 <table class="form-table">
+                    <tr>
+                        <th><label for="euwb_flow_mode"><?php esc_html_e( 'Modalità flusso recesso', 'eu-withdrawal-button' ); ?></label></th>
+                        <td>
+                            <select id="euwb_flow_mode" name="euwb_flow_mode">
+                                <option value="standard" <?php selected( get_option( 'euwb_flow_mode', 'standard' ), 'standard' ); ?>>
+                                    <?php esc_html_e( 'Flusso standard (richiede conferma admin)', 'eu-withdrawal-button' ); ?>
+                                </option>
+                                <option value="direct" <?php selected( get_option( 'euwb_flow_mode', 'standard' ), 'direct' ); ?>>
+                                    <?php esc_html_e( 'Flusso diretto (auto-conferma immediata)', 'eu-withdrawal-button' ); ?>
+                                </option>
+                            </select>
+                            <p class="description">
+                                <strong><?php esc_html_e( 'Flusso standard:', 'eu-withdrawal-button' ); ?></strong>
+                                <?php esc_html_e( 'il cliente avvia la richiesta, l\'amministratore la conferma manualmente. Il cliente riceve un\'email di avviso (intent) e poi una di conferma.', 'eu-withdrawal-button' ); ?><br>
+                                <strong><?php esc_html_e( 'Flusso diretto:', 'eu-withdrawal-button' ); ?></strong>
+                                <?php esc_html_e( 'al click del cliente il recesso è immediatamente confermato. L\'ordine passa in "In attesa di rimborso" e il cliente riceve subito l\'email di conferma.', 'eu-withdrawal-button' ); ?>
+                            </p>
+                        </td>
+                    </tr>
                     <tr>
                         <th><label for="euwb_withdrawal_window"><?php esc_html_e( 'Finestra di recesso (giorni)', 'eu-withdrawal-button' ); ?></label></th>
                         <td><input type="number" id="euwb_withdrawal_window" name="euwb_withdrawal_window" value="<?php echo esc_attr( $window ); ?>" min="1" max="30" class="small-text">

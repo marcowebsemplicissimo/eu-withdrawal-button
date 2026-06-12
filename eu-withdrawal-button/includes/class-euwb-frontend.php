@@ -239,11 +239,20 @@ class EUWB_Frontend {
             wp_send_json_error( __( 'Compila tutti i campi obbligatori.', 'eu-withdrawal-button' ) );
         }
 
-        $withdrawal_id = EUWB_Withdrawal::create( $order_id, $data );
+        $flow_mode = get_option( 'euwb_flow_mode', 'standard' );
+
+        if ( $flow_mode === 'direct' ) {
+            $withdrawal_id  = EUWB_Withdrawal::create_and_confirm( $order_id, $data );
+            $success_message = __( 'Recesso confermato con successo. Riceverai un\'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.', 'eu-withdrawal-button' );
+        } else {
+            $withdrawal_id  = EUWB_Withdrawal::create( $order_id, $data );
+            $success_message = __( 'Richiesta di recesso inviata con successo. Riceverai un\'email di conferma. L\'amministratore elaborerà il rimborso nei prossimi giorni lavorativi.', 'eu-withdrawal-button' );
+        }
+
         if ( ! $withdrawal_id ) wp_send_json_error( __( 'Impossibile registrare la richiesta di recesso. Riprova o contatta il supporto.', 'eu-withdrawal-button' ) );
 
         wp_send_json_success( array(
-            'message' => __( 'Richiesta di recesso inviata con successo. Riceverai un\'email di conferma. L\'amministratore elaborerà il rimborso nei prossimi giorni lavorativi.', 'eu-withdrawal-button' ),
+            'message' => $success_message,
         ) );
     }
 }
