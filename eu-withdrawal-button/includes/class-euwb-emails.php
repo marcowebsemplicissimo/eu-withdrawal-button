@@ -40,14 +40,16 @@ class EUWB_Emails {
         $order_num   = $order->get_order_number();
         $first_name  = $withdrawal->first_name;
         $last_name   = $withdrawal->last_name;
-        $date        = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdrawal->confirmed_at ) );
+        $ts          = ! empty( $withdrawal->confirmed_at ) ? strtotime( $withdrawal->confirmed_at ) : strtotime( $withdrawal->created_at );
+        $date        = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $ts );
         $refund_days = apply_filters( 'euwb_refund_days', 14 );
+        $title       = sprintf( __( 'Conferma di recesso – Ordine #%s', 'eu-withdrawal-button' ), $order_num );
 
         ob_start();
         ?>
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title><?php echo esc_html( $subject ?? '' ); ?></title></head>
+<head><meta charset="UTF-8"><title><?php echo esc_html( $title ); ?></title></head>
 <body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:24px;">
   <h2 style="color:#1a1a1a;"><?php echo esc_html( $site_name ); ?> – <?php esc_html_e( 'Withdrawal Confirmation', 'eu-withdrawal-button' ); ?></h2>
   <p><?php printf( esc_html__( 'Dear %s,', 'eu-withdrawal-button' ), esc_html( "$first_name $last_name" ) ); ?></p>
@@ -91,7 +93,8 @@ class EUWB_Emails {
         $headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
         $order_url = admin_url( 'post.php?post=' . $order->get_id() . '&action=edit' );
-        $date      = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdrawal->confirmed_at ) );
+        $ts        = ! empty( $withdrawal->confirmed_at ) ? strtotime( $withdrawal->confirmed_at ) : strtotime( $withdrawal->created_at );
+        $date      = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $ts );
 
         $body = '
 <html><body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:24px;">

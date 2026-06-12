@@ -57,14 +57,46 @@ class EUWB_Frontend {
         echo '<h2 class="euwb-title">' . esc_html__( 'Diritto di recesso (UE 2023/2673)', 'eu-withdrawal-button' ) . '</h2>';
 
         if ( $already_withdrawn ) {
-            $withdrawal = EUWB_Withdrawal::get_withdrawal( $order_id );
-            $date       = $withdrawal ? date_i18n( get_option( 'date_format' ), strtotime( $withdrawal->confirmed_at ?: $withdrawal->created_at ) ) : '';
-            echo '<div class="euwb-notice euwb-notice--success">';
-            echo '<p>' . sprintf(
-                esc_html__( 'Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi.', 'eu-withdrawal-button' ),
-                esc_html( $date )
-            ) . '</p>';
-            echo '</div>';
+            $withdrawal    = EUWB_Withdrawal::get_withdrawal( $order_id );
+            $date          = $withdrawal ? date_i18n( get_option( 'date_format' ), strtotime( $withdrawal->confirmed_at ?: $withdrawal->created_at ) ) : '';
+            $order_status  = $order->get_status();
+
+            if ( in_array( $order_status, array( 'refunded' ), true ) ) {
+                echo '<div class="euwb-notice euwb-notice--success">';
+                echo '<p>' . sprintf(
+                    esc_html__( 'Hai esercitato il recesso per questo ordine il %s. Il rimborso è stato effettuato.', 'eu-withdrawal-button' ),
+                    esc_html( $date )
+                ) . '</p>';
+                echo '</div>';
+            } elseif ( in_array( $order_status, array( 'cancelled' ), true ) ) {
+                echo '<div class="euwb-notice euwb-notice--success">';
+                echo '<p>' . sprintf(
+                    esc_html__( 'Hai esercitato il recesso per questo ordine il %s. L\'ordine è stato annullato. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi.', 'eu-withdrawal-button' ),
+                    esc_html( $date )
+                ) . '</p>';
+                echo '</div>';
+            } elseif ( in_array( $order_status, array( 'pending-refund' ), true ) ) {
+                echo '<div class="euwb-notice euwb-notice--success">';
+                echo '<p>' . sprintf(
+                    esc_html__( 'Hai esercitato il recesso per questo ordine il %s. La richiesta è stata confermata dall\'amministratore e il rimborso sarà elaborato nei prossimi 14 giorni lavorativi.', 'eu-withdrawal-button' ),
+                    esc_html( $date )
+                ) . '</p>';
+                echo '</div>';
+            } elseif ( in_array( $order_status, array( 'pending-withdrawal' ), true ) ) {
+                echo '<div class="euwb-notice euwb-notice--warning">';
+                echo '<p>' . sprintf(
+                    esc_html__( 'Hai richiesto il recesso per questo ordine il %s. La richiesta è in attesa di conferma da parte dell\'amministratore.', 'eu-withdrawal-button' ),
+                    esc_html( $date )
+                ) . '</p>';
+                echo '</div>';
+            } else {
+                echo '<div class="euwb-notice euwb-notice--success">';
+                echo '<p>' . sprintf(
+                    esc_html__( 'Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi.', 'eu-withdrawal-button' ),
+                    esc_html( $date )
+                ) . '</p>';
+                echo '</div>';
+            }
 
         } elseif ( ! $within_window ) {
             echo '<div class="euwb-notice euwb-notice--expired">';

@@ -100,6 +100,11 @@ class EUWB_Admin {
             wp_send_json_error( __( 'ID ordine non valido.', 'eu-withdrawal-button' ) );
         }
 
+        $order = wc_get_order( $order_id );
+        if ( ! $order ) {
+            wp_send_json_error( __( 'Ordine non trovato.', 'eu-withdrawal-button' ) );
+        }
+
         $result = EUWB_Withdrawal::confirm( $order_id );
         if ( ! $result ) {
             wp_send_json_error( __( 'Impossibile confermare. La richiesta potrebbe non esistere o essere già stata confermata.', 'eu-withdrawal-button' ) );
@@ -267,6 +272,8 @@ class EUWB_Admin {
                     date_i18n( get_option( 'date_format' ), strtotime( $row->created_at ) )
                 )
             );
+        }else{
+            wp_send_json_error( __( 'Ordine non trovato.', 'eu-withdrawal-button' ) );
         }
 
         wp_send_json_success();
