@@ -126,7 +126,7 @@
             formData = {};
             $step2.fadeOut(200, function () {
                 $step1.fadeIn(200);
-                $btnInitiate.prop('disabled', false);
+                $btnInitiate.prop('disabled', false).text(euWithdrawalLabel('initiate'));
             });
         });
     });
