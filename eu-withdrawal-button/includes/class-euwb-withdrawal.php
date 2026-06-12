@@ -170,19 +170,36 @@ class EUWB_Withdrawal {
     public static function get_all( $args = array() ) {
         global $wpdb;
         $table    = $wpdb->prefix . 'euwb_withdrawals';
-        $defaults = array( 'limit' => 20, 'offset' => 0, 'status' => '' );
+        $defaults = array( 'limit' => 20, 'offset' => 0, 'status' => '', 'search' => '', 'orderby' => 'created_at', 'order' => 'DESC' );
         $args     = wp_parse_args( $args, $defaults );
 
-        $where = '';
+        $allowed_orderby = array( 'created_at', 'confirmed_at' );
+        $orderby = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'created_at';
+        $order   = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
+
+        $conditions = array();
+        $values     = array();
+
         if ( $args['status'] ) {
-            $where = $wpdb->prepare( 'WHERE status = %s', $args['status'] );
+            $conditions[] = 'status = %s';
+            $values[]     = $args['status'];
         }
 
+        if ( $args['search'] ) {
+            $like         = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+            $conditions[] = '(first_name LIKE %s OR last_name LIKE %s OR email LIKE %s OR CAST(order_id AS CHAR) LIKE %s)';
+            $values       = array_merge( $values, array( $like, $like, $like, $like ) );
+        }
+
+        $where = $conditions ? 'WHERE ' . implode( ' AND ', $conditions ) : '';
+        $values[] = $args['limit'];
+        $values[] = $args['offset'];
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         return $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM $table $where ORDER BY created_at DESC LIMIT %d OFFSET %d",
-                $args['limit'],
-                $args['offset']
+                "SELECT * FROM $table $where ORDER BY $orderby $order LIMIT %d OFFSET %d",
+                $values
             )
         );
     }
@@ -190,12 +207,30 @@ class EUWB_Withdrawal {
     /**
      * Count withdrawals.
      */
-    public static function count( $status = '' ) {
+    public static function count( $status = '', $search = '' ) {
         global $wpdb;
         $table = $wpdb->prefix . 'euwb_withdrawals';
+
+        $conditions = array();
+        $values     = array();
+
         if ( $status ) {
-            return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table WHERE status = %s", $status ) );
+            $conditions[] = 'status = %s';
+            $values[]     = $status;
         }
+
+        if ( $search ) {
+            $like         = '%' . $wpdb->esc_like( $search ) . '%';
+            $conditions[] = '(first_name LIKE %s OR last_name LIKE %s OR email LIKE %s OR CAST(order_id AS CHAR) LIKE %s)';
+            $values       = array_merge( $values, array( $like, $like, $like, $like ) );
+        }
+
+        if ( $conditions ) {
+            $where = 'WHERE ' . implode( ' AND ', $conditions );
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table $where", $values ) );
+        }
+
         return (int) $wpdb->get_var( "SELECT COUNT(*) FROM $table" );
     }
 

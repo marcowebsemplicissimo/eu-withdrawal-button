@@ -160,24 +160,53 @@ class EUWB_Admin {
     // Log page
     // -----------------------------------------------------------------------
     public function render_log_page() {
-        $per_page    = (int) get_user_meta( get_current_user_id(), 'euwb_withdrawals_per_page', true ) ?: 20;
-        $current_page = max( 1, absint( $_GET['paged'] ?? 1 ) );
+        $per_page      = (int) get_user_meta( get_current_user_id(), 'euwb_withdrawals_per_page', true ) ?: 20;
+        $current_page  = max( 1, absint( $_GET['paged'] ?? 1 ) );
         $status_filter = sanitize_text_field( $_GET['status'] ?? '' );
-        $offset      = ( $current_page - 1 ) * $per_page;
+        $search        = sanitize_text_field( $_GET['s'] ?? '' );
+        $orderby       = in_array( $_GET['orderby'] ?? '', array( 'created_at', 'confirmed_at' ), true ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
+        $order         = strtoupper( $_GET['order'] ?? '' ) === 'ASC' ? 'ASC' : 'DESC';
+        $offset        = ( $current_page - 1 ) * $per_page;
 
-        $items = EUWB_Withdrawal::get_all( array( 'limit' => $per_page, 'offset' => $offset, 'status' => $status_filter ) );
-        $total = EUWB_Withdrawal::count( $status_filter );
+        $items = EUWB_Withdrawal::get_all( array( 'limit' => $per_page, 'offset' => $offset, 'status' => $status_filter, 'search' => $search, 'orderby' => $orderby, 'order' => $order ) );
+        $total = EUWB_Withdrawal::count( $status_filter, $search );
         $pages = ceil( $total / $per_page );
+
+        $base_url = admin_url( 'admin.php?page=eu-withdrawal-log' );
+        if ( $status_filter ) $base_url = add_query_arg( 'status', $status_filter, $base_url );
+        if ( $search )        $base_url = add_query_arg( 's', $search, $base_url );
+
+        $sort_url = function( $col ) use ( $base_url, $orderby, $order ) {
+            $new_order = ( $orderby === $col && $order === 'ASC' ) ? 'DESC' : 'ASC';
+            return esc_url( add_query_arg( array( 'orderby' => $col, 'order' => $new_order ), $base_url ) );
+        };
+        $sort_indicator = function( $col ) use ( $orderby, $order ) {
+            if ( $orderby !== $col ) return '';
+            return ' <span class="euwb-sort-arrow">' . ( $order === 'ASC' ? '&#9650;' : '&#9660;' ) . '</span>';
+        };
         ?>
         <div class="wrap euwb-admin-wrap">
             <h1><?php esc_html_e( 'Registro Recessi EU', 'eu-withdrawal-button' ); ?>
                 <span class="euwb-badge"><?php echo esc_html( EUWB_Withdrawal::count( 'pending' ) ); ?> <?php esc_html_e( 'In attesa', 'eu-withdrawal-button' ); ?></span>
             </h1>
 
+            <form method="get" class="euwb-search-form">
+                <input type="hidden" name="page" value="eu-withdrawal-log">
+                <?php if ( $status_filter ) : ?><input type="hidden" name="status" value="<?php echo esc_attr( $status_filter ); ?>"><?php endif; ?>
+                <p class="search-box">
+                    <label class="screen-reader-text" for="euwb-search-input"><?php esc_html_e( 'Cerca recessi', 'eu-withdrawal-button' ); ?></label>
+                    <input type="search" id="euwb-search-input" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Nome, email, n° ordine…', 'eu-withdrawal-button' ); ?>">
+                    <input type="submit" class="button" value="<?php esc_attr_e( 'Cerca', 'eu-withdrawal-button' ); ?>">
+                    <?php if ( $search ) : ?>
+                    <a href="<?php echo esc_url( $status_filter ? add_query_arg( 'status', $status_filter, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" class="button"><?php esc_html_e( '✕ Rimuovi filtro', 'eu-withdrawal-button' ); ?></a>
+                    <?php endif; ?>
+                </p>
+            </form>
+
             <ul class="subsubsub">
-                <li><a href="<?php echo esc_url( admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" <?php echo ! $status_filter ? 'class="current"' : ''; ?>><?php esc_html_e( 'Tutti', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count(); ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url( admin_url( 'admin.php?page=eu-withdrawal-log&status=pending' ) ); ?>" <?php echo $status_filter === 'pending' ? 'class="current"' : ''; ?>><?php esc_html_e( 'In attesa', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'pending' ); ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url( admin_url( 'admin.php?page=eu-withdrawal-log&status=confirmed' ) ); ?>" <?php echo $status_filter === 'confirmed' ? 'class="current"' : ''; ?>><?php esc_html_e( 'Confermati', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'confirmed' ); ?>)</span></a></li>
+                <li><a href="<?php echo esc_url( $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" <?php echo ! $status_filter ? 'class="current"' : ''; ?>><?php esc_html_e( 'Tutti', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( '', $search ); ?>)</span></a> |</li>
+                <li><a href="<?php echo esc_url( add_query_arg( 'status', 'pending', $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ) ); ?>" <?php echo $status_filter === 'pending' ? 'class="current"' : ''; ?>><?php esc_html_e( 'In attesa', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'pending', $search ); ?>)</span></a> |</li>
+                <li><a href="<?php echo esc_url( add_query_arg( 'status', 'confirmed', $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ) ); ?>" <?php echo $status_filter === 'confirmed' ? 'class="current"' : ''; ?>><?php esc_html_e( 'Confermati', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'confirmed', $search ); ?>)</span></a></li>
             </ul>
 
             <table class="wp-list-table widefat striped euwb-table">
@@ -190,8 +219,8 @@ class EUWB_Admin {
                         <th><?php esc_html_e( 'Motivo', 'eu-withdrawal-button' ); ?></th>
                         <th><?php esc_html_e( 'Stato recesso', 'eu-withdrawal-button' ); ?></th>
                         <th><?php esc_html_e( 'Stato ordine', 'eu-withdrawal-button' ); ?></th>
-                        <th><?php esc_html_e( 'Data richiesta', 'eu-withdrawal-button' ); ?></th>
-                        <th><?php esc_html_e( 'Data conferma', 'eu-withdrawal-button' ); ?></th>
+                        <th class="sortable"><a href="<?php echo $sort_url( 'created_at' ); ?>"><?php esc_html_e( 'Data richiesta', 'eu-withdrawal-button' ); echo $sort_indicator( 'created_at' ); ?></a></th>
+                        <th class="sortable"><a href="<?php echo $sort_url( 'confirmed_at' ); ?>"><?php esc_html_e( 'Data conferma', 'eu-withdrawal-button' ); echo $sort_indicator( 'confirmed_at' ); ?></a></th>
                         <th style="width:190px"><?php esc_html_e( 'Azioni', 'eu-withdrawal-button' ); ?></th>
                     </tr>
                 </thead>
@@ -220,6 +249,9 @@ class EUWB_Admin {
                             } elseif ( $order_obj ) {
                                 $slug         = $order_obj->get_status();
                                 $order_status = $all_statuses[ 'wc-' . $slug ] ?? $slug;
+                                if ( $order_status === 'trash' ){
+                                    $order_status = __('Cestinato', 'eu-withdrawal-button');
+                                }
                                 echo '<span class="euwb-order-status euwb-order-status--' . esc_attr( $slug ) . '">' . esc_html( $order_status ) . '</span>';
                             } else {
                                 echo '<span class="euwb-order-status">—</span>';
@@ -259,8 +291,9 @@ class EUWB_Admin {
             <div class="tablenav bottom">
                 <div class="tablenav-pages">
                     <?php
+                    $pagination_base = add_query_arg( array( 'orderby' => $orderby, 'order' => $order ), $base_url );
                     echo paginate_links( array(
-                        'base'      => add_query_arg( 'paged', '%#%' ),
+                        'base'      => add_query_arg( 'paged', '%#%', $pagination_base ),
                         'format'    => '',
                         'current'   => $current_page,
                         'total'     => $pages,
