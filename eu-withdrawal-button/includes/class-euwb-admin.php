@@ -25,7 +25,16 @@ class EUWB_Admin {
             wp_enqueue_script( 'euwb-table2csv',   EUWB_PLUGIN_URL . 'assets/js/jquery.table2csv.js',   array( 'jquery' ), EUWB_VERSION, true );
             wp_enqueue_script( 'euwb-table2excel', EUWB_PLUGIN_URL . 'assets/js/jquery.table2excel.js', array( 'jquery' ), EUWB_VERSION, true );
         }
-        wp_enqueue_script( 'euwb-script', EUWB_PLUGIN_URL . 'assets/js/euwb.js', array( 'jquery' ), EUWB_VERSION, true );
+        // SelectWoo for taxonomy exclusion selects (settings page only)
+        if ( strpos( $hook, 'eu-withdrawal-settings' ) !== false ) {
+            wp_enqueue_style( 'woocommerce_admin_styles' );
+            wp_enqueue_script( 'selectWoo' );
+        }
+        $euwb_deps = array( 'jquery' );
+        if ( strpos( $hook, 'eu-withdrawal-settings' ) !== false ) {
+            $euwb_deps[] = 'selectWoo';
+        }
+        wp_enqueue_script( 'euwb-script', EUWB_PLUGIN_URL . 'assets/js/euwb.js', $euwb_deps, EUWB_VERSION, true );
         wp_localize_script( 'euwb-script', 'euwbAdminData', array(
             'ajaxUrl'               => admin_url( 'admin-ajax.php' ),
             'nonce'                 => wp_create_nonce( 'euwb_revoke_nonce' ),
@@ -326,6 +335,23 @@ class EUWB_Admin {
     // -----------------------------------------------------------------------
     // AJAX: revoke a withdrawal record
     // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    // Helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Returns the active brands taxonomy slug, or null if none is available.
+     * Supports WooCommerce Brands (product_brand) and Perfect Brands for WooCommerce (pwb-brand).
+     */
+    public static function get_brands_taxonomy() {
+        if ( taxonomy_exists( 'product_brand' ) )  return 'product_brand';
+        if ( taxonomy_exists( 'pwb-brand' ) )       return 'pwb-brand';
+        return null;
+    }
+
+    // -----------------------------------------------------------------------
+    // AJAX: revoke a withdrawal record
+    // -----------------------------------------------------------------------
     public function ajax_revoke() {
         check_ajax_referer( 'euwb_revoke_nonce', 'nonce' );
 
@@ -388,6 +414,15 @@ class EUWB_Admin {
             update_option( 'euwb_intent_email_body',          wp_kses_post( $_POST['euwb_intent_email_body'] ?? $default_intent_body ) );
             update_option( 'euwb_confirmation_email_subject', sanitize_text_field( $_POST['euwb_confirmation_email_subject'] ?? $default_confirm_subj ) );
             update_option( 'euwb_confirmation_email_body',    wp_kses_post( $_POST['euwb_confirmation_email_body'] ?? $default_confirm_body ) );
+
+            // Taxonomy exclusions — sanitize as arrays of integer IDs
+            $excluded_cats   = array_map( 'absint', (array) ( $_POST['euwb_excluded_categories'] ?? array() ) );
+            $excluded_tags   = array_map( 'absint', (array) ( $_POST['euwb_excluded_tags'] ?? array() ) );
+            $excluded_brands = array_map( 'absint', (array) ( $_POST['euwb_excluded_brands'] ?? array() ) );
+            update_option( 'euwb_excluded_categories', array_filter( $excluded_cats ) );
+            update_option( 'euwb_excluded_tags',       array_filter( $excluded_tags ) );
+            update_option( 'euwb_excluded_brands',     array_filter( $excluded_brands ) );
+
             $saved = true;
         }
         $window     = get_option( 'euwb_withdrawal_window', 14 );
@@ -458,6 +493,64 @@ class EUWB_Admin {
                                 <p class="description"><?php esc_html_e( 'Riceverà una notifica ad ogni recesso confermato.', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
+                    </table>
+
+                    <h2><?php esc_html_e( 'Esclusioni per tassonomia prodotto', 'eu-withdrawal-button' ); ?></h2>
+                    <p class="description"><?php esc_html_e( 'Se un prodotto nell\'ordine appartiene a una delle tassonomie selezionate, il box di recesso non sarà mostrato al cliente.', 'eu-withdrawal-button' ); ?></p>
+                    <table class="form-table">
+                        <?php
+                        $exclusion_fields = array(
+                            array(
+                                'option'   => 'euwb_excluded_categories',
+                                'taxonomy' => 'product_cat',
+                                'id'       => 'euwb_excluded_categories',
+                                'label'    => __( 'Categorie escluse', 'eu-withdrawal-button' ),
+                                'desc'     => __( 'Ordini contenenti prodotti in queste categorie non potranno avviare il recesso.', 'eu-withdrawal-button' ),
+                            ),
+                            array(
+                                'option'   => 'euwb_excluded_tags',
+                                'taxonomy' => 'product_tag',
+                                'id'       => 'euwb_excluded_tags',
+                                'label'    => __( 'Tag esclusi', 'eu-withdrawal-button' ),
+                                'desc'     => __( 'Ordini contenenti prodotti con questi tag non potranno avviare il recesso.', 'eu-withdrawal-button' ),
+                            ),
+                            array(
+                                'option'   => 'euwb_excluded_brands',
+                                'taxonomy' => EUWB_Admin::get_brands_taxonomy(),
+                                'id'       => 'euwb_excluded_brands',
+                                'label'    => __( 'Marchi esclusi', 'eu-withdrawal-button' ),
+                                'desc'     => __( 'Ordini contenenti prodotti di questi marchi non potranno avviare il recesso.', 'eu-withdrawal-button' ),
+                            ),
+                        );
+                        foreach ( $exclusion_fields as $field ) :
+                            $saved_ids = (array) get_option( $field['option'], array() );
+                            $terms     = $field['taxonomy'] ? get_terms( array( 'taxonomy' => $field['taxonomy'], 'hide_empty' => false ) ) : array();
+                        ?>
+                        <tr>
+                            <th><label for="<?php echo esc_attr( $field['id'] ); ?>"><?php echo esc_html( $field['label'] ); ?></label></th>
+                            <td>
+                                <?php if ( $field['taxonomy'] && ! is_wp_error( $terms ) && ! empty( $terms ) ) : ?>
+                                <select id="<?php echo esc_attr( $field['id'] ); ?>"
+                                        name="<?php echo esc_attr( $field['option'] ); ?>[]"
+                                        multiple="multiple"
+                                        class="wc-enhanced-select euwb-select2"
+                                        style="min-width:350px;width:100%;max-width:600px;">
+                                    <?php foreach ( $terms as $term ) : ?>
+                                    <option value="<?php echo esc_attr( $term->term_id ); ?>"
+                                        <?php selected( in_array( (int) $term->term_id, array_map( 'intval', $saved_ids ), true ), true ); ?>>
+                                        <?php echo esc_html( $term->name ); ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <?php elseif ( ! $field['taxonomy'] ) : ?>
+                                <p class="description"><?php esc_html_e( 'Nessun plugin marchi attivo rilevato (WooCommerce Brands o Perfect Brands for WooCommerce).', 'eu-withdrawal-button' ); ?></p>
+                                <?php else : ?>
+                                <p class="description"><?php esc_html_e( 'Nessun termine trovato per questa tassonomia.', 'eu-withdrawal-button' ); ?></p>
+                                <?php endif; ?>
+                                <p class="description"><?php echo esc_html( $field['desc'] ); ?></p>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
                     </table>
                 </div><!-- /euwb-tab-generale -->
 

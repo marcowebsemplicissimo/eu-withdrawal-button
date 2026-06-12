@@ -296,6 +296,23 @@
 
 }(jQuery));
 
+/* EU Withdrawal Button – taxonomy exclusion SelectWoo */
+(function ($) {
+    'use strict';
+
+    $(document).ready(function () {
+        var $selects = $('.euwb-select2');
+        if ( ! $selects.length ) return;
+
+        if ( typeof $.fn.selectWoo !== 'undefined' ) {
+            $selects.selectWoo({ width: '100%' });
+        } else if ( typeof $.fn.select2 !== 'undefined' ) {
+            $selects.select2({ width: '100%' });
+        }
+    });
+
+}(jQuery));
+
 /* EU Withdrawal Button – settings page tabs */
 (function ($) {
     'use strict';

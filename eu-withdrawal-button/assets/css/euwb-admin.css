@@ -356,3 +356,17 @@
     padding: 0;
     color: #1d2327;
 }
+
+.select2-container .select2-selection--multiple {
+    border-color: transparent !important;
+}
+
+.select2-container {
+    max-width: 500px;
+}
+
+#euwb-tab-generale > h2 {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 24px;
+    padding-top: 16px;
+}

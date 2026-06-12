@@ -58,6 +58,11 @@ class EUWB_Frontend {
         $already_withdrawn = EUWB_Withdrawal::order_has_withdrawal( $order_id );
         $within_window     = EUWB_Withdrawal::is_within_window( $order );
 
+        // Do not show the box if the order contains products with excluded taxonomies
+        if ( ! $already_withdrawn && EUWB_Withdrawal::order_has_excluded_taxonomy( $order ) ) {
+            return;
+        }
+
         echo '<section class="euwb-section" id="euwb-withdrawal-section" aria-label="' . esc_attr__( 'Recesso dal contratto', 'eu-withdrawal-button' ) . '">';
         echo '<h2 class="euwb-title">' . esc_html__( 'Diritto di recesso (UE 2023/2673)', 'eu-withdrawal-button' ) . '</h2>';
 
@@ -199,6 +204,7 @@ class EUWB_Frontend {
 
         if ( ! EUWB_Withdrawal::is_within_window( $order ) ) wp_send_json_error( __( 'Il periodo di recesso è scaduto.', 'eu-withdrawal-button' ) );
         if ( EUWB_Withdrawal::order_has_withdrawal( $order_id ) ) wp_send_json_error( __( 'Hai già richiesto il recesso per questo ordine.', 'eu-withdrawal-button' ) );
+        if ( EUWB_Withdrawal::order_has_excluded_taxonomy( $order ) ) wp_send_json_error( __( 'Il recesso non è disponibile per i prodotti di questo ordine.', 'eu-withdrawal-button' ) );
 
         $first_name = sanitize_text_field( $_POST['first_name'] ?? '' );
         $last_name  = sanitize_text_field( $_POST['last_name'] ?? '' );
@@ -236,6 +242,7 @@ class EUWB_Frontend {
 
         if ( ! EUWB_Withdrawal::is_within_window( $order ) ) wp_send_json_error( __( 'Il periodo di recesso è scaduto.', 'eu-withdrawal-button' ) );
         if ( EUWB_Withdrawal::order_has_withdrawal( $order_id ) ) wp_send_json_error( __( 'Hai già richiesto il recesso per questo ordine.', 'eu-withdrawal-button' ) );
+        if ( EUWB_Withdrawal::order_has_excluded_taxonomy( $order ) ) wp_send_json_error( __( 'Il recesso non è disponibile per i prodotti di questo ordine.', 'eu-withdrawal-button' ) );
 
         $data = array(
             'first_name' => sanitize_text_field( $_POST['first_name'] ?? '' ),

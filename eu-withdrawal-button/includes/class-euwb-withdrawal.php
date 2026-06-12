@@ -291,6 +291,40 @@ class EUWB_Withdrawal {
         return (string) get_option( 'euwb_return_instructions', '' );
     }
 
+    /**
+     * Returns true if any product in the order belongs to an excluded taxonomy term.
+     * Checks product_cat, product_tag, and the active brands taxonomy.
+     */
+    public static function order_has_excluded_taxonomy( $order ) {
+        if ( ! $order instanceof WC_Order ) {
+            $order = wc_get_order( $order );
+        }
+        if ( ! $order ) return false;
+
+        $excluded_cats   = array_map( 'intval', (array) get_option( 'euwb_excluded_categories', array() ) );
+        $excluded_tags   = array_map( 'intval', (array) get_option( 'euwb_excluded_tags', array() ) );
+        $excluded_brands = array_map( 'intval', (array) get_option( 'euwb_excluded_brands', array() ) );
+
+        $brands_taxonomy = class_exists( 'EUWB_Admin' ) ? EUWB_Admin::get_brands_taxonomy() : null;
+
+        foreach ( $order->get_items() as $item ) {
+            $product_id = $item->get_product_id();
+            if ( ! $product_id ) continue;
+
+            if ( $excluded_cats && has_term( $excluded_cats, 'product_cat', $product_id ) ) {
+                return true;
+            }
+            if ( $excluded_tags && has_term( $excluded_tags, 'product_tag', $product_id ) ) {
+                return true;
+            }
+            if ( $excluded_brands && $brands_taxonomy && has_term( $excluded_brands, $brands_taxonomy, $product_id ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static function get_client_ip() {
         $keys = array( 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' );
         foreach ( $keys as $key ) {

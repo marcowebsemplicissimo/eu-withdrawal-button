@@ -73,7 +73,19 @@
 
 ---
 
-## Feature 7 – Email admin come WC_Email nativa
+## Feature 7 – Esclusione tassonomie prodotto dal diritto di recesso ✅ COMPLETATA
+
+**Implementato (2026-06-12):**
+
+- **Impostazioni admin** — tab **Generale**, nuovo blocco "Esclusioni per tassonomia prodotto": tre select multipli (`select2` WooCommerce style) per selezionare categorie (`product_cat`), tag (`product_tag`) e marchi (`product_brands`/`pwb-brand` a seconda del plugin installato).
+- Tre option salvate: `euwb_excluded_categories` (array di term IDs), `euwb_excluded_tags` (array), `euwb_excluded_brands` (array).
+- `EUWB_Frontend::order_has_excluded_taxonomy( $order )` — controlla tutti i prodotti dell'ordine: se almeno uno ha una tassonomia appartenente agli array esclusi, restituisce `true`.
+- Il box recesso **non viene mostrato** affatto lato frontend se `order_has_excluded_taxonomy()` ritorna `true`.
+- La stessa verifica è applicata nei metodi AJAX `ajax_initiate()` e `ajax_confirm()` per prevenire submit diretti.
+
+---
+
+## Feature 8 – Email admin come WC_Email nativa
 
 ### Obiettivo
 
