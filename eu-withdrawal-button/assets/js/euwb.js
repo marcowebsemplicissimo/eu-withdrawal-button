@@ -141,7 +141,7 @@
     }
 
     function euWithdrawalLabel(btn) {
-        if (btn === 'initiate') return 'Recedi dal contratto qui';
+        if (btn === 'initiate') return (euwbData.i18n && euwbData.i18n.btn_initiate) ? euwbData.i18n.btn_initiate : 'Recedi dal contratto qui';
         if (btn === 'confirm')  return 'Conferma recesso qui';
         return '';
     }

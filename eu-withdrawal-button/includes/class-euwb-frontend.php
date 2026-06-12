@@ -40,6 +40,7 @@ class EUWB_Frontend {
                 'confirm_prompt' => __( 'Confermare il recesso dal contratto? Questa azione non può essere annullata.', 'eu-withdrawal-button' ),
                 'processing'     => __( 'Elaborazione in corso…', 'eu-withdrawal-button' ),
                 'error_generic'  => __( 'Si è verificato un errore. Riprova o contatta il supporto.', 'eu-withdrawal-button' ),
+                'btn_initiate'   => get_option( 'euwb_btn_label', __( 'Recedi dal contratto qui', 'eu-withdrawal-button' ) ),
             ),
         ) );
     }
@@ -114,14 +115,17 @@ class EUWB_Frontend {
             $deadline->modify( '+' . EUWB_WITHDRAWAL_WINDOW_DAYS . ' days' );
             $days_left      = ceil( ( $deadline->getTimestamp() - current_time( 'timestamp', true ) ) / DAY_IN_SECONDS );
 
-            echo '<p class="euwb-intro">' . sprintf(
-                esc_html__( 'Hai il diritto di recedere dal presente contratto entro 14 giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra %d giorni.', 'eu-withdrawal-button' ),
+            $intro_default = __( 'Hai il diritto di recedere dal presente contratto entro %1$d giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra %2$d giorni.', 'eu-withdrawal-button' );
+            $intro_text    = get_option( 'euwb_intro_text', $intro_default );
+            echo '<p class="euwb-intro">' . wp_kses_post( sprintf(
+                $intro_text,
+                (int) get_option( 'euwb_withdrawal_window', 14 ),
                 max( 1, (int) $days_left )
-            ) . '</p>';
+            ) ) . '</p>';
 
             // Step 1 form
             echo '<div id="euwb-step-1">';
-            echo '<p>' . esc_html__( 'Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante.', 'eu-withdrawal-button' ) . '</p>';
+            echo '<p>' . esc_html( get_option( 'euwb_form_instructions', __( 'Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante.', 'eu-withdrawal-button' ) ) ) . '</p>';
             echo '<div class="euwb-form">';
             echo '<div class="euwb-row">';
             echo '<div class="euwb-field"><label for="euwb_first_name">' . esc_html__( 'Nome *', 'eu-withdrawal-button' ) . '</label>';
@@ -136,7 +140,7 @@ class EUWB_Frontend {
             echo '</div>'; // .euwb-form
 
             echo '<button type="button" id="euwb-btn-initiate" class="euwb-btn euwb-btn--primary" data-order-id="' . esc_attr( $order_id ) . '">';
-            echo esc_html__( 'Recedi dal contratto qui', 'eu-withdrawal-button' );
+            echo esc_html( get_option( 'euwb_btn_label', __( 'Recedi dal contratto qui', 'eu-withdrawal-button' ) ) );
             echo '</button>';
             echo '<p class="euwb-legal">' . esc_html__( 'Cliccando sopra avvierai la procedura di recesso. Nel passaggio successivo ti verrà chiesta conferma.', 'eu-withdrawal-button' ) . '</p>';
             echo '</div>'; // #euwb-step-1

@@ -298,13 +298,23 @@ class EUWB_Admin {
     // Settings page
     // -----------------------------------------------------------------------
     public function render_settings_page() {
+        $default_intro        = __( 'Hai il diritto di recedere dal presente contratto entro %1$d giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra %2$d giorni.', 'eu-withdrawal-button' );
+        $default_btn_label    = __( 'Recedi dal contratto qui', 'eu-withdrawal-button' );
+        $default_form_instr   = __( 'Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante.', 'eu-withdrawal-button' );
+
         if ( isset( $_POST['euwb_save_settings'] ) && check_admin_referer( 'euwb_settings' ) ) {
             update_option( 'euwb_withdrawal_window', absint( $_POST['euwb_withdrawal_window'] ?? 14 ) );
             update_option( 'euwb_admin_email', sanitize_email( $_POST['euwb_admin_email'] ?? get_option( 'admin_email' ) ) );
+            update_option( 'euwb_intro_text', wp_kses_post( $_POST['euwb_intro_text'] ?? $default_intro ) );
+            update_option( 'euwb_btn_label', sanitize_text_field( $_POST['euwb_btn_label'] ?? $default_btn_label ) );
+            update_option( 'euwb_form_instructions', sanitize_text_field( $_POST['euwb_form_instructions'] ?? $default_form_instr ) );
             echo '<div class="notice notice-success"><p>' . esc_html__( 'Impostazioni salvate.', 'eu-withdrawal-button' ) . '</p></div>';
         }
-        $window = get_option( 'euwb_withdrawal_window', 14 );
-        $email  = get_option( 'euwb_admin_email', get_option( 'admin_email' ) );
+        $window         = get_option( 'euwb_withdrawal_window', 14 );
+        $email          = get_option( 'euwb_admin_email', get_option( 'admin_email' ) );
+        $intro_text     = get_option( 'euwb_intro_text', $default_intro );
+        $btn_label      = get_option( 'euwb_btn_label', $default_btn_label );
+        $form_instr     = get_option( 'euwb_form_instructions', $default_form_instr );
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Impostazioni EU Withdrawal Button', 'eu-withdrawal-button' ); ?></h1>
@@ -315,6 +325,27 @@ class EUWB_Admin {
                         <th><label for="euwb_withdrawal_window"><?php esc_html_e( 'Finestra di recesso (giorni)', 'eu-withdrawal-button' ); ?></label></th>
                         <td><input type="number" id="euwb_withdrawal_window" name="euwb_withdrawal_window" value="<?php echo esc_attr( $window ); ?>" min="1" max="30" class="small-text">
                         <p class="description"><?php esc_html_e( 'La direttiva UE 2023/2673 prevede 14 giorni come minimo.', 'eu-withdrawal-button' ); ?></p></td>
+                    </tr>
+                    <tr>
+                        <th><label for="euwb_intro_text"><?php esc_html_e( 'Testo introduttivo recesso', 'eu-withdrawal-button' ); ?></label></th>
+                        <td>
+                            <textarea id="euwb_intro_text" name="euwb_intro_text" rows="4" class="large-text"><?php echo esc_textarea( $intro_text ); ?></textarea>
+                            <p class="description"><?php echo wp_kses_post( sprintf( __( 'Usa <code>%%1$d</code> per la finestra in giorni (es. 14) e <code>%%2$d</code> per i giorni rimasti alla scadenza.', 'eu-withdrawal-button' ) ) ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="euwb_form_instructions"><?php esc_html_e( 'Istruzioni modulo recesso', 'eu-withdrawal-button' ); ?></label></th>
+                        <td>
+                            <input type="text" id="euwb_form_instructions" name="euwb_form_instructions" value="<?php echo esc_attr( $form_instr ); ?>" class="large-text">
+                            <p class="description"><?php esc_html_e( 'Testo visualizzato sopra il modulo di recesso.', 'eu-withdrawal-button' ); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="euwb_btn_label"><?php esc_html_e( 'Label pulsante di recesso', 'eu-withdrawal-button' ); ?></label></th>
+                        <td>
+                            <input type="text" id="euwb_btn_label" name="euwb_btn_label" value="<?php echo esc_attr( $btn_label ); ?>" class="regular-text">
+                            <p class="description"><?php esc_html_e( 'Testo del pulsante che il cliente clicca per avviare la procedura di recesso.', 'eu-withdrawal-button' ); ?></p>
+                        </td>
                     </tr>
                     <tr>
                         <th><label for="euwb_admin_email"><?php esc_html_e( 'Email notifiche admin', 'eu-withdrawal-button' ); ?></label></th>
