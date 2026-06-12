@@ -88,28 +88,70 @@ Il metodo `send_customer_intent( $order_id )` deve:
 
 ### Contesto attuale
 
-Le email del plugin (`send_customer_confirmation`, `send_customer_intent`, `send_admin_confirmation`) sono implementate come semplici `wp_mail()` in `EUWB_Emails`. Non sono visibili nella sezione **WooCommerce > Email**, non possono essere personalizzate dall'admin, non ereditano il template grafico di WooCommerce, e non hanno un'anteprima in back-office.
-
-WooCommerce espone un sistema di email estendibile: basta registrare una classe che estende `WC_Email` e aggiungiarla al filtro `woocommerce_email_classes`. WooCommerce la gestirà automaticamente (anteprima, attivazione/disattivazione, personalizzazione oggetto/testo dall'interfaccia).
-
-I due nuovi status ordine già registrati dal plugin sono:
-- `wc-pending-withdrawal` – scatta quando il cliente completa lo step 2 (flusso standard)
-- `wc-pending-refund` – scatta quando l'admin conferma il recesso (flusso standard) o già incluso nel flusso diretto
+Le email del plugin (`send_customer_confirmation`, `send_customer_intent`, `send_admin_confirmation`) sono implementate come semplici `wp_mail()` in `EUWB_Emails`. Non sono visibili nella sezione **WooCommerce > Email**, non ereditano il template grafico di WooCommerce e non hanno un'anteprima in back-office.
 
 ### Obiettivo
 
-Creare **due classi email WooCommerce native** che sostituiscano (o affianchino in modo integrato) le chiamate manuali a `wp_mail()` esistenti:
+Creare **due classi email WooCommerce native** (`WC_Email`) e aggiungere nei **settings del plugin** (`EU Withdrawal > Impostazioni`) campi textarea per personalizzare il corpo di ciascuna email. I template leggono i valori tramite `get_option()`, così l'admin può modificare i testi senza toccare il codice.
 
-1. **`EUWB_Email_Customer_Intent`** — inviata al cliente quando l'ordine passa in `wc-pending-withdrawal` (flusso standard, richiesta ricevuta ma non ancora confermata dall'admin)
-2. **`EUWB_Email_Customer_Confirmation`** — inviata al cliente quando il recesso viene confermato definitivamente (hook `euwb_withdrawal_confirmed`, che scatta sia in flusso standard che in flusso diretto)
-
-La email admin notification (`send_admin_confirmation`) può essere anch'essa convertita in una terza classe `EUWB_Email_Admin_Notification`, ma è opzionale e può essere aggiunta in un secondo momento.
+Le due email:
+1. **`EUWB_Email_Customer_Intent`** — inviata al cliente quando l'ordine passa in `wc-pending-withdrawal` (flusso standard)
+2. **`EUWB_Email_Customer_Confirmation`** — inviata al cliente quando il recesso è confermato definitivamente (hook `euwb_withdrawal_confirmed`, sia flusso standard che diretto)
 
 ### Cosa implementare
 
-#### 1. Nuovo file `includes/emails/class-euwb-email-customer-intent.php`
+#### 1. Nuove opzioni di personalizzazione testo email in `includes/class-euwb-admin.php`
 
-Struttura base da seguire:
+Aggiungere una nuova sezione nella settings page dopo le impostazioni esistenti, con 4 campi:
+
+```php
+// Defaults
+$default_intent_subject = __( 'Richiesta di recesso ricevuta – Ordine #{order_number}', 'eu-withdrawal-button' );
+$default_intent_body    = __( 'Abbiamo ricevuto la tua richiesta di recesso per l\'ordine #{order_number} del {order_date}. La richiesta è in attesa di elaborazione da parte dell\'amministratore. Riceverai una email di conferma non appena la richiesta sarà processata.', 'eu-withdrawal-button' );
+$default_confirm_subject = __( 'Conferma di recesso – Ordine #{order_number}', 'eu-withdrawal-button' );
+$default_confirm_body    = __( 'Il tuo recesso per l\'ordine #{order_number} del {order_date} è stato confermato. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi.', 'eu-withdrawal-button' );
+```
+
+Campi da aggiungere nella `<table class="form-table">`:
+
+| Opzione WordPress | Campo | Note |
+|---|---|---|
+| `euwb_intent_email_subject` | `<input type="text">` | Oggetto email intent |
+| `euwb_intent_email_body` | `<textarea>` | Corpo email intent (plain text + basic HTML) |
+| `euwb_confirmation_email_subject` | `<input type="text">` | Oggetto email conferma |
+| `euwb_confirmation_email_body` | `<textarea>` | Corpo email conferma |
+
+I segnaposto disponibili (documentati nella `<p class="description">` di ciascun campo):
+- `{order_number}` — numero ordine
+- `{order_date}` — data ordine
+- `{customer_name}` — nome e cognome cliente
+- `{withdrawal_date}` — data richiesta recesso
+
+Nel blocco di salvataggio POST aggiungere:
+```php
+update_option( 'euwb_intent_email_subject',      sanitize_text_field( $_POST['euwb_intent_email_subject'] ?? $default_intent_subject ) );
+update_option( 'euwb_intent_email_body',         wp_kses_post( $_POST['euwb_intent_email_body'] ?? $default_intent_body ) );
+update_option( 'euwb_confirmation_email_subject', sanitize_text_field( $_POST['euwb_confirmation_email_subject'] ?? $default_confirm_subject ) );
+update_option( 'euwb_confirmation_email_body',    wp_kses_post( $_POST['euwb_confirmation_email_body'] ?? $default_confirm_body ) );
+```
+
+#### 2. Helper di sostituzione segnaposto
+
+In `includes/class-euwb-emails.php`, aggiungere un metodo statico riutilizzabile da entrambi i template:
+
+```php
+public static function replace_placeholders( $text, $order, $withdrawal = null ) {
+    $placeholders = array(
+        '{order_number}'   => $order->get_order_number(),
+        '{order_date}'     => wc_format_datetime( $order->get_date_created() ),
+        '{customer_name}'  => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+        '{withdrawal_date}' => $withdrawal ? date_i18n( get_option('date_format'), strtotime( $withdrawal->created_at ) ) : '',
+    );
+    return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $text );
+}
+```
+
+#### 3. Nuovo file `includes/emails/class-euwb-email-customer-intent.php`
 
 ```php
 class EUWB_Email_Customer_Intent extends WC_Email {
@@ -118,12 +160,10 @@ class EUWB_Email_Customer_Intent extends WC_Email {
         $this->id             = 'euwb_customer_intent';
         $this->customer_email = true;
         $this->title          = __( 'Recesso EU – Richiesta ricevuta', 'eu-withdrawal-button' );
-        $this->description    = __( 'Email inviata al cliente quando la richiesta di recesso è registrata e in attesa di conferma admin.', 'eu-withdrawal-button' );
+        $this->description    = __( 'Inviata al cliente quando la richiesta di recesso è registrata e in attesa di conferma admin.', 'eu-withdrawal-button' );
         $this->heading        = __( 'Abbiamo ricevuto la tua richiesta di recesso', 'eu-withdrawal-button' );
-        $this->subject        = __( 'Richiesta di recesso ricevuta – Ordine #{order_number}', 'eu-withdrawal-button' );
+        $this->subject        = get_option( 'euwb_intent_email_subject', 'Richiesta di recesso ricevuta – Ordine #{order_number}' );
 
-        // Trigger: status ordine passa a pending-withdrawal
-        $this->trigger_on_status = 'wc-pending-withdrawal';
         add_action( 'woocommerce_order_status_pending-withdrawal_notification', array( $this, 'trigger' ), 10, 2 );
 
         parent::__construct();
@@ -143,111 +183,82 @@ class EUWB_Email_Customer_Intent extends WC_Email {
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
     }
 
-    public function get_content_html() { /* template HTML */ }
-    public function get_content_plain() { /* template plain text */ }
+    public function get_content_html() {
+        return wc_get_template_html( 'euwb-customer-intent.php', array(
+            'order'         => $this->object,
+            'email_heading' => $this->get_heading(),
+            'email'         => $this,
+        ), '', EUWB_PLUGIN_DIR . 'includes/emails/templates/' );
+    }
+
+    public function get_content_plain() {
+        return wc_get_template_html( 'euwb-customer-intent-plain.php', array(
+            'order' => $this->object,
+            'email' => $this,
+        ), '', EUWB_PLUGIN_DIR . 'includes/emails/templates/' );
+    }
 }
 ```
 
-- Il trigger è `woocommerce_order_status_pending-withdrawal_notification` — WooCommerce genera automaticamente questo hook quando registri lo status custom con `show_in_admin_all_list => true` e l'ordine cambia status.
-- L'hook ha la forma `woocommerce_order_status_{status_slug}_notification` dove lo slug non ha il prefisso `wc-`.
+#### 4. Nuovo file `includes/emails/class-euwb-email-customer-confirmation.php`
 
-#### 2. Nuovo file `includes/emails/class-euwb-email-customer-confirmation.php`
+Struttura identica a `EUWB_Email_Customer_Intent`, con:
+- `$this->id = 'euwb_customer_confirmation'`
+- `$this->subject = get_option( 'euwb_confirmation_email_subject', ... )`
+- Trigger: `add_action( 'euwb_withdrawal_confirmed', array( $this, 'trigger' ), 10, 1 )` — firma `trigger( $order_id )` senza `$order`
+- Template: `euwb-customer-confirmation.php` / `euwb-customer-confirmation-plain.php`
 
-```php
-class EUWB_Email_Customer_Confirmation extends WC_Email {
+#### 5. Template HTML e plain-text (`includes/emails/templates/`)
 
-    public function __construct() {
-        $this->id             = 'euwb_customer_confirmation';
-        $this->customer_email = true;
-        $this->title          = __( 'Recesso EU – Conferma', 'eu-withdrawal-button' );
-        $this->description    = __( 'Email inviata al cliente quando il recesso è confermato definitivamente.', 'eu-withdrawal-button' );
-        $this->heading        = __( 'Il tuo recesso è stato confermato', 'eu-withdrawal-button' );
-        $this->subject        = __( 'Conferma di recesso – Ordine #{order_number}', 'eu-withdrawal-button' );
-
-        // Trigger: hook custom del plugin (sia flusso standard che diretto)
-        add_action( 'euwb_withdrawal_confirmed', array( $this, 'trigger' ), 10, 1 );
-
-        parent::__construct();
-    }
-
-    public function trigger( $order_id ) {
-        $order = wc_get_order( $order_id );
-        if ( ! $order ) return;
-
-        $this->object    = $order;
-        $this->recipient = $order->get_billing_email();
-
-        if ( ! $this->is_enabled() || ! $this->get_recipient() ) return;
-
-        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-    }
-
-    public function get_content_html() { /* template HTML */ }
-    public function get_content_plain() { /* template plain text */ }
-}
-```
-
-- Usa l'hook `euwb_withdrawal_confirmed` già esistente (identico sia per flusso standard che diretto).
-- Non dipende dal cambio di status ordine ma dall'evento business del plugin, così funziona in entrambi i flussi senza logica condizionale aggiuntiva.
-
-#### 3. Template HTML e plain-text per ciascuna email
-
-Creare la cartella `includes/emails/templates/` con 4 file:
-
-- `euwb-customer-intent.php` — corpo HTML email intent (stessa struttura di `get_customer_email_body()` in `EUWB_Emails`, ma come template WooCommerce che riceve `$order` e `$email` come variabili)
-- `euwb-customer-intent-plain.php` — versione plain text
-- `euwb-customer-confirmation.php` — corpo HTML email conferma (migrazione di `get_customer_email_body()` attuale)
-- `euwb-customer-confirmation-plain.php` — versione plain text
-
-I template chiamano `wc_get_template_html()` internamente. Per renderli sovrascrivibili dal tema, usare il meccanismo standard WooCommerce: caricare da `woocommerce/emails/` nella cartella del tema se esiste, altrimenti dal plugin. Questo si ottiene registrando la path nel filtro `woocommerce_locate_template` oppure usando `wc_locate_template()` passando la path del plugin come fallback.
-
-Struttura base di un template:
+4 file da creare. Struttura comune per gli HTML:
 
 ```php
 <?php
 // euwb-customer-intent.php
 if ( ! defined( 'ABSPATH' ) ) exit;
 do_action( 'woocommerce_email_header', $email_heading, $email );
-// ... contenuto ...
+
+$withdrawal = EUWB_Withdrawal::get_withdrawal( $order->get_id() );
+$body = get_option( 'euwb_intent_email_body', '' );
+$body = EUWB_Emails::replace_placeholders( $body, $order, $withdrawal );
+
+echo '<p>' . nl2br( wp_kses_post( $body ) ) . '</p>';
+
 do_action( 'woocommerce_email_footer', $email );
 ```
 
-#### 4. Registrare le classi nel filtro `woocommerce_email_classes`
+Per i plain-text (`-plain.php`): stessa logica ma `echo wp_strip_all_tags( $body )` senza header/footer WC.
 
-In `includes/class-euwb-emails.php`, nel metodo `init()`, aggiungere:
+#### 6. Registrare le classi nel filtro `woocommerce_email_classes`
+
+In `includes/class-euwb-emails.php`, nel metodo `init()`:
 
 ```php
 add_filter( 'woocommerce_email_classes', array( __CLASS__, 'register_email_classes' ) );
 ```
 
-E il metodo:
-
 ```php
 public static function register_email_classes( $email_classes ) {
     require_once EUWB_PLUGIN_DIR . 'includes/emails/class-euwb-email-customer-intent.php';
     require_once EUWB_PLUGIN_DIR . 'includes/emails/class-euwb-email-customer-confirmation.php';
-    $email_classes['EUWB_Email_Customer_Intent']        = new EUWB_Email_Customer_Intent();
-    $email_classes['EUWB_Email_Customer_Confirmation']  = new EUWB_Email_Customer_Confirmation();
+    $email_classes['EUWB_Email_Customer_Intent']       = new EUWB_Email_Customer_Intent();
+    $email_classes['EUWB_Email_Customer_Confirmation'] = new EUWB_Email_Customer_Confirmation();
     return $email_classes;
 }
 ```
 
-Dopo questa registrazione, le due email compaiono in **WooCommerce > Email** con la possibilità di:
-- Abilitare/disabilitare ciascuna separatamente
-- Personalizzare oggetto, intestazione e testo aggiuntivo dall'interfaccia
-- Visualizzare l'anteprima HTML
+Le due email compaiono in **WooCommerce > Email** con anteprima e toggle attiva/disattiva.
 
-#### 5. Rimuovere le chiamate manuali `wp_mail()` ora duplicate
+#### 7. Rimuovere le chiamate manuali `wp_mail()` ora duplicate
 
-Una volta che le classi WC_Email gestiscono l'invio:
+In `EUWB_Emails::init()`:
+- Rimuovere `add_action( 'euwb_withdrawal_confirmed', array( __CLASS__, 'send_email_confirmed' ) )` — gestito da `EUWB_Email_Customer_Confirmation`.
+- Rimuovere `add_action( 'euwb_withdrawal_intent_created', array( __CLASS__, 'send_email_intent' ) )` — gestito da `EUWB_Email_Customer_Intent` tramite cambio status.
+- Mantenere `send_admin_confirmation()` (o `send_admin_intent()`) finché non viene creata `EUWB_Email_Admin_Notification`.
 
-- Rimuovere `add_action( 'euwb_withdrawal_confirmed', array( __CLASS__, 'send_email_confirmed' ) )` da `EUWB_Emails::init()` (o almeno `send_customer_confirmation()` al suo interno), poiché `EUWB_Email_Customer_Confirmation` ascolta già `euwb_withdrawal_confirmed`.
-- Rimuovere (o disabilitare) la chiamata a `send_customer_intent()` dall'hook `euwb_withdrawal_intent_created`, poiché `EUWB_Email_Customer_Intent` ascolta il cambio di status `pending-withdrawal`.
-- Mantenere `send_admin_confirmation()` fino a quando non viene creata la classe `EUWB_Email_Admin_Notification`.
+#### 8. Aggiungere la template path al loader di WooCommerce
 
-#### 6. Aggiungere la template path al loader di WooCommerce
-
-In `eu-withdrawal-button.php` (file principale del plugin), aggiungere:
+In `eu-withdrawal-button.php`:
 
 ```php
 add_filter( 'woocommerce_locate_template', 'euwb_locate_template', 10, 3 );
@@ -261,7 +272,7 @@ function euwb_locate_template( $template, $template_name, $template_path ) {
 }
 ```
 
-Questo permette al tema di sovrascrivere i template copiandoli in `wp-content/themes/<tema>/woocommerce/emails/`.
+Permette al tema di sovrascrivere i template copiandoli in `wp-content/themes/<tema>/woocommerce/emails/`.
 
 ---
 
@@ -270,14 +281,14 @@ Questo permette al tema di sovrascrivere i template copiandoli in `wp-content/th
 | File | Modifica |
 |------|----------|
 | ~~`includes/class-euwb-withdrawal.php`~~ ✅ | ~~Aggiungere `do_action( 'euwb_withdrawal_intent_created', $order_id )` in `create()`~~ — fatto |
-| `includes/class-euwb-emails.php` | ✅ `send_customer_intent()` + `send_admin_intent()` completate; hook `init()` aggiornato. Da fare (Feature 3): registrazione classi WC_Email, rimozione `wp_mail()` duplicate |
-| ~~`includes/class-euwb-admin.php`~~ ✅ | ~~Aggiungere select `euwb_flow_mode` nella settings page + salvataggio~~ — fatto |
+| `includes/class-euwb-emails.php` | ✅ `send_customer_intent()` + `send_admin_intent()` completate; hook `init()` aggiornato. Da fare (Feature 3): aggiungere `replace_placeholders()`, registrazione classi WC_Email, rimozione `wp_mail()` duplicate |
+| ~~`includes/class-euwb-admin.php`~~ ✅ | ~~Aggiungere select `euwb_flow_mode` nella settings page + salvataggio~~ — fatto. Da fare (Feature 3): aggiungere 4 campi textarea/input per testi email intent e conferma |
 | ~~`includes/class-euwb-frontend.php`~~ ✅ | ~~Modificare `ajax_confirm()` per usare `create_and_confirm()` in flusso diretto~~ — fatto |
 | `includes/emails/class-euwb-email-customer-intent.php` | Nuova classe `EUWB_Email_Customer_Intent extends WC_Email` |
 | `includes/emails/class-euwb-email-customer-confirmation.php` | Nuova classe `EUWB_Email_Customer_Confirmation extends WC_Email` |
-| `includes/emails/templates/euwb-customer-intent.php` | Template HTML email intent |
+| `includes/emails/templates/euwb-customer-intent.php` | Template HTML — legge `euwb_intent_email_body` via `get_option()` + `replace_placeholders()` |
 | `includes/emails/templates/euwb-customer-intent-plain.php` | Template plain-text email intent |
-| `includes/emails/templates/euwb-customer-confirmation.php` | Template HTML email conferma (migrazione da `get_customer_email_body()`) |
+| `includes/emails/templates/euwb-customer-confirmation.php` | Template HTML — legge `euwb_confirmation_email_body` via `get_option()` + `replace_placeholders()` |
 | `includes/emails/templates/euwb-customer-confirmation-plain.php` | Template plain-text email conferma |
 | `eu-withdrawal-button.php` | Aggiungere filter `woocommerce_locate_template` per la template path |
 
