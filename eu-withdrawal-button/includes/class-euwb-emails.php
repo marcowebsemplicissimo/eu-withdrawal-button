@@ -4,28 +4,68 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EUWB_Emails {
 
     public static function init() {
-        add_action( 'euwb_withdrawal_confirmed', array( __CLASS__, 'send_email_confirmed' ) );
-        add_action( 'euwb_withdrawal_intent_created', array( __CLASS__, 'send_email_intent' ) );
+        // Admin notifications via wp_mail().
+        add_action( 'euwb_withdrawal_confirmed',      array( __CLASS__, 'send_admin_confirmed_notification' ) );
+        add_action( 'euwb_withdrawal_intent_created', array( __CLASS__, 'send_admin_intent_notification' ) );
+
+        // Customer emails: sent directly here so WC_Email is not needed at hook-registration time.
+        add_action( 'euwb_withdrawal_intent_created', array( __CLASS__, 'send_customer_intent_wc' ) );
+        add_action( 'euwb_withdrawal_confirmed',      array( __CLASS__, 'send_customer_confirmation_wc' ) );
+
+        // Register classes in WC panel (WooCommerce > Email) for preview / enable-disable.
+        add_filter( 'woocommerce_email_classes', array( __CLASS__, 'register_email_classes' ) );
+    }
+
+    public static function send_customer_intent_wc( $order_id ) {
+        if ( ! class_exists( 'WC_Emails' ) ) return;
+        $mailer = WC()->mailer();
+        $emails = $mailer->get_emails();
+        if ( isset( $emails['EUWB_Email_Customer_Intent'] ) ) {
+            $emails['EUWB_Email_Customer_Intent']->trigger( (int) $order_id );
+        }
+    }
+
+    public static function send_customer_confirmation_wc( $order_id ) {
+        if ( ! class_exists( 'WC_Emails' ) ) return;
+        $mailer = WC()->mailer();
+        $emails = $mailer->get_emails();
+        if ( isset( $emails['EUWB_Email_Customer_Confirmation'] ) ) {
+            $emails['EUWB_Email_Customer_Confirmation']->trigger( (int) $order_id );
+        }
+    }
+
+    public static function register_email_classes( $email_classes ) {
+        require_once EUWB_PLUGIN_DIR . 'includes/emails/class-euwb-email-customer-intent.php';
+        require_once EUWB_PLUGIN_DIR . 'includes/emails/class-euwb-email-customer-confirmation.php';
+        $email_classes['EUWB_Email_Customer_Intent']       = new EUWB_Email_Customer_Intent();
+        $email_classes['EUWB_Email_Customer_Confirmation'] = new EUWB_Email_Customer_Confirmation();
+        return $email_classes;
     }
 
     /**
-     * Send confirmation to the customer and notification to the admin.
+     * Replaces {placeholder} tokens in email subject/body strings.
      */
-    public static function send_email_confirmed( $order_id ) {
+    public static function replace_placeholders( $text, $order, $withdrawal = null ) {
+        $placeholders = array(
+            '{order_number}'    => $order->get_order_number(),
+            '{order_date}'      => wc_format_datetime( $order->get_date_created() ),
+            '{customer_name}'   => trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
+            '{withdrawal_date}' => $withdrawal ? date_i18n( get_option( 'date_format' ), strtotime( $withdrawal->created_at ) ) : '',
+        );
+        return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $text );
+    }
+
+    public static function send_admin_confirmed_notification( $order_id ) {
         $order      = wc_get_order( $order_id );
         $withdrawal = EUWB_Withdrawal::get_withdrawal( $order_id );
         if ( ! $order || ! $withdrawal ) return;
-
-        self::send_customer_confirmation( $order, $withdrawal );
         self::send_admin_confirmation( $order, $withdrawal );
     }
 
-    public static function send_email_intent( $order_id ) {
+    public static function send_admin_intent_notification( $order_id ) {
         $order      = wc_get_order( $order_id );
         $withdrawal = EUWB_Withdrawal::get_withdrawal( $order_id );
         if ( ! $order || ! $withdrawal ) return;
-
-        self::send_customer_intent( $order, $withdrawal );
         self::send_admin_intent( $order, $withdrawal );
     }
 

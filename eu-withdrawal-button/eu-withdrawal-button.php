@@ -73,6 +73,16 @@ function euwb_add_order_status_to_wc( $statuses ) {
     return $new;
 }
 
+add_filter( 'woocommerce_locate_template', 'euwb_locate_template', 10, 3 );
+
+function euwb_locate_template( $template, $template_name, $template_path ) {
+    $plugin_template = EUWB_PLUGIN_DIR . 'includes/emails/templates/' . $template_name;
+    if ( file_exists( $plugin_template ) ) {
+        return $plugin_template;
+    }
+    return $template;
+}
+
 add_action( 'plugins_loaded', 'euwb_init' );
 
 function euwb_init() {
