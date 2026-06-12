@@ -148,6 +148,39 @@
 
 }(jQuery));
 
+/* EU Withdrawal Button – export CSV / XLS */
+(function ($) {
+    'use strict';
+
+    $(document).ready(function () {
+        var $table = $('.euwb-table');
+        if ( ! $table.length ) return;
+
+        var today    = new Date();
+        var datePart = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+        $('#euwb-export-csv').on('click', function () {
+            $table.table2csv({
+                filename:      'recessi-' + datePart + '.csv',
+                excludeColumns: '.euwb-actions-col',
+                excludeRows:    ''
+            });
+        });
+
+        $('#euwb-export-xls').on('click', function () {
+            $table.table2excel({
+                filename:     'recessi-' + datePart,
+                fileext:      '.xls',
+                exclude:      '.euwb-actions-col',
+                exclude_img:  true,
+                exclude_links: false,
+                exclude_inputs: true
+            });
+        });
+    });
+
+}(jQuery));
+
 /* EU Withdrawal Button – admin log page + edit-order meta box */
 (function ($) {
     'use strict';

@@ -21,6 +21,10 @@ class EUWB_Admin {
         if ( ! $is_withdrawal_page && ! $is_order_page ) return;
 
         wp_enqueue_style( 'euwb-admin', EUWB_PLUGIN_URL . 'assets/css/euwb-admin.css', array(), EUWB_VERSION );
+        if ( $is_withdrawal_page ) {
+            wp_enqueue_script( 'euwb-table2csv',   EUWB_PLUGIN_URL . 'assets/js/jquery.table2csv.js',   array( 'jquery' ), EUWB_VERSION, true );
+            wp_enqueue_script( 'euwb-table2excel', EUWB_PLUGIN_URL . 'assets/js/jquery.table2excel.js', array( 'jquery' ), EUWB_VERSION, true );
+        }
         wp_enqueue_script( 'euwb-script', EUWB_PLUGIN_URL . 'assets/js/euwb.js', array( 'jquery' ), EUWB_VERSION, true );
         wp_localize_script( 'euwb-script', 'euwbAdminData', array(
             'ajaxUrl'               => admin_url( 'admin-ajax.php' ),
@@ -190,24 +194,35 @@ class EUWB_Admin {
                 <span class="euwb-badge"><?php echo esc_html( EUWB_Withdrawal::count( 'pending' ) ); ?> <?php esc_html_e( 'In attesa', 'eu-withdrawal-button' ); ?></span>
             </h1>
 
-            <form method="get" class="euwb-search-form">
-                <input type="hidden" name="page" value="eu-withdrawal-log">
-                <?php if ( $status_filter ) : ?><input type="hidden" name="status" value="<?php echo esc_attr( $status_filter ); ?>"><?php endif; ?>
-                <p class="search-box">
-                    <label class="screen-reader-text" for="euwb-search-input"><?php esc_html_e( 'Cerca recessi', 'eu-withdrawal-button' ); ?></label>
-                    <input type="search" id="euwb-search-input" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Nome, email, n° ordine…', 'eu-withdrawal-button' ); ?>">
-                    <input type="submit" class="button" value="<?php esc_attr_e( 'Cerca', 'eu-withdrawal-button' ); ?>">
-                    <?php if ( $search ) : ?>
-                    <a href="<?php echo esc_url( $status_filter ? add_query_arg( 'status', $status_filter, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" class="button"><?php esc_html_e( '✕ Rimuovi filtro', 'eu-withdrawal-button' ); ?></a>
-                    <?php endif; ?>
-                </p>
-            </form>
-
-            <ul class="subsubsub">
-                <li><a href="<?php echo esc_url( $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" <?php echo ! $status_filter ? 'class="current"' : ''; ?>><?php esc_html_e( 'Tutti', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( '', $search ); ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url( add_query_arg( 'status', 'pending', $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ) ); ?>" <?php echo $status_filter === 'pending' ? 'class="current"' : ''; ?>><?php esc_html_e( 'In attesa', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'pending', $search ); ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url( add_query_arg( 'status', 'confirmed', $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ) ); ?>" <?php echo $status_filter === 'confirmed' ? 'class="current"' : ''; ?>><?php esc_html_e( 'Confermati', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'confirmed', $search ); ?>)</span></a></li>
-            </ul>
+            <div class="euwb-toolbar">
+                <ul class="subsubsub">
+                    <li><a href="<?php echo esc_url( $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" <?php echo ! $status_filter ? 'class="current"' : ''; ?>><?php esc_html_e( 'Tutti', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( '', $search ); ?>)</span></a> |</li>
+                    <li><a href="<?php echo esc_url( add_query_arg( 'status', 'pending', $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ) ); ?>" <?php echo $status_filter === 'pending' ? 'class="current"' : ''; ?>><?php esc_html_e( 'In attesa', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'pending', $search ); ?>)</span></a> |</li>
+                    <li><a href="<?php echo esc_url( add_query_arg( 'status', 'confirmed', $search ? add_query_arg( 's', $search, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ) ); ?>" <?php echo $status_filter === 'confirmed' ? 'class="current"' : ''; ?>><?php esc_html_e( 'Confermati', 'eu-withdrawal-button' ); ?> <span class="count">(<?php echo EUWB_Withdrawal::count( 'confirmed', $search ); ?>)</span></a></li>
+                </ul>
+                <div>
+                    <form method="get" class="euwb-search-form">
+                        <input type="hidden" name="page" value="eu-withdrawal-log">
+                        <?php if ( $status_filter ) : ?><input type="hidden" name="status" value="<?php echo esc_attr( $status_filter ); ?>"><?php endif; ?>
+                            <p class="search-box">
+                                <label class="screen-reader-text" for="euwb-search-input"><?php esc_html_e( 'Cerca recessi', 'eu-withdrawal-button' ); ?></label>
+                            <input type="search" id="euwb-search-input" name="s" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Nome, email, n° ordine…', 'eu-withdrawal-button' ); ?>">
+                            <input type="submit" class="button" value="<?php esc_attr_e( 'Cerca', 'eu-withdrawal-button' ); ?>">
+                            <?php if ( $search ) : ?>
+                            <a href="<?php echo esc_url( $status_filter ? add_query_arg( 'status', $status_filter, admin_url( 'admin.php?page=eu-withdrawal-log' ) ) : admin_url( 'admin.php?page=eu-withdrawal-log' ) ); ?>" class="button"><?php esc_html_e( '✕ Rimuovi filtro', 'eu-withdrawal-button' ); ?></a>
+                            <?php endif; ?>
+                        </p>
+                    </form>
+                    <div class="euwb-export-btns">
+                        <button type="button" id="euwb-export-csv" class="button">
+                            <span class="dashicons dashicons-media-spreadsheet"></span> <?php esc_html_e( 'Esporta CSV', 'eu-withdrawal-button' ); ?>
+                        </button>
+                        <button type="button" id="euwb-export-xls" class="button">
+                            <span class="dashicons dashicons-media-spreadsheet"></span> <?php esc_html_e( 'Esporta XLS', 'eu-withdrawal-button' ); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <table class="wp-list-table widefat striped euwb-table">
                 <thead>
@@ -221,7 +236,7 @@ class EUWB_Admin {
                         <th><?php esc_html_e( 'Stato ordine', 'eu-withdrawal-button' ); ?></th>
                         <th class="sortable"><a href="<?php echo $sort_url( 'created_at' ); ?>"><?php esc_html_e( 'Data richiesta', 'eu-withdrawal-button' ); echo $sort_indicator( 'created_at' ); ?></a></th>
                         <th class="sortable"><a href="<?php echo $sort_url( 'confirmed_at' ); ?>"><?php esc_html_e( 'Data conferma', 'eu-withdrawal-button' ); echo $sort_indicator( 'confirmed_at' ); ?></a></th>
-                        <th style="width:190px"><?php esc_html_e( 'Azioni', 'eu-withdrawal-button' ); ?></th>
+                        <th class="euwb-actions-col" style="width:190px"><?php esc_html_e( 'Azioni', 'eu-withdrawal-button' ); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -259,7 +274,7 @@ class EUWB_Admin {
                         ?></td>
                         <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->created_at ) ) ); ?></td>
                         <td><?php echo $row->confirmed_at ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->confirmed_at ) ) ) : '—'; ?></td>
-                        <td class="euwb-actions">
+                        <td class="euwb-actions euwb-actions-col">
                             <?php if ( empty( $row->order_deleted ) ) : ?>
                                 <?php if ( $row->status === 'pending' ) : ?>
                                 <button type="button"
