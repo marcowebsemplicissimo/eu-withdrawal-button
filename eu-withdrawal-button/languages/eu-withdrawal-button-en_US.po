@@ -1,221 +1,926 @@
-# EU Withdrawal Button – English translation
-# Copyright (C) 2026
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: EU Withdrawal Button 1.0.0\n"
-"PO-Revision-Date: 2026-05-05\n"
+"Project-Id-Version: EU Withdrawal Button\n"
+"POT-Creation-Date: 2026-06-12 23:10+0200\n"
+"PO-Revision-Date: 2026-06-12 23:17+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.9\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: eu-withdrawal-button.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-msgid "EU Withdrawal Button"
-msgstr "EU Withdrawal Button"
+#: eu-withdrawal-button.php:49 eu-withdrawal-button.php:73
+#: eu-withdrawal-button.php:78
+msgctxt "Order status"
+msgid "In attesa di conferma recesso"
+msgstr "Waiting for confirmation of withdrawal"
 
-msgid "Implements the EU mandatory withdrawal button as required by Directive (EU) 2023/2673, effective 19 June 2026. Adds a compliant withdrawal function to WooCommerce order pages with email notifications and a full audit log."
-msgstr "Implements the EU mandatory withdrawal button as required by Directive (EU) 2023/2673, effective 19 June 2026. Adds a compliant withdrawal function to WooCommerce order pages with email notifications and a full audit log."
+#: eu-withdrawal-button.php:54
+#, php-format
+msgid "In attesa di conferma recesso <span class=\"count\">(%s)</span>"
+msgid_plural "In attesa di conferma recesso <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+"Waiting for withdrawal confirmation <span class=\"count\">(%s)</span>"
+msgstr[1] ""
+"Waiting for withdrawal confirmation <span class=\"count\">(%s)</span>"
 
-msgid "EU Withdrawal"
-msgstr "EU Withdrawal"
+#: eu-withdrawal-button.php:57 eu-withdrawal-button.php:74
+#: eu-withdrawal-button.php:81
+msgctxt "Order status"
+msgid "In attesa di rimborso"
+msgstr "Waiting for refund"
 
+#: eu-withdrawal-button.php:62
+#, php-format
+msgid "In attesa di rimborso <span class=\"count\">(%s)</span>"
+msgid_plural "In attesa di rimborso <span class=\"count\">(%s)</span>"
+msgstr[0] "Waiting for refund <span class=\"count\">(%s)</span>"
+msgstr[1] "Waiting for refund <span class=\"count\">(%s)</span>"
+
+#: eu-withdrawal-button.php:111
 msgid "WooCommerce deve essere attivo per usare questo plugin."
-msgstr "WooCommerce must be active to use this plugin."
+msgstr "WooCommerce must be enabled to use this plugin."
 
-msgid "Diritto di recesso (UE 2023/2673)"
-msgstr "Right of Withdrawal (EU 2023/2673)"
+#: includes/class-euwb-admin.php:33
+msgid ""
+"Eliminare questo record di recesso e aggiungere una nota di revoca "
+"all'ordine?"
+msgstr "Delete this withdrawal record and add a revocation note to the order?"
 
-msgid "Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi."
-msgstr "You have already exercised your right of withdrawal for this order on %s. Your refund will be processed within the next 14 business days."
+#: includes/class-euwb-admin.php:34
+msgid ""
+"Confermare la richiesta di recesso? L'ordine passerà in stato \"In attesa di "
+"rimborso\"."
+msgstr ""
+"Confirm your return request? Your order will be placed in \"Awaiting "
+"Refund\" status."
 
-msgid "Il periodo di recesso di 14 giorni per questo ordine è scaduto."
-msgstr "The 14-day withdrawal period for this order has expired."
+#: includes/class-euwb-admin.php:35
+msgid "Revocato"
+msgstr "Revoked"
 
-msgid "Hai il diritto di recedere dal presente contratto entro 14 giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra %d giorni."
-msgstr "You have the right to withdraw from this contract within 14 days without giving any reason. The withdrawal period expires in %d days."
+#: includes/class-euwb-admin.php:36
+msgid "Errore durante la revoca. Riprova."
+msgstr "Error during revocation. Please try again."
 
-msgid "Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante."
-msgstr "To exercise your right of withdrawal, please complete the form below and click the button."
+#: includes/class-euwb-admin.php:37
+msgid "Errore durante la conferma del recesso. Riprova."
+msgstr "There was an error confirming your withdrawal. Please try again."
 
-msgid "Nome *"
-msgstr "First name *"
+#: includes/class-euwb-admin.php:38
+msgid "Recesso confermato. La pagina verrà ricaricata."
+msgstr "Cancellation confirmed. The page will reload."
 
-msgid "Cognome *"
-msgstr "Last name *"
+#: includes/class-euwb-admin.php:50
+msgid "Recesso EU"
+msgstr "EU withdrawal"
 
-msgid "Indirizzo e-mail *"
-msgstr "Email address *"
+#: includes/class-euwb-admin.php:67
+msgid "Nessuna richiesta di recesso per questo ordine."
+msgstr "No cancellation requests for this order."
 
-msgid "Motivo del recesso (facoltativo)"
-msgstr "Reason for withdrawal (optional)"
-
-msgid "Puoi lasciare vuoto questo campo."
-msgstr "You may leave this field blank."
-
-msgid "Recedi dal contratto qui"
-msgstr "Withdraw from the contract here"
-
-msgid "Cliccando sopra avvierai la procedura di recesso. Nel passaggio successivo ti verrà chiesta conferma."
-msgstr "By clicking above you will initiate the withdrawal procedure. You will be asked to confirm in the next step."
-
-msgid "Sei sicuro di voler recedere dal contratto?"
-msgstr "Are you sure you want to withdraw from the contract?"
-
-msgid "Cliccando \"Conferma recesso qui\" invierai la dichiarazione di recesso. Riceverai un'email di conferma."
-msgstr "By clicking \"Confirm withdrawal here\" you will submit your withdrawal declaration. You will receive a confirmation email."
-
-msgid "Conferma recesso qui"
-msgstr "Confirm withdrawal here"
-
-msgid "Annulla"
-msgstr "Cancel"
-
-msgid "Recesso dal contratto"
-msgstr "Contract withdrawal"
-
-msgid "Ordine non trovato."
-msgstr "Order not found."
-
-msgid "Il periodo di recesso è scaduto."
-msgstr "The withdrawal period has expired."
-
-msgid "Hai già richiesto il recesso per questo ordine."
-msgstr "You have already requested withdrawal for this order."
-
-msgid "Compila tutti i campi obbligatori."
-msgstr "Please fill in all required fields."
-
-msgid "Errore durante la registrazione. Riprova."
-msgstr "Registration error. Please try again."
-
-msgid "Impossibile confermare il recesso. Riprova o contatta il supporto."
-msgstr "Unable to confirm withdrawal. Please try again or contact support."
-
-msgid "Recesso confermato con successo. Riceverai un'email di conferma a breve."
-msgstr "Withdrawal successfully confirmed. You will receive a confirmation email shortly."
-
-msgid "Recesso avviato dal cliente (ID recesso: %d). In attesa di conferma."
-msgstr "Withdrawal initiated by customer (withdrawal ID: %d). Awaiting confirmation."
-
-msgid "Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673."
-msgstr "Withdrawal confirmed by customer pursuant to EU Directive 2023/2673."
-
-msgid "Conferma di recesso – Ordine #%s"
-msgstr "Withdrawal confirmation – Order #%s"
-
-msgid "[%s] Nuovo recesso – Ordine #%s"
-msgstr "[%s] New withdrawal – Order #%s"
-
-msgid "Registro Recessi EU"
-msgstr "EU Withdrawal Log"
-
-msgid "Registro Recessi"
-msgstr "Withdrawal Log"
-
-msgid "Impostazioni"
-msgstr "Settings"
-
-msgid "Tutti"
-msgstr "All"
-
-msgid "In attesa"
-msgstr "Pending"
-
-msgid "Confermati"
-msgstr "Confirmed"
-
-msgid "ID"
-msgstr "ID"
-
-msgid "Ordine"
-msgstr "Order"
-
-msgid "Cliente"
-msgstr "Customer"
-
-msgid "Email"
-msgstr "Email"
-
-msgid "Motivo"
-msgstr "Reason"
-
-msgid "Stato"
-msgstr "Status"
-
-msgid "Data richiesta"
-msgstr "Request date"
-
-msgid "Data conferma"
-msgstr "Confirmation date"
-
-msgid "Nessun recesso trovato."
-msgstr "No withdrawals found."
-
-msgid "Impostazioni EU Withdrawal Button"
-msgstr "EU Withdrawal Button Settings"
-
-msgid "Finestra di recesso (giorni)"
-msgstr "Withdrawal window (days)"
-
-msgid "La direttiva UE 2023/2673 prevede 14 giorni come minimo."
-msgstr "EU Directive 2023/2673 sets 14 days as the legal minimum."
-
-msgid "Email notifiche admin"
-msgstr "Admin notification email"
-
-msgid "Riceverà una notifica ad ogni recesso confermato."
-msgstr "This address will receive a notification for every confirmed withdrawal."
-
-msgid "Salva impostazioni"
-msgstr "Save settings"
-
-msgid "Impostazioni salvate."
-msgstr "Settings saved."
-
-msgid "Recessi per pagina"
-msgstr "Withdrawals per page"
-
+#: includes/class-euwb-admin.php:72 includes/class-euwb-emails.php:178
+#: includes/emails/templates/euwb-customer-confirmation-plain.php:30
+#: includes/emails/templates/euwb-customer-confirmation.php:50
 msgid "Confermato"
 msgstr "Confirmed"
 
-msgid "Conferma di recesso – Ordine #%s"
-msgstr "Withdrawal confirmation – Order #%s"
+#: includes/class-euwb-admin.php:73 includes/class-euwb-admin.php:194
+#: includes/class-euwb-admin.php:200
+msgid "In attesa"
+msgstr "Pending"
 
-msgid "Withdrawal Confirmation"
-msgstr "Withdrawal Confirmation"
+#: includes/class-euwb-admin.php:75
+msgid "Cliente:"
+msgstr "Customer:"
 
-msgid "Dear %s,"
-msgstr "Dear %s,"
+#: includes/class-euwb-admin.php:76
+msgid "Email:"
+msgstr "Email:"
 
-msgid "We confirm that your withdrawal from order #%1$s has been successfully registered on %2$s, pursuant to Art. 11a of EU Directive 2023/2673 (amending Directive 2011/83/EU on consumer rights)."
-msgstr "We confirm that your withdrawal from order #%1$s has been successfully registered on %2$s, pursuant to Art. 11a of EU Directive 2023/2673 (amending Directive 2011/83/EU on consumer rights)."
+#: includes/class-euwb-admin.php:77
+msgid "Richiesto il:"
+msgstr "Requested on:"
 
-msgid "Order"
-msgstr "Order"
+#: includes/class-euwb-admin.php:79
+msgid "Motivo:"
+msgstr "Reason:"
 
-msgid "Withdrawal date"
-msgstr "Withdrawal date"
+#: includes/class-euwb-admin.php:81
+msgid "Stato:"
+msgstr "Status:"
 
-msgid "Status"
-msgstr "Status"
+#: includes/class-euwb-admin.php:86
+msgid "Conferma richiesta di recesso"
+msgstr "Confirm withdrawal request"
 
-msgid "Confirmed"
+#: includes/class-euwb-admin.php:99 includes/class-euwb-admin.php:333
+msgid "Permessi insufficienti."
+msgstr "Insufficient permissions."
+
+#: includes/class-euwb-admin.php:104
+msgid "ID ordine non valido."
+msgstr "Invalid order ID."
+
+#: includes/class-euwb-admin.php:109 includes/class-euwb-admin.php:359
+#: includes/class-euwb-frontend.php:187 includes/class-euwb-frontend.php:224
+msgid "Ordine non trovato."
+msgstr "Presale not found."
+
+#: includes/class-euwb-admin.php:114
+msgid ""
+"Impossibile confermare. La richiesta potrebbe non esistere o essere già "
+"stata confermata."
+msgstr ""
+"Unable to confirm. The request may not exist or may have already been "
+"confirmed."
+
+#. Plugin Name of the plugin/theme
+#: includes/class-euwb-admin.php:122
+msgid "EU Withdrawal Button"
+msgstr "EU Withdrawal Button"
+
+#: includes/class-euwb-admin.php:123
+msgid "EU Withdrawal"
+msgstr "EU Withdrawal"
+
+#: includes/class-euwb-admin.php:132 includes/class-euwb-admin.php:133
+msgid "Registro Recessi"
+msgstr "Withdrawal Register"
+
+#: includes/class-euwb-admin.php:140 includes/class-euwb-admin.php:141
+msgid "Impostazioni"
+msgstr "Settings"
+
+#: includes/class-euwb-admin.php:152
+msgid "Recessi per pagina"
+msgstr "Recesses per page"
+
+#: includes/class-euwb-admin.php:193
+msgid "Registro Recessi EU"
+msgstr "EU Withdrawal Register"
+
+#: includes/class-euwb-admin.php:199
+msgid "Tutti"
+msgstr "All"
+
+#: includes/class-euwb-admin.php:201
+msgid "Confermati"
 msgstr "Confirmed"
 
-msgid "What happens next?"
-msgstr "What happens next?"
+#: includes/class-euwb-admin.php:208
+msgid "Cerca recessi"
+msgstr "Search for recesses"
 
-msgid "Our team will process your request within %d business days."
+#: includes/class-euwb-admin.php:209
+msgid "Nome, email, n° ordine…"
+msgstr "Name, email, order number…"
+
+#: includes/class-euwb-admin.php:210
+msgid "Cerca"
+msgstr "Search"
+
+#: includes/class-euwb-admin.php:212
+msgid "✕ Rimuovi filtro"
+msgstr "✕ Remove filter"
+
+#: includes/class-euwb-admin.php:218
+msgid "Esporta CSV"
+msgstr "Export CSV"
+
+#: includes/class-euwb-admin.php:221
+msgid "Esporta XLS"
+msgstr "Export XLS"
+
+#: includes/class-euwb-admin.php:230
+msgid "ID"
+msgstr "ID"
+
+#: includes/class-euwb-admin.php:231 includes/class-euwb-emails.php:110
+#: includes/class-euwb-emails.php:169
+#: includes/emails/templates/euwb-customer-confirmation-plain.php:23
+#: includes/emails/templates/euwb-customer-confirmation.php:32
+#: includes/emails/templates/euwb-customer-intent-plain.php:23
+#: includes/emails/templates/euwb-customer-intent.php:32
+msgid "Ordine"
+msgstr "Order"
+
+#: includes/class-euwb-admin.php:232
+msgid "Cliente"
+msgstr "Customer"
+
+#: includes/class-euwb-admin.php:233 includes/class-euwb-admin.php:411
+msgid "Email"
+msgstr "Email"
+
+#: includes/class-euwb-admin.php:234
+msgid "Motivo"
+msgstr "Reason"
+
+#: includes/class-euwb-admin.php:235
+msgid "Stato recesso"
+msgstr "Withdrawal status"
+
+#: includes/class-euwb-admin.php:236
+msgid "Stato ordine"
+msgstr "Order Status"
+
+#: includes/class-euwb-admin.php:237 includes/class-euwb-emails.php:114
+#: includes/emails/templates/euwb-customer-intent-plain.php:26
+#: includes/emails/templates/euwb-customer-intent.php:36
+msgid "Data richiesta"
+msgstr "Request date"
+
+#: includes/class-euwb-admin.php:238
+#: includes/emails/templates/euwb-customer-confirmation-plain.php:27
+#: includes/emails/templates/euwb-customer-confirmation.php:36
+msgid "Data conferma"
+msgstr "Confirmation date"
+
+#: includes/class-euwb-admin.php:239
+msgid "Azioni"
+msgstr "Actions"
+
+#: includes/class-euwb-admin.php:252
+msgid "Ordine eliminato definitivamente"
+msgstr "Order permanently deleted"
+
+#: includes/class-euwb-admin.php:252
+msgid "eliminato"
+msgstr "eliminated"
+
+#: includes/class-euwb-admin.php:263
+msgid "Eliminato"
+msgstr "Deleted"
+
+#: includes/class-euwb-admin.php:268
+msgid "Cestinato"
+msgstr "Trashed"
+
+#: includes/class-euwb-admin.php:283
+msgid "Conferma"
+msgstr "Confirm"
+
+#: includes/class-euwb-admin.php:291
+msgid "Revoca"
+msgstr "Revoke"
+
+#: includes/class-euwb-admin.php:300
+msgid "Nessun recesso trovato."
+msgstr "No recess found."
+
+#: includes/class-euwb-admin.php:338
+msgid "ID non valido."
+msgstr "Invalid ID."
+
+#: includes/class-euwb-admin.php:343
+msgid "Record non trovato o già eliminato."
+msgstr "Record not found or already deleted."
+
+#: includes/class-euwb-admin.php:350
+#, php-format
+msgid ""
+"Recesso (ID: %d) revocato manualmente dall'amministratore. Cliente: %s %s "
+"<%s>. Richiesta originale del: %s."
+msgstr ""
+"Termination (ID: %d) manually revoked by administrator. Customer: %s %s "
+"<%s>. Original request dated: %s."
+
+#: includes/class-euwb-admin.php:369 includes/class-euwb-frontend.php:118
+#, php-format
+msgid ""
+"Hai il diritto di recedere dal presente contratto entro %1$d giorni senza "
+"fornire alcuna motivazione. Il periodo di recesso scade tra %2$d giorni."
+msgstr ""
+"You have the right to withdraw from this contract within %1$d days without "
+"giving any reason. The withdrawal period expires in %2$d days."
+
+#: includes/class-euwb-admin.php:370 includes/class-euwb-frontend.php:43
+#: includes/class-euwb-frontend.php:152
+msgid "Recedi dal contratto qui"
+msgstr "Withdraw from the contract here"
+
+#: includes/class-euwb-admin.php:371 includes/class-euwb-frontend.php:137
+msgid ""
+"Per esercitare il diritto di recesso, compilare il modulo sottostante e fare "
+"clic sul pulsante."
+msgstr ""
+"To exercise your right of withdrawal, fill out the form below and click the "
+"button."
+
+#: includes/class-euwb-admin.php:372
+#: includes/emails/class-euwb-email-customer-intent.php:12
+msgid "Richiesta di recesso ricevuta – Ordine #{order_number}"
+msgstr "Withdrawal request received – Order #{order_number}"
+
+#: includes/class-euwb-admin.php:373
+#: includes/emails/templates/euwb-customer-intent-plain.php:5
+#: includes/emails/templates/euwb-customer-intent.php:5
+msgid ""
+"Gentile {customer_name},\n"
+"\n"
+"abbiamo ricevuto la tua richiesta di recesso per l'ordine #{order_number} "
+"del {order_date}.\n"
+"\n"
+"La richiesta è attualmente in fase di elaborazione. Riceverai un'email di "
+"conferma non appena sarà processata.\n"
+"\n"
+"Ai sensi dell'Art. 11a della Direttiva UE 2023/2673."
+msgstr ""
+"Dear {customer_name},\n"
+"\n"
+"We have received your cancellation request for order #{order_number} of "
+"{order_date}.\n"
+"\n"
+"The request is currently being processed. You will receive a confirmation "
+"email as soon as it is processed.\n"
+"\n"
+"Pursuant to Art. 11a of EU Directive 2023/2673."
+
+#: includes/class-euwb-admin.php:374
+#: includes/emails/class-euwb-email-customer-confirmation.php:12
+msgid "Conferma di recesso – Ordine #{order_number}"
+msgstr "Withdrawal Confirmation – Order #{order_number}"
+
+#: includes/class-euwb-admin.php:375
+#: includes/emails/templates/euwb-customer-confirmation-plain.php:5
+#: includes/emails/templates/euwb-customer-confirmation.php:5
+msgid ""
+"Gentile {customer_name},\n"
+"\n"
+"il tuo recesso per l'ordine #{order_number} del {order_date} è stato "
+"confermato.\n"
+"\n"
+"Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi con lo stesso "
+"metodo di pagamento utilizzato all'acquisto.\n"
+"\n"
+"Ai sensi dell'Art. 11a della Direttiva UE 2023/2673."
+msgstr ""
+"Dear {customer_name},\n"
+"\n"
+"Your cancellation for order #{order_number} of {order_date} has been "
+"confirmed.\n"
+"\n"
+"The refund will be processed within the next 14 business days using the same "
+"payment method used for the purchase.\n"
+"\n"
+"Pursuant to Art. 11a of EU Directive 2023/2673."
+
+#: includes/class-euwb-admin.php:402
+msgid "Impostazioni EU Withdrawal Button"
+msgstr "EU Withdrawal Button Settings"
+
+#: includes/class-euwb-admin.php:405
+msgid "Impostazioni salvate."
+msgstr "Settings saved."
+
+#: includes/class-euwb-admin.php:409
+msgid "Generale"
+msgstr "General"
+
+#: includes/class-euwb-admin.php:410
+msgid "Testi frontend"
+msgstr "Frontend texts"
+
+#: includes/class-euwb-admin.php:422
+msgid "Modalità flusso recesso"
+msgstr "Recess Flow Mode"
+
+#: includes/class-euwb-admin.php:426
+msgid "Flusso standard (richiede conferma admin)"
+msgstr "Standard flow (requires admin confirmation)"
+
+#: includes/class-euwb-admin.php:429
+msgid "Flusso diretto (auto-conferma immediata)"
+msgstr "Direct flow (immediate auto-confirmation)"
+
+#: includes/class-euwb-admin.php:433
+msgid "Flusso standard:"
+msgstr "Standard flow:"
+
+#: includes/class-euwb-admin.php:434
+msgid ""
+"il cliente avvia la richiesta, l'amministratore la conferma manualmente. Il "
+"cliente riceve un'email di avviso (intent) e poi una di conferma."
+msgstr ""
+"The customer initiates the request, and the administrator manually confirms "
+"it. The customer receives a notification email (intent) and then a "
+"confirmation email."
+
+#: includes/class-euwb-admin.php:435
+msgid "Flusso diretto:"
+msgstr "Direct flow:"
+
+#: includes/class-euwb-admin.php:436
+msgid ""
+"al click del cliente il recesso è immediatamente confermato. L'ordine passa "
+"in \"In attesa di rimborso\" e il cliente riceve subito l'email di conferma."
+msgstr ""
+"Once the customer clicks, the return is immediately confirmed. The order "
+"moves to \"Awaiting Refund\" and the customer immediately receives a "
+"confirmation email."
+
+#: includes/class-euwb-admin.php:441
+msgid "Finestra di recesso (giorni)"
+msgstr "Withdrawal window (days)"
+
+#: includes/class-euwb-admin.php:444
+msgid "La direttiva UE 2023/2673 prevede 14 giorni come minimo."
+msgstr "EU Directive 2023/2673 provides for a minimum of 14 days."
+
+#: includes/class-euwb-admin.php:448
+msgid "Giorni per la restituzione del bene"
+msgstr "Days for returning the goods"
+
+#: includes/class-euwb-admin.php:451
+msgid ""
+"Giorni entro cui il cliente deve rispedire il prodotto dopo la conferma del "
+"recesso. Usato nel testo default delle istruzioni di restituzione."
+msgstr ""
+"Days within which the customer must return the product after confirmation of "
+"the withdrawal. Used in the default text of the return instructions."
+
+#: includes/class-euwb-admin.php:455
+msgid "Email notifiche admin"
+msgstr "Admin notification email"
+
+#: includes/class-euwb-admin.php:458
+msgid "Riceverà una notifica ad ogni recesso confermato."
+msgstr "You will receive a notification for each confirmed withdrawal."
+
+#: includes/class-euwb-admin.php:468
+msgid "Testo introduttivo recesso"
+msgstr "Introductory text of withdrawal"
+
+#: includes/class-euwb-admin.php:471
+#, php-format
+msgid ""
+"Usa <code>%%1$d</code> per la finestra in giorni (es. 14) e <code>%%2$d</"
+"code> per i giorni rimasti alla scadenza."
+msgstr ""
+"Use <code>%%1$d</code> for the window in days (e.g. 14) and <code>%%2$d</"
+"code> for the days left until expiration."
+
+#: includes/class-euwb-admin.php:475
+msgid "Istruzioni modulo recesso"
+msgstr "Withdrawal form instructions"
+
+#: includes/class-euwb-admin.php:478
+msgid "Testo visualizzato sopra il modulo di recesso."
+msgstr "Text displayed above the withdrawal form."
+
+#: includes/class-euwb-admin.php:482
+msgid "Label pulsante di recesso"
+msgstr "Withdraw button label"
+
+#: includes/class-euwb-admin.php:485
+msgid ""
+"Testo del pulsante che il cliente clicca per avviare la procedura di recesso."
+msgstr ""
+"Text of the button that the customer clicks to start the withdrawal "
+"procedure."
+
+#: includes/class-euwb-admin.php:494
+msgid "Email al cliente – Richiesta ricevuta (flusso standard)"
+msgstr "Email to customer – Request received (standard flow)"
+
+#: includes/class-euwb-admin.php:495 includes/class-euwb-admin.php:510
+msgid ""
+"Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</"
+"code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>"
+msgstr ""
+"Available placeholders: <code>{order_number}</code> , <code>{order_date}</"
+"code> , <code>{customer_name}</code> , <code>{withdrawal_date}</code>"
+
+#: includes/class-euwb-admin.php:498 includes/class-euwb-admin.php:513
+msgid "Oggetto"
+msgstr "Subject"
+
+#: includes/class-euwb-admin.php:502 includes/class-euwb-admin.php:517
+msgid "Corpo"
+msgstr "Body"
+
+#: includes/class-euwb-admin.php:509
+msgid "Email al cliente – Recesso confermato"
+msgstr "Email to customer – Withdrawal confirmed"
+
+#: includes/class-euwb-admin.php:524
+msgid "Istruzioni per la restituzione del bene (prodotti fisici)"
+msgstr "Instructions for returning goods (physical products)"
+
+#: includes/class-euwb-admin.php:525
+msgid ""
+"Mostrato nel form di recesso e nelle email solo se l'ordine contiene "
+"prodotti fisici che richiedono spedizione. Lasciare vuoto per non mostrarlo."
+msgstr ""
+"Displayed in the withdrawal form and emails only if the order contains "
+"physical products that require shipping. Leave blank to hide it."
+
+#: includes/class-euwb-admin.php:528
+msgid "Testo istruzioni"
+msgstr "Instruction text"
+
+#. translators: %d: return window in days
+#: includes/class-euwb-admin.php:533
+#, php-format
+msgid ""
+"Per completare il recesso è necessario restituire il prodotto entro %d "
+"giorni dalla data di conferma del recesso.\n"
+"\n"
+"Spedire il pacco a:\n"
+"[Ragione sociale / Nome]\n"
+"[Indirizzo]\n"
+"[CAP – Città (Provincia)]\n"
+"\n"
+"Le spese di restituzione sono a carico del cliente, salvo diverso accordo. "
+"Si consiglia di utilizzare un servizio con tracciamento della spedizione."
+msgstr ""
+"To complete the return, you must return the product within %d days of the "
+"return confirmation date.\n"
+"\n"
+"Send the package to:\n"
+"[Company Name / Name]\n"
+"[Address]\n"
+"[Zip Code – City (Province)]\n"
+"\n"
+"Return costs are the responsibility of the customer, unless otherwise "
+"agreed. We recommend using a tracking service."
+
+#: includes/class-euwb-admin.php:544
+msgid "Salva impostazioni"
+msgstr "Save settings"
+
+#: includes/class-euwb-emails.php:80 includes/class-euwb-emails.php:96
+#, php-format
+msgid "Richiesta di recesso ricevuta – Ordine #%s"
+msgstr "Withdrawal request received – Order #%s"
+
+#: includes/class-euwb-emails.php:104
+msgid "Richiesta di recesso ricevuta"
+msgstr "Withdrawal request received"
+
+#: includes/class-euwb-emails.php:105 includes/class-euwb-emails.php:165
+#, php-format
+msgid "Gentile %s,"
+msgstr "Dear %s,"
+
+#: includes/class-euwb-emails.php:106
+#, php-format
+msgid ""
+"Abbiamo ricevuto la tua richiesta di recesso relativa all'ordine #%1$s, "
+"inviata il %2$s, ai sensi dell'Art. 11a della Direttiva UE 2023/2673 (che "
+"modifica la Direttiva 2011/83/UE sui diritti dei consumatori)."
+msgstr ""
+"We have received your withdrawal request relating to order #%1$s, sent on "
+"%2$s, pursuant to Art. 11a of EU Directive 2023/2673 (amending Directive "
+"2011/83/EU on consumer rights)."
+
+#: includes/class-euwb-emails.php:107
+msgid ""
+"La tua richiesta è attualmente in fase di elaborazione da parte del nostro "
+"team. Riceverai un'email di conferma non appena sarà processata."
+msgstr ""
+"Your request is currently being processed by our team. You will receive a "
+"confirmation email as soon as it is processed."
+
+#: includes/class-euwb-emails.php:118 includes/class-euwb-emails.php:177
+#: includes/emails/templates/euwb-customer-confirmation-plain.php:30
+#: includes/emails/templates/euwb-customer-confirmation.php:49
+#: includes/emails/templates/euwb-customer-intent-plain.php:29
+#: includes/emails/templates/euwb-customer-intent.php:42
+msgid "Stato"
+msgstr "Status"
+
+#: includes/class-euwb-emails.php:119
+#: includes/emails/templates/euwb-customer-intent-plain.php:29
+#: includes/emails/templates/euwb-customer-intent.php:43
+msgid "In attesa di conferma"
+msgstr "Pending confirmation"
+
+#: includes/class-euwb-emails.php:123 includes/class-euwb-emails.php:188
+msgid ""
+"Questo messaggio è stato generato automaticamente ai sensi della Direttiva "
+"UE 2023/2673 e della Direttiva 2011/83/UE sui diritti dei consumatori."
+msgstr ""
+"This message has been automatically generated in accordance with EU "
+"Directive 2023/2673 and Directive 2011/83/EU on consumer rights."
+
+#: includes/class-euwb-emails.php:124 includes/class-euwb-emails.php:189
+msgid "Per ulteriori informazioni:"
+msgstr "For further information:"
+
+#: includes/class-euwb-emails.php:139 includes/class-euwb-emails.php:156
+#, php-format
+msgid "Conferma di recesso – Ordine #%s"
+msgstr "Withdrawal Confirmation – Order #%s"
+
+#: includes/class-euwb-emails.php:164
+msgid "Conferma di recesso"
+msgstr "Withdrawal confirmation"
+
+#: includes/class-euwb-emails.php:166
+#, php-format
+msgid ""
+"Confermiamo che il tuo recesso relativo all'ordine #%1$s è stato registrato "
+"con successo in data %2$s, ai sensi dell'Art. 11a della Direttiva UE "
+"2023/2673 (che modifica la Direttiva 2011/83/UE sui diritti dei consumatori)."
+msgstr ""
+"We confirm that your withdrawal relating to order #%1$s has been "
+"successfully registered on %2$s, pursuant to Art. 11a of EU Directive "
+"2023/2673 (amending Directive 2011/83/EU on consumer rights)."
+
+#: includes/class-euwb-emails.php:173
+msgid "Data recesso"
+msgstr "Withdrawal date"
+
+#: includes/class-euwb-emails.php:181
+msgid "Cosa succede adesso?"
+msgstr "What happens now?"
+
+#: includes/class-euwb-emails.php:183
+#, php-format
+msgid "Il nostro team elaborerà la tua richiesta entro %d giorni lavorativi."
 msgstr "Our team will process your request within %d business days."
 
-msgid "The refund will be issued using the same payment method used at the time of purchase, unless otherwise agreed."
-msgstr "The refund will be issued using the same payment method used at the time of purchase, unless otherwise agreed."
+#: includes/class-euwb-emails.php:184
+msgid ""
+"Il rimborso verrà emesso utilizzando lo stesso metodo di pagamento usato al "
+"momento dell'acquisto, salvo diverso accordo."
+msgstr ""
+"The refund will be issued using the same payment method used at the time of "
+"purchase, unless otherwise agreed."
 
-msgid "We will provide return instructions for the product (if applicable)."
-msgstr "We will provide return instructions for the product (if applicable)."
+#: includes/class-euwb-emails.php:185
+msgid ""
+"Ti forniremo le istruzioni per la restituzione del prodotto (se applicabile)."
+msgstr ""
+"We will provide you with instructions for returning the product (if "
+"applicable)."
 
-msgid "This message was automatically generated in accordance with EU Directive 2023/2673 and Directive 2011/83/EU on consumer rights."
-msgstr "This message was automatically generated in accordance with EU Directive 2023/2673 and Directive 2011/83/EU on consumer rights."
+#: includes/class-euwb-emails.php:202
+#, php-format
+msgid "[%s] Nuovo recesso – Ordine #%s"
+msgstr "[%s] New Withdrawal – Order #%s"
 
-msgid "For further information:"
-msgstr "For further information:"
+#: includes/class-euwb-emails.php:227
+#, php-format
+msgid "[%s] Nuova richiesta di recesso – Ordine #%s"
+msgstr "[%s] New Withdrawal Request – Order #%s"
+
+#: includes/class-euwb-frontend.php:40
+msgid ""
+"Confermare il recesso dal contratto? Questa azione non può essere annullata."
+msgstr "Confirm withdrawal from the contract? This action cannot be undone."
+
+#: includes/class-euwb-frontend.php:41
+msgid "Elaborazione in corso…"
+msgstr "Processing in progress…"
+
+#: includes/class-euwb-frontend.php:42
+msgid "Si è verificato un errore. Riprova o contatta il supporto."
+msgstr "An error occurred. Please try again or contact support."
+
+#: includes/class-euwb-frontend.php:61
+msgid "Recesso dal contratto"
+msgstr "Withdrawal from the contract"
+
+#: includes/class-euwb-frontend.php:62
+msgid "Diritto di recesso (UE 2023/2673)"
+msgstr "Right of withdrawal (EU 2023/2673)"
+
+#: includes/class-euwb-frontend.php:72
+#, php-format
+msgid ""
+"Hai esercitato il recesso per questo ordine il %s. Il rimborso è stato "
+"effettuato."
+msgstr ""
+"You exercised your right of withdrawal for this order on %s. Your refund has "
+"been processed."
+
+#: includes/class-euwb-frontend.php:79
+#, php-format
+msgid ""
+"Hai esercitato il recesso per questo ordine il %s. L'ordine è stato "
+"annullato. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi."
+msgstr ""
+"You returned this order on %s. The order has been cancelled. Your refund "
+"will be processed within the next 14 business days."
+
+#: includes/class-euwb-frontend.php:86
+#, php-format
+msgid ""
+"Hai esercitato il recesso per questo ordine il %s. La richiesta è stata "
+"confermata dall'amministratore e il rimborso sarà elaborato nei prossimi 14 "
+"giorni lavorativi."
+msgstr ""
+"You returned this order on %s. Your request has been confirmed by the "
+"administrator, and your refund will be processed within the next 14 business "
+"days."
+
+#: includes/class-euwb-frontend.php:93
+#, php-format
+msgid ""
+"Hai richiesto il recesso per questo ordine il %s. La richiesta è in attesa "
+"di conferma da parte dell'amministratore."
+msgstr ""
+"You requested a cancellation for this order on %s. Your request is pending "
+"confirmation from the administrator."
+
+#: includes/class-euwb-frontend.php:100
+#, php-format
+msgid ""
+"Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà "
+"elaborato nei prossimi 14 giorni lavorativi."
+msgstr ""
+"You have already exercised your right of withdrawal for this order on %s. "
+"Your refund will be processed within the next 14 business days."
+
+#: includes/class-euwb-frontend.php:108
+msgid "Il periodo di recesso di 14 giorni per questo ordine è scaduto."
+msgstr "The 14-day cooling-off period for this order has expired."
+
+#: includes/class-euwb-frontend.php:130
+#: includes/emails/templates/euwb-customer-confirmation-plain.php:17
+#: includes/emails/templates/euwb-customer-confirmation.php:23
+#: includes/emails/templates/euwb-customer-intent-plain.php:17
+#: includes/emails/templates/euwb-customer-intent.php:23
+msgid "Istruzioni per la restituzione del bene"
+msgstr "Instructions for returning the goods"
+
+#: includes/class-euwb-frontend.php:140
+msgid "Nome *"
+msgstr "Name *"
+
+#: includes/class-euwb-frontend.php:142
+msgid "Cognome *"
+msgstr "Surname *"
+
+#: includes/class-euwb-frontend.php:145
+msgid "Indirizzo e-mail *"
+msgstr "Email address *"
+
+#: includes/class-euwb-frontend.php:147
+msgid "Motivo del recesso (facoltativo)"
+msgstr "Reason for withdrawal (optional)"
+
+#: includes/class-euwb-frontend.php:148
+msgid "Puoi lasciare vuoto questo campo."
+msgstr "You can leave this field blank."
+
+#: includes/class-euwb-frontend.php:154
+msgid ""
+"Cliccando sopra avvierai la procedura di recesso. Nel passaggio successivo "
+"ti verrà chiesta conferma."
+msgstr ""
+"Clicking above will start the cancellation process. In the next step, you "
+"will be asked for confirmation."
+
+#: includes/class-euwb-frontend.php:160
+msgid "Sei sicuro di voler recedere dal contratto?"
+msgstr "Are you sure you want to withdraw from the contract?"
+
+#: includes/class-euwb-frontend.php:161
+msgid ""
+"Cliccando \"Conferma recesso qui\" invierai la dichiarazione di recesso. "
+"Riceverai un'email di conferma."
+msgstr ""
+"By clicking \"Confirm withdrawal here,\" you will submit your withdrawal "
+"declaration. You will receive a confirmation email."
+
+#: includes/class-euwb-frontend.php:164
+msgid "Conferma recesso qui"
+msgstr "Confirm withdrawal here"
+
+#: includes/class-euwb-frontend.php:167
+msgid "Annulla"
+msgstr "Cancel"
+
+#: includes/class-euwb-frontend.php:191 includes/class-euwb-frontend.php:196
+#: includes/class-euwb-frontend.php:228 includes/class-euwb-frontend.php:233
+msgid "Non autorizzato."
+msgstr "Unauthorized."
+
+#: includes/class-euwb-frontend.php:200 includes/class-euwb-frontend.php:237
+msgid "Il periodo di recesso è scaduto."
+msgstr "The withdrawal period has expired."
+
+#: includes/class-euwb-frontend.php:201 includes/class-euwb-frontend.php:238
+msgid "Hai già richiesto il recesso per questo ordine."
+msgstr "You have already requested a return for this order."
+
+#: includes/class-euwb-frontend.php:208 includes/class-euwb-frontend.php:248
+msgid "Compila tutti i campi obbligatori."
+msgstr "Please fill in all required fields."
+
+#: includes/class-euwb-frontend.php:255
+msgid ""
+"Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso "
+"sarà elaborato nei prossimi giorni lavorativi."
+msgstr ""
+"Your return has been successfully confirmed. You will receive a confirmation "
+"email. Your refund will be processed within the next few business days."
+
+#: includes/class-euwb-frontend.php:258
+msgid ""
+"Richiesta di recesso inviata con successo. Riceverai un'email di conferma. "
+"L'amministratore elaborerà il rimborso nei prossimi giorni lavorativi."
+msgstr ""
+"Your refund request has been sent successfully. You will receive a "
+"confirmation email. The administrator will process your refund within the "
+"next few business days."
+
+#: includes/class-euwb-frontend.php:261
+msgid ""
+"Impossibile registrare la richiesta di recesso. Riprova o contatta il "
+"supporto."
+msgstr ""
+"Your cancellation request could not be registered. Please try again or "
+"contact support."
+
+#: includes/class-euwb-withdrawal.php:77
+#, php-format
+msgid ""
+"Recesso richiesto dal cliente (ID recesso: %d). In attesa di conferma da "
+"parte dell'amministratore."
+msgstr ""
+"Withdrawal requested by customer (Withdrawal ID: %d). Awaiting confirmation "
+"from the administrator."
+
+#: includes/class-euwb-withdrawal.php:123
+#, php-format
+msgid ""
+"Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673 (ID "
+"recesso: %d)."
+msgstr ""
+"Withdrawal confirmed by the customer pursuant to EU Directive 2023/2673 "
+"(Withdrawal ID: %d)."
+
+#: includes/class-euwb-withdrawal.php:158
+msgid ""
+"Recesso confermato dall'amministratore ai sensi della Direttiva UE "
+"2023/2673. In attesa di rimborso."
+msgstr ""
+"Withdrawal confirmed by the administrator pursuant to EU Directive "
+"2023/2673. Refund pending."
+
+#: includes/emails/class-euwb-email-customer-confirmation.php:9
+msgid "Recesso EU – Conferma"
+msgstr "EU Withdrawal – Confirmation"
+
+#: includes/emails/class-euwb-email-customer-confirmation.php:10
+msgid ""
+"Inviata al cliente quando il recesso è confermato definitivamente (flusso "
+"standard e diretto)."
+msgstr ""
+"Sent to the customer when the withdrawal is definitively confirmed (standard "
+"and direct flow)."
+
+#: includes/emails/class-euwb-email-customer-confirmation.php:11
+msgid "Il tuo recesso è stato confermato"
+msgstr "Your withdrawal has been confirmed"
+
+#: includes/emails/class-euwb-email-customer-intent.php:9
+msgid "Recesso EU – Richiesta ricevuta"
+msgstr "EU Withdrawal – Request Received"
+
+#: includes/emails/class-euwb-email-customer-intent.php:10
+msgid ""
+"Inviata al cliente quando la richiesta di recesso è registrata e in attesa "
+"di conferma admin."
+msgstr ""
+"Sent to the customer when the withdrawal request is registered and awaiting "
+"admin confirmation."
+
+#: includes/emails/class-euwb-email-customer-intent.php:11
+msgid "Abbiamo ricevuto la tua richiesta di recesso"
+msgstr "We have received your withdrawal request"
+
+#. Plugin URI of the plugin/theme
+msgid "https://example.com/eu-withdrawal-button"
+msgstr "https://example.com/eu-withdrawal-button"
+
+#. Description of the plugin/theme
+msgid ""
+"Implements the EU mandatory withdrawal button as required by Directive (EU) "
+"2023/2673, effective 19 June 2026. Adds a compliant withdrawal function to "
+"WooCommerce order pages with email notifications and a full audit log."
+msgstr ""
+"Implements the EU mandatory withdrawal button as required by Directive (EU) "
+"2023/2673, effective 19 June 2026. Adds a compliant withdrawal function to "
+"WooCommerce order pages with email notifications and a full audit log."
+
+#. Author of the plugin/theme
+msgid "Marco D'Agostino, ContrattiDigitaliOnline"
+msgstr "Marco D'Agostino, DigitalContractsOnline"
