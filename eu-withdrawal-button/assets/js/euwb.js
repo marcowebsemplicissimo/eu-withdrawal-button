@@ -146,12 +146,52 @@
 
 }(jQuery));
 
-/* EU Withdrawal Button – admin log page */
+/* EU Withdrawal Button – admin log page + edit-order meta box */
 (function ($) {
     'use strict';
 
     if ( typeof euwbAdminData === 'undefined' ) return;
 
+    // ----------------------------------------------------------------
+    // Edit-order: "Conferma richiesta di recesso" button
+    // ----------------------------------------------------------------
+    $(document).on('click', '#euwb-admin-confirm-btn', function () {
+        var $btn     = $(this);
+        var orderId  = $btn.data('order-id');
+        var $result  = $('#euwb-admin-confirm-result');
+
+        if ( ! window.confirm( euwbAdminData.confirmWithdrawal ) ) return;
+
+        $btn.prop('disabled', true).text('…');
+        $result.html('');
+
+        $.ajax({
+            url:    euwbAdminData.ajaxUrl,
+            method: 'POST',
+            data: {
+                action:   'euwb_admin_confirm',
+                nonce:    euwbAdminData.nonceConfirm,
+                order_id: orderId
+            },
+            success: function (response) {
+                if ( response.success ) {
+                    $result.html('<p style="color:#46b450;font-weight:600;">' + euwbAdminData.confirmedLabel + '</p>');
+                    setTimeout(function () { window.location.reload(); }, 1500 );
+                } else {
+                    $result.html('<p style="color:#dc3232;">' + ( response.data || euwbAdminData.errorConfirmMessage ) + '</p>');
+                    $btn.prop('disabled', false).text( euwbAdminData.confirmWithdrawalLabel || 'Conferma richiesta di recesso' );
+                }
+            },
+            error: function () {
+                $result.html('<p style="color:#dc3232;">' + euwbAdminData.errorConfirmMessage + '</p>');
+                $btn.prop('disabled', false).text( euwbAdminData.confirmWithdrawalLabel || 'Conferma richiesta di recesso' );
+            }
+        });
+    });
+
+    // ----------------------------------------------------------------
+    // Admin log: "Revoca" button
+    // ----------------------------------------------------------------
     $(document).on('click', '.euwb-revoke-btn', function () {
         var $btn     = $(this);
         var id       = $btn.data('id');

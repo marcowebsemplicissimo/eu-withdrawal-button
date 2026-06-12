@@ -69,12 +69,12 @@ class EUWB_Withdrawal {
 
         if ( $inserted ) {
             $withdrawal_id = $wpdb->insert_id;
-            // Log on the WC order
             $order = wc_get_order( $order_id );
             if ( $order ) {
-                $order->add_order_note(
+                $order->update_status(
+                    'pending-withdrawal',
                     sprintf(
-                        __( 'Recesso avviato dal cliente (ID recesso: %d). In attesa di conferma.', 'eu-withdrawal-button' ),
+                        __( 'Recesso richiesto dal cliente (ID recesso: %d). In attesa di conferma da parte dell\'amministratore.', 'eu-withdrawal-button' ),
                         $withdrawal_id
                     )
                 );
@@ -131,8 +131,8 @@ class EUWB_Withdrawal {
     }
 
     /**
-     * Confirm a withdrawal (step 2 – confirmation click).
-     * @deprecated Use create_and_confirm() instead.
+     * Confirm a pending withdrawal — called by the admin from the edit-order page.
+     * Updates the withdrawal record to 'confirmed' and moves the order to pending_refund.
      */
     public static function confirm( $order_id ) {
         global $wpdb;
@@ -153,8 +153,8 @@ class EUWB_Withdrawal {
             $order = wc_get_order( $order_id );
             if ( $order ) {
                 $order->update_status(
-                    apply_filters( 'euwb_order_status_after_withdrawal', 'cancelled' ),
-                    __( 'Recesso confermato dal cliente ai sensi della Direttiva UE 2023/2673.', 'eu-withdrawal-button' )
+                    apply_filters( 'euwb_order_status_after_withdrawal', 'pending-refund' ),
+                    __( 'Recesso confermato dall\'amministratore ai sensi della Direttiva UE 2023/2673. In attesa di rimborso.', 'eu-withdrawal-button' )
                 );
             }
             do_action( 'euwb_withdrawal_confirmed', $order_id );

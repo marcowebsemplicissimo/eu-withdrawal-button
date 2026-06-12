@@ -7,20 +7,105 @@ class EUWB_Admin {
         add_action( 'admin_menu',            array( $this, 'register_menu' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
         add_filter( 'set-screen-option',     array( $this, 'set_screen_option' ), 10, 3 );
-        add_action( 'wp_ajax_euwb_revoke',   array( $this, 'ajax_revoke' ) );
+        add_action( 'wp_ajax_euwb_revoke',          array( $this, 'ajax_revoke' ) );
+        add_action( 'wp_ajax_euwb_admin_confirm',   array( $this, 'ajax_admin_confirm' ) );
+
+        // Meta box on the WooCommerce edit-order screen (classic + HPOS)
+        add_action( 'add_meta_boxes', array( $this, 'add_order_meta_box' ) );
     }
 
     public function enqueue( $hook ) {
-        if ( strpos( $hook, 'eu-withdrawal' ) === false ) return;
+        $is_withdrawal_page = strpos( $hook, 'eu-withdrawal' ) !== false;
+        $is_order_page      = in_array( $hook, array( 'post.php', 'post-new.php', 'woocommerce_page_wc-orders' ), true );
+
+        if ( ! $is_withdrawal_page && ! $is_order_page ) return;
+
         wp_enqueue_style( 'euwb-admin', EUWB_PLUGIN_URL . 'assets/css/euwb-admin.css', array(), EUWB_VERSION );
         wp_enqueue_script( 'euwb-script', EUWB_PLUGIN_URL . 'assets/js/euwb.js', array( 'jquery' ), EUWB_VERSION, true );
         wp_localize_script( 'euwb-script', 'euwbAdminData', array(
-            'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
-            'nonce'          => wp_create_nonce( 'euwb_revoke_nonce' ),
-            'confirmMessage' => __( 'Eliminare questo record di recesso e aggiungere una nota di revoca all\'ordine?', 'eu-withdrawal-button' ),
-            'revokedLabel'   => __( 'Revocato', 'eu-withdrawal-button' ),
-            'errorMessage'   => __( 'Errore durante la revoca. Riprova.', 'eu-withdrawal-button' ),
+            'ajaxUrl'               => admin_url( 'admin-ajax.php' ),
+            'nonce'                 => wp_create_nonce( 'euwb_revoke_nonce' ),
+            'nonceConfirm'          => wp_create_nonce( 'euwb_admin_confirm_nonce' ),
+            'confirmMessage'        => __( 'Eliminare questo record di recesso e aggiungere una nota di revoca all\'ordine?', 'eu-withdrawal-button' ),
+            'confirmWithdrawal'     => __( 'Confermare la richiesta di recesso? L\'ordine passerà in stato "In attesa di rimborso".', 'eu-withdrawal-button' ),
+            'revokedLabel'          => __( 'Revocato', 'eu-withdrawal-button' ),
+            'errorMessage'          => __( 'Errore durante la revoca. Riprova.', 'eu-withdrawal-button' ),
+            'errorConfirmMessage'   => __( 'Errore durante la conferma del recesso. Riprova.', 'eu-withdrawal-button' ),
+            'confirmedLabel'        => __( 'Recesso confermato. La pagina verrà ricaricata.', 'eu-withdrawal-button' ),
         ) );
+    }
+
+    // -----------------------------------------------------------------------
+    // Meta box: withdrawal info + confirm button on edit-order page
+    // -----------------------------------------------------------------------
+    public function add_order_meta_box() {
+        $screens = array( 'shop_order', 'woocommerce_page_wc-orders' );
+        foreach ( $screens as $screen ) {
+            add_meta_box(
+                'euwb-withdrawal-meta-box',
+                __( 'Recesso EU', 'eu-withdrawal-button' ),
+                array( $this, 'render_order_meta_box' ),
+                $screen,
+                'side',
+                'high'
+            );
+        }
+    }
+
+    public function render_order_meta_box( $post_or_order ) {
+        $order_id = $post_or_order instanceof WP_Post ? $post_or_order->ID : $post_or_order->get_id();
+        $order    = wc_get_order( $order_id );
+        if ( ! $order ) return;
+
+        $withdrawal = EUWB_Withdrawal::get_withdrawal( $order_id );
+
+        if ( ! $withdrawal ) {
+            echo '<p class="description">' . esc_html__( 'Nessuna richiesta di recesso per questo ordine.', 'eu-withdrawal-button' ) . '</p>';
+            return;
+        }
+
+        $status_label = $withdrawal->status === 'confirmed'
+            ? '<span style="color:#46b450;font-weight:600;">' . esc_html__( 'Confermato', 'eu-withdrawal-button' ) . '</span>'
+            : '<span style="color:#f0a500;font-weight:600;">' . esc_html__( 'In attesa', 'eu-withdrawal-button' ) . '</span>';
+
+        echo '<p><strong>' . esc_html__( 'Cliente:', 'eu-withdrawal-button' ) . '</strong> ' . esc_html( $withdrawal->first_name . ' ' . $withdrawal->last_name ) . '</p>';
+        echo '<p><strong>' . esc_html__( 'Email:', 'eu-withdrawal-button' ) . '</strong> ' . esc_html( $withdrawal->email ) . '</p>';
+        echo '<p><strong>' . esc_html__( 'Richiesto il:', 'eu-withdrawal-button' ) . '</strong> ' . esc_html( date_i18n( get_option( 'date_format' ), strtotime( $withdrawal->created_at ) ) ) . '</p>';
+        if ( $withdrawal->reason ) {
+            echo '<p><strong>' . esc_html__( 'Motivo:', 'eu-withdrawal-button' ) . '</strong> ' . esc_html( $withdrawal->reason ) . '</p>';
+        }
+        echo '<p><strong>' . esc_html__( 'Stato:', 'eu-withdrawal-button' ) . '</strong> ' . $status_label . '</p>';
+
+        if ( $withdrawal->status === 'pending' ) {
+            echo '<hr style="margin:12px 0;">';
+            echo '<button type="button" id="euwb-admin-confirm-btn" class="button button-primary" style="width:100%;" data-order-id="' . esc_attr( $order_id ) . '">';
+            echo esc_html__( 'Conferma richiesta di recesso', 'eu-withdrawal-button' );
+            echo '</button>';
+            echo '<div id="euwb-admin-confirm-result" style="margin-top:8px;"></div>';
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // AJAX: admin confirms the withdrawal
+    // -----------------------------------------------------------------------
+    public function ajax_admin_confirm() {
+        check_ajax_referer( 'euwb_admin_confirm_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'Permessi insufficienti.', 'eu-withdrawal-button' ) );
+        }
+
+        $order_id = absint( $_POST['order_id'] ?? 0 );
+        if ( ! $order_id ) {
+            wp_send_json_error( __( 'ID ordine non valido.', 'eu-withdrawal-button' ) );
+        }
+
+        $result = EUWB_Withdrawal::confirm( $order_id );
+        if ( ! $result ) {
+            wp_send_json_error( __( 'Impossibile confermare. La richiesta potrebbe non esistere o essere già stata confermata.', 'eu-withdrawal-button' ) );
+        }
+
+        wp_send_json_success();
     }
 
     public function register_menu() {

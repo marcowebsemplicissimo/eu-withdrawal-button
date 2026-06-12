@@ -3,7 +3,7 @@
  * Plugin Name: EU Withdrawal Button
  * Plugin URI:  https://example.com/eu-withdrawal-button
  * Description: Implements the EU mandatory withdrawal button as required by Directive (EU) 2023/2673, effective 19 June 2026. Adds a compliant withdrawal function to WooCommerce order pages with email notifications and a full audit log.
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      Your Name
  * License:     GPL-2.0+
  * Text Domain: eu-withdrawal-button
@@ -32,6 +32,47 @@ require_once EUWB_PLUGIN_DIR . 'includes/class-euwb-frontend.php';
 register_activation_hook( __FILE__, array( 'EUWB_Install', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'EUWB_Install', 'deactivate' ) );
 
+add_action( 'init', 'euwb_register_order_status' );
+
+function euwb_register_order_status() {
+    register_post_status( 'wc-pending-withdrawal', array(
+        'label'                     => _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' ),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop( 'In attesa di conferma recesso <span class="count">(%s)</span>', 'In attesa di conferma recesso <span class="count">(%s)</span>', 'eu-withdrawal-button' ),
+    ) );
+    register_post_status( 'wc-pending-refund', array(
+        'label'                     => _x( 'In attesa di rimborso', 'Order status', 'eu-withdrawal-button' ),
+        'public'                    => true,
+        'exclude_from_search'       => false,
+        'show_in_admin_all_list'    => true,
+        'show_in_admin_status_list' => true,
+        'label_count'               => _n_noop( 'In attesa di rimborso <span class="count">(%s)</span>', 'In attesa di rimborso <span class="count">(%s)</span>', 'eu-withdrawal-button' ),
+    ) );
+}
+
+add_filter( 'wc_order_statuses', 'euwb_add_order_status_to_wc' );
+
+function euwb_add_order_status_to_wc( $statuses ) {
+    $new = array();
+    foreach ( $statuses as $key => $label ) {
+        $new[ $key ] = $label;
+        if ( 'wc-processing' === $key ) {
+            $new['wc-pending-withdrawal'] = _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' );
+            $new['wc-pending-refund']     = _x( 'In attesa di rimborso', 'Order status', 'eu-withdrawal-button' );
+        }
+    }
+    if ( ! isset( $new['wc-pending-withdrawal'] ) ) {
+        $new['wc-pending-withdrawal'] = _x( 'In attesa di conferma recesso', 'Order status', 'eu-withdrawal-button' );
+    }
+    if ( ! isset( $new['wc-pending-refund'] ) ) {
+        $new['wc-pending-refund'] = _x( 'In attesa di rimborso', 'Order status', 'eu-withdrawal-button' );
+    }
+    return $new;
+}
+
 add_action( 'plugins_loaded', 'euwb_init' );
 
 function euwb_init() {
@@ -47,5 +88,6 @@ function euwb_init() {
 }
 
 function euwb_woocommerce_missing_notice() {
-    echo '<div class="notice notice-error"><p><strong>EU Withdrawal Button:</strong> WooCommerce deve essere attivo per usare questo plugin.</p></div>';
+    $msg = __('WooCommerce deve essere attivo per usare questo plugin.', 'eu-withdrawal-button');
+    echo '<div class="notice notice-error"><p><strong>EU Withdrawal Button:</strong> ' . $msg . '</p></div>';
 }

@@ -152,7 +152,7 @@ class EUWB_Frontend {
     }
 
     // -----------------------------------------------------------------------
-    // AJAX: step 2 – create record and confirm in one atomic step
+    // AJAX: step 2 – create the pending withdrawal record (admin confirms later)
     // -----------------------------------------------------------------------
     public function ajax_confirm() {
         check_ajax_referer( 'euwb_nonce', 'nonce' );
@@ -175,11 +175,11 @@ class EUWB_Frontend {
             wp_send_json_error( __( 'Compila tutti i campi obbligatori.', 'eu-withdrawal-button' ) );
         }
 
-        $confirmed = EUWB_Withdrawal::create_and_confirm( $order_id, $data );
-        if ( ! $confirmed ) wp_send_json_error( __( 'Impossibile confermare il recesso. Riprova o contatta il supporto.', 'eu-withdrawal-button' ) );
+        $withdrawal_id = EUWB_Withdrawal::create( $order_id, $data );
+        if ( ! $withdrawal_id ) wp_send_json_error( __( 'Impossibile registrare la richiesta di recesso. Riprova o contatta il supporto.', 'eu-withdrawal-button' ) );
 
         wp_send_json_success( array(
-            'message' => __( 'Recesso confermato con successo. Riceverai un\'email di conferma a breve.', 'eu-withdrawal-button' ),
+            'message' => __( 'Richiesta di recesso inviata con successo. Riceverai un\'email di conferma. L\'amministratore elaborerà il rimborso nei prossimi giorni lavorativi.', 'eu-withdrawal-button' ),
         ) );
     }
 }
