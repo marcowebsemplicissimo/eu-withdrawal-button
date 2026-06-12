@@ -65,85 +65,22 @@ Il metodo `send_customer_intent( $order_id )` deve:
 
 ---
 
-## Feature 2 – Modalità "Flusso Diretto" (auto-confirm al click cliente)
+## ~~Feature 2 – Modalità "Flusso Diretto" (auto-confirm al click cliente)~~ ✅ COMPLETATA
 
-### Contesto attuale
+### Stato finale
 
-Il flusso attuale è **a due stadi**:
-- Il cliente conferma → record in DB con status `pending` → ordine va in `pending-withdrawal`
-- L'admin deve poi cliccare "Conferma richiesta di recesso" → `EUWB_Withdrawal::confirm()` → ordine va in `pending-refund` + hook `euwb_withdrawal_confirmed` + email `customer_confirmation` + `admin_notification`
+**Implementato:**
+- Opzione `euwb_flow_mode` (`standard` | `direct`, default `standard`) nelle impostazioni (`EU Withdrawal > Impostazioni`), prima riga della form-table.
+- `ajax_confirm()` in `includes/class-euwb-frontend.php` legge `euwb_flow_mode` e chiama:
+  - `EUWB_Withdrawal::create_and_confirm()` in flusso `direct` → ordine passa in `pending-refund`, hook `euwb_withdrawal_confirmed` scatta, email `customer_confirmation` + `admin_notification` inviate immediatamente.
+  - `EUWB_Withdrawal::create()` in flusso `standard` → comportamento invariato, ordine va in `pending-withdrawal`, hook `euwb_withdrawal_intent_created` scatta → email intent al cliente.
+- Messaggio di successo JSON differenziato per modalità.
+- `euwb_withdrawal_intent_created` **non scatta** in flusso diretto (perché `create_and_confirm()` non lo chiama) — by design.
 
-La funzione `EUWB_Withdrawal::create_and_confirm()` esiste già in `includes/class-euwb-withdrawal.php` ed esegue tutto in un solo step automatico: inserisce il record con status `confirmed`, cambia lo stato ordine direttamente in `cancelled` (o il valore filtrato da `euwb_order_status_after_withdrawal`), e scatta l'hook `euwb_withdrawal_confirmed`.
+### Note operative
 
-### Obiettivo
-
-Aggiungere una **select nelle impostazioni** (`EU Withdrawal > Impostazioni`) che permetta di scegliere tra:
-
-- **Flusso standard** (default attuale): il cliente crea una richiesta `pending`, l'admin deve confermare manualmente
-- **Flusso diretto**: al click su `euwb-btn-confirm`, il recesso viene confermato automaticamente senza intervento admin, usando `create_and_confirm()`. In questo flusso:
-  - NON viene inviata la email `customer_intent` (la richiesta è già confermata)
-  - Viene inviata direttamente la email `customer_confirmation` (e `admin_notification`) tramite l'hook `euwb_withdrawal_confirmed` già esistente
-  - L'ordine passa direttamente allo status configurato da `euwb_order_status_after_withdrawal` (default: `cancelled`)
-
-### Cosa implementare
-
-#### 1. Nuova opzione `euwb_flow_mode` nelle impostazioni
-
-In `includes/class-euwb-admin.php`, metodo `render_settings_page()`:
-
-Aggiungere una nuova riga `<tr>` nella `<table class="form-table">` **prima** delle righe esistenti:
-
-```html
-<tr>
-    <th><label for="euwb_flow_mode">Modalità flusso recesso</label></th>
-    <td>
-        <select id="euwb_flow_mode" name="euwb_flow_mode">
-            <option value="standard" <?php selected( get_option('euwb_flow_mode', 'standard'), 'standard' ); ?>>
-                Flusso standard (richiede conferma admin)
-            </option>
-            <option value="direct" <?php selected( get_option('euwb_flow_mode', 'standard'), 'direct' ); ?>>
-                Flusso diretto (auto-conferma immediata)
-            </option>
-        </select>
-        <p class="description">
-            <strong>Flusso standard:</strong> il cliente avvia la richiesta, l'amministratore la conferma manualmente. Il cliente riceve un'email di avviso (intent) e poi una di conferma.<br>
-            <strong>Flusso diretto:</strong> al click del cliente il recesso è immediatamente confermato. L'ordine viene annullato e il cliente riceve subito l'email di conferma.
-        </p>
-    </td>
-</tr>
-```
-
-Nel blocco di salvataggio `if ( isset( $_POST['euwb_save_settings'] ) ... )`, aggiungere:
-
-```php
-update_option( 'euwb_flow_mode', in_array( $_POST['euwb_flow_mode'] ?? '', array( 'standard', 'direct' ), true ) ? $_POST['euwb_flow_mode'] : 'standard' );
-```
-
-#### 2. Modificare `ajax_confirm()` in `includes/class-euwb-frontend.php`
-
-Sostituire la chiamata fissa a `EUWB_Withdrawal::create()` con una logica condizionale basata su `euwb_flow_mode`:
-
-```php
-$flow_mode = get_option( 'euwb_flow_mode', 'standard' );
-
-if ( $flow_mode === 'direct' ) {
-    $withdrawal_id = EUWB_Withdrawal::create_and_confirm( $order_id, $data );
-    $success_message = __( 'Recesso confermato con successo. Riceverai un\'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.', 'eu-withdrawal-button' );
-} else {
-    $withdrawal_id = EUWB_Withdrawal::create( $order_id, $data );
-    $success_message = __( 'Richiesta di recesso inviata con successo. Riceverai un\'email di conferma. L\'amministratore elaborerà il rimborso nei prossimi giorni lavorativi.', 'eu-withdrawal-button' );
-}
-```
-
-In flusso `direct`, l'hook `euwb_withdrawal_intent_created` **non deve scattare** (perché `create_and_confirm()` non lo chiama), e l'hook `euwb_withdrawal_confirmed` scatta già dentro `create_and_confirm()`, inviando le email corrette.
-
-In flusso `standard`, il comportamento rimane invariato: `create()` scatta `euwb_withdrawal_intent_created` → email intent al cliente.
-
-#### 3. Verificare messaggi di successo nella UI
-
-Il messaggio di risposta JSON al frontend (`wp_send_json_success`) deve riflettere la modalità:
-- **Flusso diretto**: "Recesso confermato con successo…"
-- **Flusso standard**: messaggio attuale "Richiesta di recesso inviata con successo…"
+- In **flusso diretto**, il tab "In attesa di conferma" nel registro recessi non verrà usato: tutti i recessi entrano già come `confirmed`. Il meta box nell'edit-order non mostra mai il pulsante admin "Conferma richiesta".
+- Lo status ordine dopo `create_and_confirm()` è `pending-refund` (modificato rispetto al default originale `cancelled`).
 
 ---
 
@@ -334,8 +271,8 @@ Questo permette al tema di sovrascrivere i template copiandoli in `wp-content/th
 |------|----------|
 | ~~`includes/class-euwb-withdrawal.php`~~ ✅ | ~~Aggiungere `do_action( 'euwb_withdrawal_intent_created', $order_id )` in `create()`~~ — fatto |
 | `includes/class-euwb-emails.php` | ✅ `send_customer_intent()` + `send_admin_intent()` completate; hook `init()` aggiornato. Da fare (Feature 3): registrazione classi WC_Email, rimozione `wp_mail()` duplicate |
-| `includes/class-euwb-admin.php` | Aggiungere select `euwb_flow_mode` nella settings page + salvataggio |
-| `includes/class-euwb-frontend.php` | Modificare `ajax_confirm()` per usare `create_and_confirm()` in flusso diretto |
+| ~~`includes/class-euwb-admin.php`~~ ✅ | ~~Aggiungere select `euwb_flow_mode` nella settings page + salvataggio~~ — fatto |
+| ~~`includes/class-euwb-frontend.php`~~ ✅ | ~~Modificare `ajax_confirm()` per usare `create_and_confirm()` in flusso diretto~~ — fatto |
 | `includes/emails/class-euwb-email-customer-intent.php` | Nuova classe `EUWB_Email_Customer_Intent extends WC_Email` |
 | `includes/emails/class-euwb-email-customer-confirmation.php` | Nuova classe `EUWB_Email_Customer_Confirmation extends WC_Email` |
 | `includes/emails/templates/euwb-customer-intent.php` | Template HTML email intent |
