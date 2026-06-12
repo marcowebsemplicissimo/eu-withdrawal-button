@@ -46,41 +46,16 @@
 
 ---
 
-## Feature 5 – Export CSV del registro recessi
+## ~~Feature 5 – Export CSV / XLS del registro recessi~~ ✅ COMPLETATA
 
-### Obiettivo
+**Implementato (2026-06-12):**
 
-Aggiungere un pulsante **"Esporta CSV"** nella pagina del registro recessi che scarica un file `.csv` con tutte le righe corrispondenti ai filtri attivi (status, ricerca, ordinamento).
-
-### Cosa implementare
-
-#### 1. Pulsante nella `render_log_page()`
-
-Aggiungere vicino alla `<h1>` o sopra la tabella:
-
-```php
-<a href="<?php echo esc_url( add_query_arg( array_merge( $_GET, array( 'euwb_export' => '1', 'euwb_export_nonce' => wp_create_nonce( 'euwb_export' ) ) ) ) ); ?>" class="button">
-    <?php esc_html_e( 'Esporta CSV', 'eu-withdrawal-button' ); ?>
-</a>
-```
-
-#### 2. Handler export in `EUWB_Admin::render_log_page()` (o hook `admin_init`)
-
-Intercettare `$_GET['euwb_export']` prima del rendering HTML:
-
-```php
-if ( ! empty( $_GET['euwb_export'] ) && wp_verify_nonce( $_GET['euwb_export_nonce'] ?? '', 'euwb_export' ) ) {
-    $this->export_csv();
-    exit;
-}
-```
-
-#### 3. Metodo `export_csv()` in `EUWB_Admin`
-
-- Recupera **tutti** i record (senza paginazione) rispettando i filtri `status`, `s`, `orderby`, `order`.
-- Imposta header HTTP: `Content-Type: text/csv`, `Content-Disposition: attachment; filename="recessi-YYYY-MM-DD.csv"`.
-- Scrive riga di intestazione + righe dati con `fputcsv( STDOUT, ... )`.
-- Colonne: ID, Ordine, Nome, Cognome, Email, Motivo, Stato recesso, Stato ordine, Data richiesta, Data conferma.
+- Pulsanti **"Esporta CSV"** e **"Esporta XLS"** posizionati a sinistra nella toolbar, affiancati alla barra di ricerca.
+- Export interamente client-side tramite i plugin jQuery `jquery.table2csv.js` e `jquery.table2excel.js` (agiti sulla tabella DOM).
+- I due script vengono caricati solo sulla pagina del registro (`enqueue()` con guard `$is_withdrawal_page`).
+- La colonna **Azioni** è marcata con classe `euwb-actions-col` ed esclusa da entrambi gli export.
+- Nome file generato dinamicamente in JS: `recessi-YYYY-MM-DD.csv` / `.xls`.
+- Layout toolbar (`div.euwb-toolbar`) flex row: export a sinistra, search box a destra.
 
 ---
 
