@@ -6,20 +6,24 @@
  * Version:     1.1.0
  * Author:      Marco D'Agostino, ContrattiDigitaliOnline
  * License:     GPL-2.0+
+ * Tested up to: 7.0.0
+ * Requires at least: 6.5
+ * Requires PHP: 7.4
+ * Requires Plugins: woocommerce
+ * WC requires at least: 7.0
+ * WC tested up to: 10.8.1
  * Text Domain: eu-withdrawal-button
  * Domain Path: /languages
- * Requires at least: 6.0
- * Requires PHP: 7.4
- * WC requires at least: 7.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'EUWB_VERSION', '1.1.0' );
-define( 'EUWB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'EUWB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'EUWB_VERSION',     '1.1.0' );
+define( 'EUWB_PLUGIN_DIR',  plugin_dir_path( __FILE__ ) );
+define( 'EUWB_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );
+define( 'EUWB_BASENAME',    plugin_basename( __FILE__ ) );
 define( 'EUWB_WITHDRAWAL_WINDOW_DAYS', 14 );
 
 // Autoload includes
@@ -96,6 +100,15 @@ function euwb_locate_template( $template, $template_name, $template_path ) {
 add_action( 'plugins_loaded', 'euwb_init' );
 
 function euwb_init() {
+
+    //HPOS COMPATIBILITY DECLARATION
+    add_action( 'before_woocommerce_init', function() {
+        
+        if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', EUWB_BASENAME, true );
+        }
+    } );
+
     load_plugin_textdomain( 'eu-withdrawal-button', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
     if ( ! class_exists( 'WooCommerce' ) ) {
