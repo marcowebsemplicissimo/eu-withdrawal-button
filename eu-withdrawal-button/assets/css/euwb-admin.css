@@ -21,6 +21,68 @@
     margin-top: 1em;
 }
 
+.euwb-table .euwb-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    align-items: center;
+    min-width: 180px;
+}
+
+.euwb-table .euwb-actions .button {
+    white-space: nowrap;
+}
+
+.euwb-table .euwb-revoke-btn {
+    background: #dc3232;
+    border-color: #b22222;
+    color: #fff;
+}
+
+.euwb-order-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    background: #f0f0f0;
+    color: #444;
+}
+
+.euwb-order-status--pending-withdrawal,
+.euwb-order-status--pending-refund {
+    background: #fff8e1;
+    color: #6b4c00;
+}
+
+.euwb-order-status--cancelled {
+    background: #fde8e8;
+    color: #8c1a1a;
+}
+
+.euwb-order-status--refunded {
+    background: #edfaef;
+    color: #1e6422;
+}
+
+.euwb-order-status--processing,
+.euwb-order-status--on-hold {
+    background: #e8f0fe;
+    color: #1a3c8c;
+}
+
+.euwb-order-status--completed {
+    background: #edfaef;
+    color: #1e6422;
+}
+
+.euwb-table .euwb-revoke-btn:hover,
+.euwb-table .euwb-revoke-btn:focus {
+    background: #b22222;
+    border-color: #8c1a1a;
+    color: #fff;
+}
+
 .euwb-status {
     display: inline-block;
     padding: 3px 10px;

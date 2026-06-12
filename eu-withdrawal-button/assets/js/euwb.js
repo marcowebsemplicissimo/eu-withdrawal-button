@@ -192,6 +192,46 @@
     });
 
     // ----------------------------------------------------------------
+    // Admin log: "Conferma" button
+    // ----------------------------------------------------------------
+    $(document).on('click', '.euwb-confirm-btn', function () {
+        var $btn    = $(this);
+        var orderId = $btn.data('order-id');
+
+        if ( ! window.confirm( euwbAdminData.confirmWithdrawal ) ) return;
+
+        $btn.prop('disabled', true).text('…');
+
+        $.ajax({
+            url:    euwbAdminData.ajaxUrl,
+            method: 'POST',
+            data: {
+                action:   'euwb_admin_confirm',
+                nonce:    euwbAdminData.nonceConfirm,
+                order_id: orderId
+            },
+            success: function (response) {
+                if ( response.success ) {
+                    var $row = $btn.closest('tr');
+                    $row.find('.euwb-status')
+                        .removeClass('euwb-status--pending')
+                        .addClass('euwb-status--confirmed')
+                        .text('Confermato');
+                    $row.find('td:nth-child(8)').text( new Date().toLocaleDateString() );
+                    $btn.remove();
+                } else {
+                    alert( response.data || euwbAdminData.errorConfirmMessage );
+                    $btn.prop('disabled', false).text('Conferma');
+                }
+            },
+            error: function () {
+                alert( euwbAdminData.errorConfirmMessage );
+                $btn.prop('disabled', false).text('Conferma');
+            }
+        });
+    });
+
+    // ----------------------------------------------------------------
     // Admin log: "Revoca" button
     // ----------------------------------------------------------------
     $(document).on('click', '.euwb-revoke-btn', function () {
