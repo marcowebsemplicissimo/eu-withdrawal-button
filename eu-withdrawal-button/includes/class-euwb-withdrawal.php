@@ -79,6 +79,7 @@ class EUWB_Withdrawal {
                     )
                 );
             }
+            do_action( 'euwb_withdrawal_intent_created', $order_id );
             return $withdrawal_id;
         }
 
