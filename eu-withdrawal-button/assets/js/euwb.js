@@ -212,13 +212,7 @@
             },
             success: function (response) {
                 if ( response.success ) {
-                    var $row = $btn.closest('tr');
-                    $row.find('.euwb-status')
-                        .removeClass('euwb-status--pending')
-                        .addClass('euwb-status--confirmed')
-                        .text('Confermato');
-                    $row.find('td:nth-child(8)').text( new Date().toLocaleDateString() );
-                    $btn.remove();
+                    window.location.reload();
                 } else {
                     alert( response.data || euwbAdminData.errorConfirmMessage );
                     $btn.prop('disabled', false).text('Conferma');
@@ -254,9 +248,7 @@
             },
             success: function (response) {
                 if ( response.success ) {
-                    $btn.closest('tr').fadeOut(300, function () {
-                        $(this).remove();
-                    });
+                    window.location.reload();
                 } else {
                     alert( response.data || euwbAdminData.errorMessage );
                     $btn.prop('disabled', false).text( euwbAdminData.revokedLabel );

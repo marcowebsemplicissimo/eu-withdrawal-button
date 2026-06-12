@@ -236,7 +236,7 @@ class EUWB_Admin {
                                     <?php esc_html_e( 'Conferma', 'eu-withdrawal-button' ); ?>
                                 </button>
                                 <?php endif; ?>
-                                <?php if ( ! $order_obj || $order_obj->get_status() !== 'refunded' ) : ?>
+                                <?php if ( ! $order_obj || ( $order_obj->get_status() !== 'refunded' && $order_obj->get_status() !== 'trash' ) ) : ?>
                                 <button type="button"
                                     class="button euwb-revoke-btn"
                                     data-id="<?php echo absint( $row->id ); ?>"
