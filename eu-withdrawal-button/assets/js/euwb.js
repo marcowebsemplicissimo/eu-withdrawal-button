@@ -270,3 +270,50 @@
     });
 
 }(jQuery));
+
+/* EU Withdrawal Button – settings page tabs */
+(function ($) {
+    'use strict';
+
+    var STORAGE_KEY = 'euwb_active_tab';
+
+    $(document).ready(function () {
+        var $tabs   = $('#euwb-settings-tabs .nav-tab');
+        var $panels = $('.euwb-tab-panel');
+
+        if ( ! $tabs.length ) return;
+
+        function activateTab( tabName ) {
+            $tabs.removeClass('nav-tab-active');
+            $panels.hide();
+
+            var $link  = $tabs.filter('[data-tab="' + tabName + '"]');
+            var $panel = $('#euwb-tab-' + tabName);
+
+            if ( ! $link.length ) {
+                $link  = $tabs.first();
+                $panel = $panels.first();
+            }
+
+            $link.addClass('nav-tab-active');
+            $panel.show();
+            $('#euwb_active_tab').val( tabName );
+
+            try { sessionStorage.setItem( STORAGE_KEY, tabName ); } catch (e) {}
+        }
+
+        $tabs.on('click', function (e) {
+            e.preventDefault();
+            activateTab( $(this).data('tab') );
+        });
+
+        // Restore active tab: prefer URL param, then sessionStorage, then first tab
+        var urlParams  = new URLSearchParams( window.location.search );
+        var initialTab = urlParams.get('tab') ||
+                         ( function() { try { return sessionStorage.getItem( STORAGE_KEY ); } catch(e) { return null; } }() ) ||
+                         $tabs.first().data('tab');
+
+        activateTab( initialTab );
+    });
+
+}(jQuery));

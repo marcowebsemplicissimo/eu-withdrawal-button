@@ -17,33 +17,161 @@
     font-weight: 600;
 }
 
-.euwb-table {
-    margin-top: 1em;
+/* -----------------------------------------------------------------------
+   Log table – clean/minimal
+----------------------------------------------------------------------- */
+
+.euwb-admin-wrap {
+    max-width: 1400px;
 }
 
+.euwb-table {
+    margin-top: 1.5em;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+/* header */
+.euwb-table thead tr {
+    background: #f6f7f7;
+}
+
+.euwb-table thead th {
+    padding: 11px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #50575e;
+    border-bottom: 1px solid #e0e0e0;
+    border-top: none;
+    white-space: nowrap;
+}
+
+/* body rows */
+.euwb-table tbody tr {
+    background: #fff;
+    transition: background 120ms ease;
+}
+
+.euwb-table tbody tr:hover {
+    background: #f9f9fb;
+}
+
+.euwb-table tbody tr + tr td {
+    border-top: 1px solid #f0f0f0;
+}
+
+.euwb-table.striped tbody tr:nth-child(odd),
+.euwb-table.widefat.striped tbody tr:nth-child(odd) {
+    background: #fff;
+}
+
+.euwb-table td {
+    padding: 13px 16px;
+    font-size: 13px;
+    color: #1d2327;
+    vertical-align: middle;
+    border: none;
+}
+.euwb-table td:not(.euwb-reason-td){
+    white-space: nowrap;
+}
+
+
+/* order link */
+.euwb-table td a {
+    font-weight: 600;
+    color: #2271b1;
+    text-decoration: none;
+}
+
+.euwb-table td a:hover {
+    text-decoration: underline;
+}
+
+/* actions column */
 .euwb-table .euwb-actions {
     display: flex;
     flex-wrap: nowrap;
     gap: 6px;
     align-items: center;
-    min-width: 180px;
 }
 
 .euwb-table .euwb-actions .button {
     white-space: nowrap;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 4px 12px;
+    height: auto;
+    line-height: 1.5;
+    box-shadow: none;
 }
 
+/* revoke button */
 .euwb-table .euwb-revoke-btn {
+    background: #fff;
+    border: 1px solid #dc3232;
+    color: #dc3232;
+    font-weight: 600;
+}
+
+.euwb-table .euwb-revoke-btn:hover,
+.euwb-table .euwb-revoke-btn:focus {
     background: #dc3232;
-    border-color: #b22222;
+    border-color: #dc3232;
     color: #fff;
+}
+
+/* status badges */
+.euwb-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .02em;
+}
+
+.euwb-status::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.euwb-status--confirmed {
+    background: #edfaef;
+    color: #1e6422;
+}
+
+.euwb-status--confirmed::before {
+    background: #46b450;
+}
+
+.euwb-status--pending {
+    background: #fff8e1;
+    color: #6b4c00;
+}
+
+.euwb-status--pending::before {
+    background: #f0a500;
 }
 
 .euwb-order-status {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 20px;
-    font-size: 0.85em;
+    font-size: 12px;
     font-weight: 600;
     background: #f0f0f0;
     color: #444;
@@ -76,27 +204,43 @@
     color: #1e6422;
 }
 
-.euwb-table .euwb-revoke-btn:hover,
-.euwb-table .euwb-revoke-btn:focus {
-    background: #b22222;
-    border-color: #8c1a1a;
-    color: #fff;
+/* -----------------------------------------------------------------------
+   Settings page – tab layout
+----------------------------------------------------------------------- */
+
+.euwb-settings-wrap .euwb-tab-wrapper {
+    margin-bottom: 0;
+    border-bottom: 1px solid #c3c4c7;
 }
 
-.euwb-status {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.85em;
+.euwb-settings-wrap .nav-tab {
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+.euwb-settings-form .euwb-tab-panel {
+    display: none;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-top: none;
+    padding: 24px 24px 8px;
+    margin-bottom: 20px;
+}
+
+.euwb-settings-form .euwb-tab-panel .form-table th {
+    width: 240px;
+}
+
+.euwb-email-block + .euwb-email-block {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 24px;
+    padding-top: 16px;
+}
+
+.euwb-email-title {
+    font-size: 14px;
     font-weight: 600;
-}
-
-.euwb-status--confirmed {
-    background: #edfaef;
-    color: #1e6422;
-}
-
-.euwb-status--pending {
-    background: #fff8e1;
-    color: #6b4c00;
+    margin: 0 0 8px;
+    padding: 0;
+    color: #1d2327;
 }
