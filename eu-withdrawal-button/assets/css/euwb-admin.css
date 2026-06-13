@@ -105,6 +105,122 @@
     white-space: nowrap;
 }
 
+/* reason column */
+.euwb-table .euwb-reason-td {
+    white-space: nowrap;
+}
+.euwb-table .euwb-reason-btn {
+    white-space: nowrap;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 4px 10px;
+    height: auto;
+    line-height: 1.5;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.euwb-reason-btn .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin: 0;
+}
+
+/* -----------------------------------------------------------------------
+   Reason lightbox / modal
+----------------------------------------------------------------------- */
+
+.euwb-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.euwb-modal[hidden] {
+    display: none;
+}
+
+.euwb-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    cursor: pointer;
+}
+
+.euwb-modal__box {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .22);
+    width: 480px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.euwb-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.euwb-modal__header h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2327;
+    padding: 0;
+    border: none;
+}
+
+.euwb-modal__close {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    padding: 2px !important;
+    display: flex;
+    align-items: center;
+    color: #787c82;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.euwb-modal__close:hover {
+    color: #dc3232;
+}
+
+.euwb-modal__close .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.euwb-modal__body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.euwb-modal__body p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1d2327;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
 
 /* order link */
 .euwb-table td a {

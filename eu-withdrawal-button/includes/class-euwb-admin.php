@@ -265,7 +265,17 @@ class EUWB_Admin {
                         </td>
                         <td><?php echo esc_html( $row->first_name . ' ' . $row->last_name ); ?></td>
                         <td><?php echo esc_html( $row->email ); ?></td>
-                        <td class="euwb-reason-td"><?php echo esc_html( $row->reason ?: '—' ); ?></td>
+                        <td class="euwb-reason-td">
+                            <?php if ( ! empty( $row->reason ) ) : ?>
+                                <button type="button"
+                                    class="button euwb-reason-btn"
+                                    data-reason="<?php echo esc_attr( $row->reason ); ?>">
+                                    <span class="dashicons dashicons-visibility"></span> <?php esc_html_e( 'Mostra', 'eu-withdrawal-button' ); ?>
+                                </button>
+                            <?php else : ?>
+                                —
+                            <?php endif; ?>
+                        </td>
                         <td><span class="euwb-status euwb-status--<?php echo esc_attr( $row->status ); ?>"><?php echo esc_html( $row->status === 'confirmed' ? 'Confermato' : 'In attesa' ); ?></span></td>
                         <td><?php
                             if ( ! empty( $row->order_deleted ) ) {
@@ -310,6 +320,22 @@ class EUWB_Admin {
                 <?php endif; ?>
                 </tbody>
             </table>
+
+            <!-- Lightbox motivo recesso -->
+            <div id="euwb-reason-modal" class="euwb-modal" role="dialog" aria-modal="true" aria-labelledby="euwb-reason-modal-title" hidden>
+                <div class="euwb-modal__backdrop"></div>
+                <div class="euwb-modal__box">
+                    <div class="euwb-modal__header">
+                        <h2 id="euwb-reason-modal-title"><?php esc_html_e( 'Motivo del recesso', 'eu-withdrawal-button' ); ?></h2>
+                        <button type="button" class="euwb-modal__close" aria-label="<?php esc_attr_e( 'Chiudi', 'eu-withdrawal-button' ); ?>">
+                            <span class="dashicons dashicons-no-alt"></span>
+                        </button>
+                    </div>
+                    <div class="euwb-modal__body">
+                        <p id="euwb-reason-modal-text"></p>
+                    </div>
+                </div>
+            </div>
 
             <?php if ( $pages > 1 ) : ?>
             <div class="tablenav bottom">

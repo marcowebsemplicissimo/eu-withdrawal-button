@@ -259,6 +259,36 @@
     });
 
     // ----------------------------------------------------------------
+    // Admin log: "Mostra motivo" lightbox
+    // ----------------------------------------------------------------
+    var $modal      = $('#euwb-reason-modal');
+    var $modalText  = $('#euwb-reason-modal-text');
+
+    function openReasonModal( reason ) {
+        $modalText.text( reason );
+        $modal.removeAttr('hidden');
+        $modal.find('.euwb-modal__close').trigger('focus');
+    }
+
+    function closeReasonModal() {
+        $modal.attr('hidden', true);
+    }
+
+    $(document).on('click', '.euwb-reason-btn', function () {
+        openReasonModal( $(this).data('reason') );
+    });
+
+    $(document).on('click', '.euwb-modal__close, .euwb-modal__backdrop', function () {
+        closeReasonModal();
+    });
+
+    $(document).on('keydown', function ( e ) {
+        if ( e.key === 'Escape' && ! $modal.attr('hidden') ) {
+            closeReasonModal();
+        }
+    });
+
+    // ----------------------------------------------------------------
     // Admin log: "Revoca" button
     // ----------------------------------------------------------------
     $(document).on('click', '.euwb-revoke-btn', function () {
