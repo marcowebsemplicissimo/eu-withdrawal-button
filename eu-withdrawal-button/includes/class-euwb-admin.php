@@ -418,13 +418,13 @@ class EUWB_Admin {
     // Settings page
     // -----------------------------------------------------------------------
     public function render_settings_page() {
-        $default_intro        = __( 'Hai il diritto di recedere dal presente contratto entro %1$d giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra %2$d giorni.', 'eu-withdrawal-button' );
+        $default_intro        = __( 'Hai il diritto di recedere dal presente contratto entro {withdrawal_window} giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra {days_left} giorni.', 'eu-withdrawal-button' );
         $default_btn_label    = __( 'Recedi dal contratto qui', 'eu-withdrawal-button' );
         $default_form_instr   = __( 'Per esercitare il diritto di recesso, compilare il modulo sottostante e fare clic sul pulsante.', 'eu-withdrawal-button' );
         $default_intent_subj  = __( 'Richiesta di recesso ricevuta – Ordine #{order_number}', 'eu-withdrawal-button' );
         $default_intent_body  = __( "Gentile {customer_name},\n\nabbiamo ricevuto la tua richiesta di recesso per l'ordine #{order_number} del {order_date}.\n\nLa richiesta è attualmente in fase di elaborazione. Riceverai un'email di conferma non appena sarà processata.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' );
         $default_confirm_subj = __( 'Conferma di recesso – Ordine #{order_number}', 'eu-withdrawal-button' );
-        $default_confirm_body = sprintf( __( "Gentile {customer_name},\n\nil tuo recesso per l'ordine #{order_number} del {order_date} è stato confermato.\n\nIl rimborso sarà elaborato nei prossimi %d giorni lavorativi con lo stesso metodo di pagamento utilizzato all'acquisto.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' ), (int) get_option( 'euwb_return_window', 14 ) );
+        $default_confirm_body = __( "Gentile {customer_name},\n\nil tuo recesso per l'ordine #{order_number} del {order_date} è stato confermato.\n\nIl rimborso sarà elaborato nei prossimi {return_window} giorni lavorativi con lo stesso metodo di pagamento utilizzato all'acquisto.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' );
         $default_success_standard = __( "Richiesta di recesso inviata con successo. Riceverai un'email di presa in carico. La tua richiesta sarà valutata dall'amministratore.", 'eu-withdrawal-button' );
         $default_success_direct   = __( "Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.", 'eu-withdrawal-button' );
 
@@ -521,7 +521,7 @@ class EUWB_Admin {
                         <tr>
                             <th><label for="euwb_admin_email"><?php esc_html_e( 'Email notifiche admin', 'eu-withdrawal-button' ); ?></label></th>
                             <td>
-                                <input type="email" id="euwb_admin_email" name="euwb_admin_email" value="<?php echo esc_attr( $email ); ?>" class="regular-text">
+                                <input type="email" id="euwb_admin_email" name="euwb_admin_email" value="<?php echo esc_attr( $email ); ?>" class="regular-text" placeholder="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>">
                                 <p class="description"><?php esc_html_e( 'Riceverà una notifica ad ogni recesso confermato.', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
@@ -592,35 +592,35 @@ class EUWB_Admin {
                         <tr>
                             <th><label for="euwb_intro_text"><?php esc_html_e( 'Testo introduttivo recesso', 'eu-withdrawal-button' ); ?></label></th>
                             <td>
-                                <textarea id="euwb_intro_text" name="euwb_intro_text" rows="4" class="large-text"><?php echo esc_textarea( $intro_text ); ?></textarea>
-                                <p class="description"><?php echo wp_kses_post( sprintf( __( 'Usa <code>%%1$d</code> per la finestra in giorni (es. 14) e <code>%%2$d</code> per i giorni rimasti alla scadenza.', 'eu-withdrawal-button' ) ) ); ?></p>
+                                <textarea id="euwb_intro_text" name="euwb_intro_text" rows="4" class="large-text" placeholder="<?php echo esc_attr( $default_intro ); ?>"><?php echo esc_textarea( $intro_text ); ?></textarea>
+                                <p class="description"><?php echo wp_kses_post( __( 'Segnaposto disponibili: <code>{withdrawal_window}</code> (finestra in giorni), <code>{days_left}</code> (giorni rimasti alla scadenza).', 'eu-withdrawal-button' ) ); ?></p>
                             </td>
                         </tr>
                         <tr>
                             <th><label for="euwb_form_instructions"><?php esc_html_e( 'Istruzioni modulo recesso', 'eu-withdrawal-button' ); ?></label></th>
                             <td>
-                                <input type="text" id="euwb_form_instructions" name="euwb_form_instructions" value="<?php echo esc_attr( $form_instr ); ?>" class="large-text">
+                                <input type="text" id="euwb_form_instructions" name="euwb_form_instructions" value="<?php echo esc_attr( $form_instr ); ?>" class="large-text" placeholder="<?php echo esc_attr( $default_form_instr ); ?>">
                                 <p class="description"><?php esc_html_e( 'Testo visualizzato sopra il modulo di recesso.', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
                         <tr>
                             <th><label for="euwb_btn_label"><?php esc_html_e( 'Label pulsante di recesso', 'eu-withdrawal-button' ); ?></label></th>
                             <td>
-                                <input type="text" id="euwb_btn_label" name="euwb_btn_label" value="<?php echo esc_attr( $btn_label ); ?>" class="regular-text">
+                                <input type="text" id="euwb_btn_label" name="euwb_btn_label" value="<?php echo esc_attr( $btn_label ); ?>" class="regular-text" placeholder="<?php echo esc_attr( $default_btn_label ); ?>">
                                 <p class="description"><?php esc_html_e( 'Testo del pulsante che il cliente clicca per avviare la procedura di recesso.', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
                         <tr>
                             <th><label for="euwb_success_message_standard"><?php esc_html_e( 'Messaggio di successo (flusso standard)', 'eu-withdrawal-button' ); ?></label></th>
                             <td>
-                                <input type="text" id="euwb_success_message_standard" name="euwb_success_message_standard" value="<?php echo esc_attr( $success_standard ); ?>" class="large-text">
+                                <input type="text" id="euwb_success_message_standard" name="euwb_success_message_standard" value="<?php echo esc_attr( $success_standard ); ?>" class="large-text" placeholder="<?php echo esc_attr( $default_success_standard ); ?>">
                                 <p class="description"><?php esc_html_e( 'Mostrato al cliente dopo l\'invio della richiesta in attesa di approvazione (flusso standard).', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
                         <tr>
                             <th><label for="euwb_success_message_direct"><?php esc_html_e( 'Messaggio di successo (flusso diretto)', 'eu-withdrawal-button' ); ?></label></th>
                             <td>
-                                <input type="text" id="euwb_success_message_direct" name="euwb_success_message_direct" value="<?php echo esc_attr( $success_direct ); ?>" class="large-text">
+                                <input type="text" id="euwb_success_message_direct" name="euwb_success_message_direct" value="<?php echo esc_attr( $success_direct ); ?>" class="large-text" placeholder="<?php echo esc_attr( $default_success_direct ); ?>">
                                 <p class="description"><?php esc_html_e( 'Mostrato al cliente quando il recesso viene confermato immediatamente (flusso diretto).', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
@@ -631,30 +631,30 @@ class EUWB_Admin {
                 <div id="euwb-tab-email" class="euwb-tab-panel">
                     <div class="euwb-email-block">
                         <h2 class="euwb-email-title"><?php esc_html_e( 'Email al cliente – Richiesta ricevuta (flusso standard)', 'eu-withdrawal-button' ); ?></h2>
-                        <p class="description"><?php echo wp_kses_post( __( 'Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>', 'eu-withdrawal-button' ) ); ?></p>
+                        <p class="description"><?php echo wp_kses_post( __( 'Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>, <code>{withdrawal_window}</code>', 'eu-withdrawal-button' ) ); ?></p>
                         <table class="form-table">
                             <tr>
                                 <th><label for="euwb_intent_email_subject"><?php esc_html_e( 'Oggetto', 'eu-withdrawal-button' ); ?></label></th>
-                                <td><input type="text" id="euwb_intent_email_subject" name="euwb_intent_email_subject" value="<?php echo esc_attr( get_option( 'euwb_intent_email_subject', $default_intent_subj ) ); ?>" class="large-text"></td>
+                                <td><input type="text" id="euwb_intent_email_subject" name="euwb_intent_email_subject" value="<?php echo esc_attr( get_option( 'euwb_intent_email_subject', $default_intent_subj ) ); ?>" class="large-text" placeholder="<?php echo esc_attr( $default_intent_subj ); ?>"></td>
                             </tr>
                             <tr>
                                 <th><label for="euwb_intent_email_body"><?php esc_html_e( 'Corpo', 'eu-withdrawal-button' ); ?></label></th>
-                                <td><textarea id="euwb_intent_email_body" name="euwb_intent_email_body" rows="7" class="large-text"><?php echo esc_textarea( get_option( 'euwb_intent_email_body', $default_intent_body ) ); ?></textarea></td>
+                                <td><textarea id="euwb_intent_email_body" name="euwb_intent_email_body" rows="7" class="large-text" placeholder="<?php echo esc_attr( $default_intent_body ); ?>"><?php echo esc_textarea( get_option( 'euwb_intent_email_body', $default_intent_body ) ); ?></textarea></td>
                             </tr>
                         </table>
                     </div>
 
                     <div class="euwb-email-block">
                         <h2 class="euwb-email-title"><?php esc_html_e( 'Email al cliente – Recesso confermato', 'eu-withdrawal-button' ); ?></h2>
-                        <p class="description"><?php echo wp_kses_post( __( 'Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>', 'eu-withdrawal-button' ) ); ?></p>
+                        <p class="description"><?php echo wp_kses_post( __( 'Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>, <code>{return_window}</code>', 'eu-withdrawal-button' ) ); ?></p>
                         <table class="form-table">
                             <tr>
                                 <th><label for="euwb_confirmation_email_subject"><?php esc_html_e( 'Oggetto', 'eu-withdrawal-button' ); ?></label></th>
-                                <td><input type="text" id="euwb_confirmation_email_subject" name="euwb_confirmation_email_subject" value="<?php echo esc_attr( get_option( 'euwb_confirmation_email_subject', $default_confirm_subj ) ); ?>" class="large-text"></td>
+                                <td><input type="text" id="euwb_confirmation_email_subject" name="euwb_confirmation_email_subject" value="<?php echo esc_attr( get_option( 'euwb_confirmation_email_subject', $default_confirm_subj ) ); ?>" class="large-text" placeholder="<?php echo esc_attr( $default_confirm_subj ); ?>"></td>
                             </tr>
                             <tr>
                                 <th><label for="euwb_confirmation_email_body"><?php esc_html_e( 'Corpo', 'eu-withdrawal-button' ); ?></label></th>
-                                <td><textarea id="euwb_confirmation_email_body" name="euwb_confirmation_email_body" rows="7" class="large-text"><?php echo esc_textarea( get_option( 'euwb_confirmation_email_body', $default_confirm_body ) ); ?></textarea></td>
+                                <td><textarea id="euwb_confirmation_email_body" name="euwb_confirmation_email_body" rows="7" class="large-text" placeholder="<?php echo esc_attr( $default_confirm_body ); ?>"><?php echo esc_textarea( get_option( 'euwb_confirmation_email_body', $default_confirm_body ) ); ?></textarea></td>
                             </tr>
                         </table>
                     </div>
@@ -667,13 +667,10 @@ class EUWB_Admin {
                                 <th><label for="euwb_return_instructions"><?php esc_html_e( 'Testo istruzioni', 'eu-withdrawal-button' ); ?></label></th>
                                 <td>
                                     <?php
-                                    $default_return = sprintf(
-                                        /* translators: %d: return window in days */
-                                        __( "Per completare il recesso è necessario restituire il prodotto entro %d giorni dalla data di conferma del recesso.\n\nSpedire il pacco a:\n[Ragione sociale / Nome]\n[Indirizzo]\n[CAP – Città (Provincia)]\n\nLe spese di restituzione sono a carico del cliente, salvo diverso accordo. Si consiglia di utilizzare un servizio con tracciamento della spedizione.", 'eu-withdrawal-button' ),
-                                        (int) get_option( 'euwb_return_window', 14 )
-                                    );
+                                    $default_return = __( "Per completare il recesso è necessario restituire il prodotto entro {return_window} giorni dalla data di conferma del recesso.\n\nSpedire il pacco a:\n[Ragione sociale / Nome]\n[Indirizzo]\n[CAP – Città (Provincia)]\n\nLe spese di restituzione sono a carico del cliente, salvo diverso accordo. Si consiglia di utilizzare un servizio con tracciamento della spedizione.", 'eu-withdrawal-button' );
                                     ?>
-                                    <textarea id="euwb_return_instructions" name="euwb_return_instructions" rows="8" class="large-text"><?php echo esc_textarea( get_option( 'euwb_return_instructions', $default_return ) ); ?></textarea>
+                                    <p class="description"><?php echo wp_kses_post( __( 'Segnaposto disponibile: <code>{return_window}</code> (giorni per la restituzione).', 'eu-withdrawal-button' ) ); ?></p>
+                                    <textarea id="euwb_return_instructions" name="euwb_return_instructions" rows="8" class="large-text" placeholder="<?php echo esc_attr( $default_return ); ?>"><?php echo esc_textarea( get_option( 'euwb_return_instructions', '' ) ); ?></textarea>
                                 </td>
                             </tr>
                         </table>

@@ -47,10 +47,12 @@ class EUWB_Emails {
      */
     public static function replace_placeholders( $text, $order, $withdrawal = null ) {
         $placeholders = array(
-            '{order_number}'    => $order->get_order_number(),
-            '{order_date}'      => wc_format_datetime( $order->get_date_created() ),
-            '{customer_name}'   => trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
-            '{withdrawal_date}' => $withdrawal ? date_i18n( get_option( 'date_format' ), strtotime( $withdrawal->created_at ) ) : '',
+            '{order_number}'      => $order->get_order_number(),
+            '{order_date}'        => wc_format_datetime( $order->get_date_created() ),
+            '{customer_name}'     => trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
+            '{withdrawal_date}'   => $withdrawal ? date_i18n( get_option( 'date_format' ), strtotime( $withdrawal->created_at ) ) : '',
+            '{return_window}'     => (int) get_option( 'euwb_return_window', 14 ),
+            '{withdrawal_window}' => (int) get_option( 'euwb_withdrawal_window', 14 ),
         );
         return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $text );
     }

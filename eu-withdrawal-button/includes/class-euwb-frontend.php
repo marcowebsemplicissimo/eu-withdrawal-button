@@ -123,13 +123,14 @@ class EUWB_Frontend {
             $deadline->modify( '+' . EUWB_WITHDRAWAL_WINDOW_DAYS . ' days' );
             $days_left      = ceil( ( $deadline->getTimestamp() - current_time( 'timestamp', true ) ) / DAY_IN_SECONDS );
 
-            $intro_default = __( 'Hai il diritto di recedere dal presente contratto entro %1$d giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra %2$d giorni.', 'eu-withdrawal-button' );
+            $intro_default = __( 'Hai il diritto di recedere dal presente contratto entro {withdrawal_window} giorni senza fornire alcuna motivazione. Il periodo di recesso scade tra {days_left} giorni.', 'eu-withdrawal-button' );
             $intro_text    = get_option( 'euwb_intro_text', $intro_default );
-            echo '<p class="euwb-intro">' . wp_kses_post( sprintf(
-                $intro_text,
-                (int) get_option( 'euwb_withdrawal_window', 14 ),
-                max( 1, (int) $days_left )
-            ) ) . '</p>';
+            $intro_text    = str_replace(
+                array( '{withdrawal_window}', '{days_left}' ),
+                array( (int) get_option( 'euwb_withdrawal_window', 14 ), max( 1, (int) $days_left ) ),
+                $intro_text
+            );
+            echo '<p class="euwb-intro">' . wp_kses_post( $intro_text ) . '</p>';
 
             // Return instructions box (physical products only)
             $return_instructions = EUWB_Withdrawal::get_return_instructions( $order );

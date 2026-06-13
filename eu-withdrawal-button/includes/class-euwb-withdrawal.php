@@ -288,7 +288,8 @@ class EUWB_Withdrawal {
      */
     public static function get_return_instructions( $order ) {
         if ( ! self::order_needs_shipping( $order ) ) return '';
-        return (string) get_option( 'euwb_return_instructions', '' );
+        $text = (string) get_option( 'euwb_return_instructions', '' );
+        return str_replace( '{return_window}', (int) get_option( 'euwb_return_window', 14 ), $text );
     }
 
     /**
