@@ -433,17 +433,17 @@ class EUWB_Admin {
             update_option( 'euwb_flow_mode', in_array( $_POST['euwb_flow_mode'] ?? '', array( 'standard', 'direct' ), true ) ? $_POST['euwb_flow_mode'] : 'standard' );
             update_option( 'euwb_withdrawal_window', absint( $_POST['euwb_withdrawal_window'] ?? 14 ) );
             update_option( 'euwb_return_window', absint( $_POST['euwb_return_window'] ?? 14 ) );
-            update_option( 'euwb_admin_email', sanitize_email( $_POST['euwb_admin_email'] ?? get_option( 'admin_email' ) ) );
-            update_option( 'euwb_return_instructions', wp_kses_post( $_POST['euwb_return_instructions'] ?? '' ) );
-            update_option( 'euwb_intro_text', wp_kses_post( $_POST['euwb_intro_text'] ?? $default_intro ) );
-            update_option( 'euwb_btn_label', sanitize_text_field( $_POST['euwb_btn_label'] ?? $default_btn_label ) );
-            update_option( 'euwb_form_instructions', sanitize_text_field( $_POST['euwb_form_instructions'] ?? $default_form_instr ) );
-            update_option( 'euwb_success_message_standard', sanitize_text_field( $_POST['euwb_success_message_standard'] ?? $default_success_standard ) );
-            update_option( 'euwb_success_message_direct',   sanitize_text_field( $_POST['euwb_success_message_direct'] ?? $default_success_direct ) );
-            update_option( 'euwb_intent_email_subject',       sanitize_text_field( $_POST['euwb_intent_email_subject'] ?? $default_intent_subj ) );
-            update_option( 'euwb_intent_email_body',          wp_kses_post( $_POST['euwb_intent_email_body'] ?? $default_intent_body ) );
-            update_option( 'euwb_confirmation_email_subject', sanitize_text_field( $_POST['euwb_confirmation_email_subject'] ?? $default_confirm_subj ) );
-            update_option( 'euwb_confirmation_email_body',    wp_kses_post( $_POST['euwb_confirmation_email_body'] ?? $default_confirm_body ) );
+            update_option( 'euwb_admin_email', sanitize_email( wp_unslash( $_POST['euwb_admin_email'] ?? get_option( 'admin_email' ) ) ) );
+            update_option( 'euwb_return_instructions', wp_kses_post( wp_unslash( $_POST['euwb_return_instructions'] ?? '' ) ) );
+            update_option( 'euwb_intro_text', wp_kses_post( wp_unslash( $_POST['euwb_intro_text'] ?? $default_intro ) ) );
+            update_option( 'euwb_btn_label', sanitize_text_field( wp_unslash( $_POST['euwb_btn_label'] ?? $default_btn_label ) ) );
+            update_option( 'euwb_form_instructions', sanitize_text_field( wp_unslash( $_POST['euwb_form_instructions'] ?? $default_form_instr ) ) );
+            update_option( 'euwb_success_message_standard', sanitize_text_field( wp_unslash( $_POST['euwb_success_message_standard'] ?? $default_success_standard ) ) );
+            update_option( 'euwb_success_message_direct',   sanitize_text_field( wp_unslash( $_POST['euwb_success_message_direct'] ?? $default_success_direct ) ) );
+            update_option( 'euwb_intent_email_subject',       sanitize_text_field( wp_unslash( $_POST['euwb_intent_email_subject'] ?? $default_intent_subj ) ) );
+            update_option( 'euwb_intent_email_body',          wp_kses_post( wp_unslash( $_POST['euwb_intent_email_body'] ?? $default_intent_body ) ) );
+            update_option( 'euwb_confirmation_email_subject', sanitize_text_field( wp_unslash( $_POST['euwb_confirmation_email_subject'] ?? $default_confirm_subj ) ) );
+            update_option( 'euwb_confirmation_email_body',    wp_kses_post( wp_unslash( $_POST['euwb_confirmation_email_body'] ?? $default_confirm_body ) ) );
 
             // Taxonomy exclusions — sanitize as arrays of integer IDs
             $excluded_cats   = array_map( 'absint', (array) ( $_POST['euwb_excluded_categories'] ?? array() ) );
