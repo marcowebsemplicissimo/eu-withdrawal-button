@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: EU Withdrawal Button\n"
-"POT-Creation-Date: 2026-06-12 23:10+0200\n"
-"PO-Revision-Date: 2026-06-12 23:10+0200\n"
+"POT-Creation-Date: 2026-06-13 14:59+0200\n"
+"PO-Revision-Date: 2026-06-13 14:59+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -21,37 +21,37 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: eu-withdrawal-button.php:49 eu-withdrawal-button.php:73
-#: eu-withdrawal-button.php:78
+#: eu-withdrawal-button.php:53 eu-withdrawal-button.php:77
+#: eu-withdrawal-button.php:82
 msgctxt "Order status"
 msgid "In attesa di conferma recesso"
 msgstr "In attesa di conferma recesso"
 
-#: eu-withdrawal-button.php:54
+#: eu-withdrawal-button.php:58
 #, php-format
 msgid "In attesa di conferma recesso <span class=\"count\">(%s)</span>"
 msgid_plural "In attesa di conferma recesso <span class=\"count\">(%s)</span>"
 msgstr[0] "In attesa di conferma recesso <span class=\"count\">(%s)</span>"
 msgstr[1] "In attesa di conferma recesso <span class=\"count\">(%s)</span>"
 
-#: eu-withdrawal-button.php:57 eu-withdrawal-button.php:74
-#: eu-withdrawal-button.php:81
+#: eu-withdrawal-button.php:61 eu-withdrawal-button.php:78
+#: eu-withdrawal-button.php:85
 msgctxt "Order status"
 msgid "In attesa di rimborso"
 msgstr "In attesa di rimborso"
 
-#: eu-withdrawal-button.php:62
+#: eu-withdrawal-button.php:66
 #, php-format
 msgid "In attesa di rimborso <span class=\"count\">(%s)</span>"
 msgid_plural "In attesa di rimborso <span class=\"count\">(%s)</span>"
 msgstr[0] "In attesa di rimborso <span class=\"count\">(%s)</span>"
 msgstr[1] "In attesa di rimborso <span class=\"count\">(%s)</span>"
 
-#: eu-withdrawal-button.php:111
+#: eu-withdrawal-button.php:124
 msgid "WooCommerce deve essere attivo per usare questo plugin."
 msgstr "WooCommerce deve essere attivo per usare questo plugin."
 
-#: includes/class-euwb-admin.php:33
+#: includes/class-euwb-admin.php:42
 msgid ""
 "Eliminare questo record di recesso e aggiungere una nota di revoca "
 "all'ordine?"
@@ -59,7 +59,7 @@ msgstr ""
 "Eliminare questo record di recesso e aggiungere una nota di revoca "
 "all'ordine?"
 
-#: includes/class-euwb-admin.php:34
+#: includes/class-euwb-admin.php:43
 msgid ""
 "Confermare la richiesta di recesso? L'ordine passerà in stato \"In attesa di "
 "rimborso\"."
@@ -67,79 +67,79 @@ msgstr ""
 "Confermare la richiesta di recesso? L'ordine passerà in stato \"In attesa di "
 "rimborso\"."
 
-#: includes/class-euwb-admin.php:35
+#: includes/class-euwb-admin.php:44
 msgid "Revocato"
 msgstr "Revocato"
 
-#: includes/class-euwb-admin.php:36
+#: includes/class-euwb-admin.php:45
 msgid "Errore durante la revoca. Riprova."
 msgstr "Errore durante la revoca. Riprova."
 
-#: includes/class-euwb-admin.php:37
+#: includes/class-euwb-admin.php:46
 msgid "Errore durante la conferma del recesso. Riprova."
 msgstr "Errore durante la conferma del recesso. Riprova."
 
-#: includes/class-euwb-admin.php:38
+#: includes/class-euwb-admin.php:47
 msgid "Recesso confermato. La pagina verrà ricaricata."
 msgstr "Recesso confermato. La pagina verrà ricaricata."
 
-#: includes/class-euwb-admin.php:50
+#: includes/class-euwb-admin.php:59
 msgid "Recesso EU"
 msgstr "Recesso EU"
 
-#: includes/class-euwb-admin.php:67
+#: includes/class-euwb-admin.php:76
 msgid "Nessuna richiesta di recesso per questo ordine."
 msgstr "Nessuna richiesta di recesso per questo ordine."
 
-#: includes/class-euwb-admin.php:72 includes/class-euwb-emails.php:178
+#: includes/class-euwb-admin.php:81 includes/class-euwb-emails.php:178
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:30
 #: includes/emails/templates/euwb-customer-confirmation.php:50
 msgid "Confermato"
 msgstr "Confermato"
 
-#: includes/class-euwb-admin.php:73 includes/class-euwb-admin.php:194
-#: includes/class-euwb-admin.php:200
+#: includes/class-euwb-admin.php:82 includes/class-euwb-admin.php:203
+#: includes/class-euwb-admin.php:209
 msgid "In attesa"
 msgstr "In attesa"
 
-#: includes/class-euwb-admin.php:75
+#: includes/class-euwb-admin.php:84
 msgid "Cliente:"
 msgstr "Cliente:"
 
-#: includes/class-euwb-admin.php:76
+#: includes/class-euwb-admin.php:85
 msgid "Email:"
 msgstr "Email:"
 
-#: includes/class-euwb-admin.php:77
+#: includes/class-euwb-admin.php:86
 msgid "Richiesto il:"
 msgstr "Richiesto il:"
 
-#: includes/class-euwb-admin.php:79
+#: includes/class-euwb-admin.php:88
 msgid "Motivo:"
 msgstr "Motivo:"
 
-#: includes/class-euwb-admin.php:81
+#: includes/class-euwb-admin.php:90
 msgid "Stato:"
 msgstr "Stato:"
 
-#: includes/class-euwb-admin.php:86
+#: includes/class-euwb-admin.php:95
 msgid "Conferma richiesta di recesso"
 msgstr "Conferma richiesta di recesso"
 
-#: includes/class-euwb-admin.php:99 includes/class-euwb-admin.php:333
+#: includes/class-euwb-admin.php:108 includes/class-euwb-admin.php:385
 msgid "Permessi insufficienti."
 msgstr "Permessi insufficienti."
 
-#: includes/class-euwb-admin.php:104
+#: includes/class-euwb-admin.php:113
 msgid "ID ordine non valido."
 msgstr "ID ordine non valido."
 
-#: includes/class-euwb-admin.php:109 includes/class-euwb-admin.php:359
-#: includes/class-euwb-frontend.php:187 includes/class-euwb-frontend.php:224
+#: includes/class-euwb-admin.php:118 includes/class-euwb-admin.php:411
+#: includes/class-euwb-frontend.php:192 includes/class-euwb-frontend.php:230
 msgid "Ordine non trovato."
 msgstr "Ordine non trovato."
 
-#: includes/class-euwb-admin.php:114
+#: includes/class-euwb-admin.php:123
 msgid ""
 "Impossibile confermare. La richiesta potrebbe non esistere o essere già "
 "stata confermata."
@@ -148,67 +148,67 @@ msgstr ""
 "stata confermata."
 
 #. Plugin Name of the plugin/theme
-#: includes/class-euwb-admin.php:122
+#: includes/class-euwb-admin.php:131
 msgid "EU Withdrawal Button"
 msgstr "EU Withdrawal Button"
 
-#: includes/class-euwb-admin.php:123
+#: includes/class-euwb-admin.php:132
 msgid "EU Withdrawal"
 msgstr "EU Withdrawal"
 
-#: includes/class-euwb-admin.php:132 includes/class-euwb-admin.php:133
+#: includes/class-euwb-admin.php:141 includes/class-euwb-admin.php:142
 msgid "Registro Recessi"
 msgstr "Registro Recessi"
 
-#: includes/class-euwb-admin.php:140 includes/class-euwb-admin.php:141
+#: includes/class-euwb-admin.php:149 includes/class-euwb-admin.php:150
 msgid "Impostazioni"
 msgstr "Impostazioni"
 
-#: includes/class-euwb-admin.php:152
+#: includes/class-euwb-admin.php:161
 msgid "Recessi per pagina"
 msgstr "Recessi per pagina"
 
-#: includes/class-euwb-admin.php:193
+#: includes/class-euwb-admin.php:202
 msgid "Registro Recessi EU"
 msgstr "Registro Recessi EU"
 
-#: includes/class-euwb-admin.php:199
+#: includes/class-euwb-admin.php:208
 msgid "Tutti"
 msgstr "Tutti"
 
-#: includes/class-euwb-admin.php:201
+#: includes/class-euwb-admin.php:210
 msgid "Confermati"
 msgstr "Confermati"
 
-#: includes/class-euwb-admin.php:208
+#: includes/class-euwb-admin.php:217
 msgid "Cerca recessi"
 msgstr "Cerca recessi"
 
-#: includes/class-euwb-admin.php:209
+#: includes/class-euwb-admin.php:218
 msgid "Nome, email, n° ordine…"
 msgstr "Nome, email, n° ordine…"
 
-#: includes/class-euwb-admin.php:210
+#: includes/class-euwb-admin.php:219
 msgid "Cerca"
 msgstr "Cerca"
 
-#: includes/class-euwb-admin.php:212
+#: includes/class-euwb-admin.php:221
 msgid "✕ Rimuovi filtro"
 msgstr "✕ Rimuovi filtro"
 
-#: includes/class-euwb-admin.php:218
+#: includes/class-euwb-admin.php:227
 msgid "Esporta CSV"
 msgstr "Esporta CSV"
 
-#: includes/class-euwb-admin.php:221
+#: includes/class-euwb-admin.php:230
 msgid "Esporta XLS"
 msgstr "Esporta XLS"
 
-#: includes/class-euwb-admin.php:230
+#: includes/class-euwb-admin.php:239
 msgid "ID"
 msgstr "ID"
 
-#: includes/class-euwb-admin.php:231 includes/class-euwb-emails.php:110
+#: includes/class-euwb-admin.php:240 includes/class-euwb-emails.php:110
 #: includes/class-euwb-emails.php:169
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:23
 #: includes/emails/templates/euwb-customer-confirmation.php:32
@@ -217,79 +217,91 @@ msgstr "ID"
 msgid "Ordine"
 msgstr "Ordine"
 
-#: includes/class-euwb-admin.php:232
+#: includes/class-euwb-admin.php:241
 msgid "Cliente"
 msgstr "Cliente"
 
-#: includes/class-euwb-admin.php:233 includes/class-euwb-admin.php:411
+#: includes/class-euwb-admin.php:242 includes/class-euwb-admin.php:478
 msgid "Email"
 msgstr "Email"
 
-#: includes/class-euwb-admin.php:234
+#: includes/class-euwb-admin.php:243
 msgid "Motivo"
 msgstr "Motivo"
 
-#: includes/class-euwb-admin.php:235
+#: includes/class-euwb-admin.php:244
 msgid "Stato recesso"
 msgstr "Stato recesso"
 
-#: includes/class-euwb-admin.php:236
+#: includes/class-euwb-admin.php:245
 msgid "Stato ordine"
 msgstr "Stato ordine"
 
-#: includes/class-euwb-admin.php:237 includes/class-euwb-emails.php:114
+#: includes/class-euwb-admin.php:246 includes/class-euwb-emails.php:114
 #: includes/emails/templates/euwb-customer-intent-plain.php:26
 #: includes/emails/templates/euwb-customer-intent.php:36
 msgid "Data richiesta"
 msgstr "Data richiesta"
 
-#: includes/class-euwb-admin.php:238
+#: includes/class-euwb-admin.php:247
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:27
 #: includes/emails/templates/euwb-customer-confirmation.php:36
 msgid "Data conferma"
 msgstr "Data conferma"
 
-#: includes/class-euwb-admin.php:239
+#: includes/class-euwb-admin.php:248
 msgid "Azioni"
 msgstr "Azioni"
 
-#: includes/class-euwb-admin.php:252
+#: includes/class-euwb-admin.php:261
 msgid "Ordine eliminato definitivamente"
 msgstr "Ordine eliminato definitivamente"
 
-#: includes/class-euwb-admin.php:252
+#: includes/class-euwb-admin.php:261
 msgid "eliminato"
 msgstr "eliminato"
 
-#: includes/class-euwb-admin.php:263
+#: includes/class-euwb-admin.php:273
+msgid "Mostra"
+msgstr "Mostra"
+
+#: includes/class-euwb-admin.php:282
 msgid "Eliminato"
 msgstr "Eliminato"
 
-#: includes/class-euwb-admin.php:268
+#: includes/class-euwb-admin.php:287
 msgid "Cestinato"
 msgstr "Cestinato"
 
-#: includes/class-euwb-admin.php:283
+#: includes/class-euwb-admin.php:302
 msgid "Conferma"
 msgstr "Conferma"
 
-#: includes/class-euwb-admin.php:291
+#: includes/class-euwb-admin.php:310
 msgid "Revoca"
 msgstr "Revoca"
 
-#: includes/class-euwb-admin.php:300
+#: includes/class-euwb-admin.php:319
 msgid "Nessun recesso trovato."
 msgstr "Nessun recesso trovato."
 
-#: includes/class-euwb-admin.php:338
+#: includes/class-euwb-admin.php:329
+msgid "Motivo del recesso"
+msgstr "Motivo del recesso"
+
+#: includes/class-euwb-admin.php:330
+msgid "Chiudi"
+msgstr "Chiudi"
+
+#: includes/class-euwb-admin.php:390
 msgid "ID non valido."
 msgstr "ID non valido."
 
-#: includes/class-euwb-admin.php:343
+#: includes/class-euwb-admin.php:395
 msgid "Record non trovato o già eliminato."
 msgstr "Record non trovato o già eliminato."
 
-#: includes/class-euwb-admin.php:350
+#: includes/class-euwb-admin.php:402
 #, php-format
 msgid ""
 "Recesso (ID: %d) revocato manualmente dall'amministratore. Cliente: %s %s "
@@ -298,7 +310,7 @@ msgstr ""
 "Recesso (ID: %d) revocato manualmente dall'amministratore. Cliente: %s %s "
 "<%s>. Richiesta originale del: %s."
 
-#: includes/class-euwb-admin.php:369 includes/class-euwb-frontend.php:118
+#: includes/class-euwb-admin.php:421 includes/class-euwb-frontend.php:123
 #, php-format
 msgid ""
 "Hai il diritto di recedere dal presente contratto entro %1$d giorni senza "
@@ -307,12 +319,12 @@ msgstr ""
 "Hai il diritto di recedere dal presente contratto entro %1$d giorni senza "
 "fornire alcuna motivazione. Il periodo di recesso scade tra %2$d giorni."
 
-#: includes/class-euwb-admin.php:370 includes/class-euwb-frontend.php:43
-#: includes/class-euwb-frontend.php:152
+#: includes/class-euwb-admin.php:422 includes/class-euwb-frontend.php:43
+#: includes/class-euwb-frontend.php:157
 msgid "Recedi dal contratto qui"
 msgstr "Recedi dal contratto qui"
 
-#: includes/class-euwb-admin.php:371 includes/class-euwb-frontend.php:137
+#: includes/class-euwb-admin.php:423 includes/class-euwb-frontend.php:142
 msgid ""
 "Per esercitare il diritto di recesso, compilare il modulo sottostante e fare "
 "clic sul pulsante."
@@ -320,12 +332,12 @@ msgstr ""
 "Per esercitare il diritto di recesso, compilare il modulo sottostante e fare "
 "clic sul pulsante."
 
-#: includes/class-euwb-admin.php:372
+#: includes/class-euwb-admin.php:424
 #: includes/emails/class-euwb-email-customer-intent.php:12
 msgid "Richiesta di recesso ricevuta – Ordine #{order_number}"
 msgstr "Richiesta di recesso ricevuta – Ordine #{order_number}"
 
-#: includes/class-euwb-admin.php:373
+#: includes/class-euwb-admin.php:425
 #: includes/emails/templates/euwb-customer-intent-plain.php:5
 #: includes/emails/templates/euwb-customer-intent.php:5
 msgid ""
@@ -349,12 +361,12 @@ msgstr ""
 "\n"
 "Ai sensi dell'Art. 11a della Direttiva UE 2023/2673."
 
-#: includes/class-euwb-admin.php:374
+#: includes/class-euwb-admin.php:426
 #: includes/emails/class-euwb-email-customer-confirmation.php:12
 msgid "Conferma di recesso – Ordine #{order_number}"
 msgstr "Conferma di recesso – Ordine #{order_number}"
 
-#: includes/class-euwb-admin.php:375
+#: includes/class-euwb-admin.php:427
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:5
 #: includes/emails/templates/euwb-customer-confirmation.php:5
 msgid ""
@@ -378,39 +390,55 @@ msgstr ""
 "\n"
 "Ai sensi dell'Art. 11a della Direttiva UE 2023/2673."
 
-#: includes/class-euwb-admin.php:402
+#: includes/class-euwb-admin.php:428 includes/class-euwb-frontend.php:265
+msgid ""
+"Richiesta di recesso inviata con successo. Riceverai un'email di presa in "
+"carico. La tua richiesta sarà valutata dall'amministratore."
+msgstr ""
+"Richiesta di recesso inviata con successo. Riceverai un'email di presa in "
+"carico. La tua richiesta sarà valutata dall'amministratore."
+
+#: includes/class-euwb-admin.php:429 includes/class-euwb-frontend.php:262
+msgid ""
+"Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso "
+"sarà elaborato nei prossimi giorni lavorativi."
+msgstr ""
+"Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso "
+"sarà elaborato nei prossimi giorni lavorativi."
+
+#: includes/class-euwb-admin.php:469
 msgid "Impostazioni EU Withdrawal Button"
 msgstr "Impostazioni EU Withdrawal Button"
 
-#: includes/class-euwb-admin.php:405
+#: includes/class-euwb-admin.php:472
 msgid "Impostazioni salvate."
 msgstr "Impostazioni salvate."
 
-#: includes/class-euwb-admin.php:409
+#: includes/class-euwb-admin.php:476
 msgid "Generale"
 msgstr "Generale"
 
-#: includes/class-euwb-admin.php:410
+#: includes/class-euwb-admin.php:477
 msgid "Testi frontend"
 msgstr "Testi frontend"
 
-#: includes/class-euwb-admin.php:422
+#: includes/class-euwb-admin.php:489
 msgid "Modalità flusso recesso"
 msgstr "Modalità flusso recesso"
 
-#: includes/class-euwb-admin.php:426
+#: includes/class-euwb-admin.php:493
 msgid "Flusso standard (richiede conferma admin)"
 msgstr "Flusso standard (richiede conferma admin)"
 
-#: includes/class-euwb-admin.php:429
+#: includes/class-euwb-admin.php:496
 msgid "Flusso diretto (auto-conferma immediata)"
 msgstr "Flusso diretto (auto-conferma immediata)"
 
-#: includes/class-euwb-admin.php:433
+#: includes/class-euwb-admin.php:500
 msgid "Flusso standard:"
 msgstr "Flusso standard:"
 
-#: includes/class-euwb-admin.php:434
+#: includes/class-euwb-admin.php:501
 msgid ""
 "il cliente avvia la richiesta, l'amministratore la conferma manualmente. Il "
 "cliente riceve un'email di avviso (intent) e poi una di conferma."
@@ -418,11 +446,11 @@ msgstr ""
 "il cliente avvia la richiesta, l'amministratore la conferma manualmente. Il "
 "cliente riceve un'email di avviso (intent) e poi una di conferma."
 
-#: includes/class-euwb-admin.php:435
+#: includes/class-euwb-admin.php:502
 msgid "Flusso diretto:"
 msgstr "Flusso diretto:"
 
-#: includes/class-euwb-admin.php:436
+#: includes/class-euwb-admin.php:503
 msgid ""
 "al click del cliente il recesso è immediatamente confermato. L'ordine passa "
 "in \"In attesa di rimborso\" e il cliente riceve subito l'email di conferma."
@@ -430,19 +458,19 @@ msgstr ""
 "al click del cliente il recesso è immediatamente confermato. L'ordine passa "
 "in \"In attesa di rimborso\" e il cliente riceve subito l'email di conferma."
 
-#: includes/class-euwb-admin.php:441
+#: includes/class-euwb-admin.php:508
 msgid "Finestra di recesso (giorni)"
 msgstr "Finestra di recesso (giorni)"
 
-#: includes/class-euwb-admin.php:444
+#: includes/class-euwb-admin.php:511
 msgid "La direttiva UE 2023/2673 prevede 14 giorni come minimo."
 msgstr "La direttiva UE 2023/2673 prevede 14 giorni come minimo."
 
-#: includes/class-euwb-admin.php:448
+#: includes/class-euwb-admin.php:515
 msgid "Giorni per la restituzione del bene"
 msgstr "Giorni per la restituzione del bene"
 
-#: includes/class-euwb-admin.php:451
+#: includes/class-euwb-admin.php:518
 msgid ""
 "Giorni entro cui il cliente deve rispedire il prodotto dopo la conferma del "
 "recesso. Usato nel testo default delle istruzioni di restituzione."
@@ -450,19 +478,75 @@ msgstr ""
 "Giorni entro cui il cliente deve rispedire il prodotto dopo la conferma del "
 "recesso. Usato nel testo default delle istruzioni di restituzione."
 
-#: includes/class-euwb-admin.php:455
+#: includes/class-euwb-admin.php:522
 msgid "Email notifiche admin"
 msgstr "Email notifiche admin"
 
-#: includes/class-euwb-admin.php:458
+#: includes/class-euwb-admin.php:525
 msgid "Riceverà una notifica ad ogni recesso confermato."
 msgstr "Riceverà una notifica ad ogni recesso confermato."
 
-#: includes/class-euwb-admin.php:468
+#: includes/class-euwb-admin.php:530
+msgid "Esclusioni per tassonomia prodotto"
+msgstr "Esclusioni per tassonomia prodotto"
+
+#: includes/class-euwb-admin.php:531
+msgid ""
+"Se un prodotto nell'ordine appartiene a una delle tassonomie selezionate, il "
+"box di recesso non sarà mostrato al cliente."
+msgstr ""
+"Se un prodotto nell'ordine appartiene a una delle tassonomie selezionate, il "
+"box di recesso non sarà mostrato al cliente."
+
+#: includes/class-euwb-admin.php:539
+msgid "Categorie escluse"
+msgstr "Categorie escluse"
+
+#: includes/class-euwb-admin.php:540
+msgid ""
+"Ordini contenenti prodotti in queste categorie non potranno avviare il "
+"recesso."
+msgstr ""
+"Ordini contenenti prodotti in queste categorie non potranno avviare il "
+"recesso."
+
+#: includes/class-euwb-admin.php:546
+msgid "Tag esclusi"
+msgstr "Tag esclusi"
+
+#: includes/class-euwb-admin.php:547
+msgid ""
+"Ordini contenenti prodotti con questi tag non potranno avviare il recesso."
+msgstr ""
+"Ordini contenenti prodotti con questi tag non potranno avviare il recesso."
+
+#: includes/class-euwb-admin.php:553
+msgid "Marchi esclusi"
+msgstr "Marchi esclusi"
+
+#: includes/class-euwb-admin.php:554
+msgid ""
+"Ordini contenenti prodotti di questi marchi non potranno avviare il recesso."
+msgstr ""
+"Ordini contenenti prodotti di questi marchi non potranno avviare il recesso."
+
+#: includes/class-euwb-admin.php:578
+msgid ""
+"Nessun plugin marchi attivo rilevato (WooCommerce Brands o Perfect Brands "
+"for WooCommerce)."
+msgstr ""
+"Nessun plugin marchi attivo rilevato (WooCommerce Brands o Perfect Brands "
+"for WooCommerce)."
+
+#: includes/class-euwb-admin.php:580
+msgid "Nessun termine trovato per questa tassonomia."
+msgstr "Nessun termine trovato per questa tassonomia."
+
+#: includes/class-euwb-admin.php:593
 msgid "Testo introduttivo recesso"
 msgstr "Testo introduttivo recesso"
 
-#: includes/class-euwb-admin.php:471
+#: includes/class-euwb-admin.php:596
 #, php-format
 msgid ""
 "Usa <code>%%1$d</code> per la finestra in giorni (es. 14) e <code>%%2$d</"
@@ -471,29 +555,53 @@ msgstr ""
 "Usa <code>%%1$d</code> per la finestra in giorni (es. 14) e <code>%%2$d</"
 "code> per i giorni rimasti alla scadenza."
 
-#: includes/class-euwb-admin.php:475
+#: includes/class-euwb-admin.php:600
 msgid "Istruzioni modulo recesso"
 msgstr "Istruzioni modulo recesso"
 
-#: includes/class-euwb-admin.php:478
+#: includes/class-euwb-admin.php:603
 msgid "Testo visualizzato sopra il modulo di recesso."
 msgstr "Testo visualizzato sopra il modulo di recesso."
 
-#: includes/class-euwb-admin.php:482
+#: includes/class-euwb-admin.php:607
 msgid "Label pulsante di recesso"
 msgstr "Label pulsante di recesso"
 
-#: includes/class-euwb-admin.php:485
+#: includes/class-euwb-admin.php:610
 msgid ""
 "Testo del pulsante che il cliente clicca per avviare la procedura di recesso."
 msgstr ""
 "Testo del pulsante che il cliente clicca per avviare la procedura di recesso."
 
-#: includes/class-euwb-admin.php:494
+#: includes/class-euwb-admin.php:614
+msgid "Messaggio di successo (flusso standard)"
+msgstr "Messaggio di successo (flusso standard)"
+
+#: includes/class-euwb-admin.php:617
+msgid ""
+"Mostrato al cliente dopo l'invio della richiesta in attesa di approvazione "
+"(flusso standard)."
+msgstr ""
+"Mostrato al cliente dopo l'invio della richiesta in attesa di approvazione "
+"(flusso standard)."
+
+#: includes/class-euwb-admin.php:621
+msgid "Messaggio di successo (flusso diretto)"
+msgstr "Messaggio di successo (flusso diretto)"
+
+#: includes/class-euwb-admin.php:624
+msgid ""
+"Mostrato al cliente quando il recesso viene confermato immediatamente "
+"(flusso diretto)."
+msgstr ""
+"Mostrato al cliente quando il recesso viene confermato immediatamente "
+"(flusso diretto)."
+
+#: includes/class-euwb-admin.php:633
 msgid "Email al cliente – Richiesta ricevuta (flusso standard)"
 msgstr "Email al cliente – Richiesta ricevuta (flusso standard)"
 
-#: includes/class-euwb-admin.php:495 includes/class-euwb-admin.php:510
+#: includes/class-euwb-admin.php:634 includes/class-euwb-admin.php:649
 msgid ""
 "Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</"
 "code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>"
@@ -501,23 +609,23 @@ msgstr ""
 "Segnaposto disponibili: <code>{order_number}</code>, <code>{order_date}</"
 "code>, <code>{customer_name}</code>, <code>{withdrawal_date}</code>"
 
-#: includes/class-euwb-admin.php:498 includes/class-euwb-admin.php:513
+#: includes/class-euwb-admin.php:637 includes/class-euwb-admin.php:652
 msgid "Oggetto"
 msgstr "Oggetto"
 
-#: includes/class-euwb-admin.php:502 includes/class-euwb-admin.php:517
+#: includes/class-euwb-admin.php:641 includes/class-euwb-admin.php:656
 msgid "Corpo"
 msgstr "Corpo"
 
-#: includes/class-euwb-admin.php:509
+#: includes/class-euwb-admin.php:648
 msgid "Email al cliente – Recesso confermato"
 msgstr "Email al cliente – Recesso confermato"
 
-#: includes/class-euwb-admin.php:524
+#: includes/class-euwb-admin.php:663
 msgid "Istruzioni per la restituzione del bene (prodotti fisici)"
 msgstr "Istruzioni per la restituzione del bene (prodotti fisici)"
 
-#: includes/class-euwb-admin.php:525
+#: includes/class-euwb-admin.php:664
 msgid ""
 "Mostrato nel form di recesso e nelle email solo se l'ordine contiene "
 "prodotti fisici che richiedono spedizione. Lasciare vuoto per non mostrarlo."
@@ -525,12 +633,12 @@ msgstr ""
 "Mostrato nel form di recesso e nelle email solo se l'ordine contiene "
 "prodotti fisici che richiedono spedizione. Lasciare vuoto per non mostrarlo."
 
-#: includes/class-euwb-admin.php:528
+#: includes/class-euwb-admin.php:667
 msgid "Testo istruzioni"
 msgstr "Testo istruzioni"
 
 #. translators: %d: return window in days
-#: includes/class-euwb-admin.php:533
+#: includes/class-euwb-admin.php:672
 #, php-format
 msgid ""
 "Per completare il recesso è necessario restituire il prodotto entro %d "
@@ -555,7 +663,7 @@ msgstr ""
 "Le spese di restituzione sono a carico del cliente, salvo diverso accordo. "
 "Si consiglia di utilizzare un servizio con tracciamento della spedizione."
 
-#: includes/class-euwb-admin.php:544
+#: includes/class-euwb-admin.php:683
 msgid "Salva impostazioni"
 msgstr "Salva impostazioni"
 
@@ -689,15 +797,15 @@ msgstr "Elaborazione in corso…"
 msgid "Si è verificato un errore. Riprova o contatta il supporto."
 msgstr "Si è verificato un errore. Riprova o contatta il supporto."
 
-#: includes/class-euwb-frontend.php:61
+#: includes/class-euwb-frontend.php:66
 msgid "Recesso dal contratto"
 msgstr "Recesso dal contratto"
 
-#: includes/class-euwb-frontend.php:62
+#: includes/class-euwb-frontend.php:67
 msgid "Diritto di recesso (UE 2023/2673)"
 msgstr "Diritto di recesso (UE 2023/2673)"
 
-#: includes/class-euwb-frontend.php:72
+#: includes/class-euwb-frontend.php:77
 #, php-format
 msgid ""
 "Hai esercitato il recesso per questo ordine il %s. Il rimborso è stato "
@@ -706,7 +814,7 @@ msgstr ""
 "Hai esercitato il recesso per questo ordine il %s. Il rimborso è stato "
 "effettuato."
 
-#: includes/class-euwb-frontend.php:79
+#: includes/class-euwb-frontend.php:84
 #, php-format
 msgid ""
 "Hai esercitato il recesso per questo ordine il %s. L'ordine è stato "
@@ -715,7 +823,7 @@ msgstr ""
 "Hai esercitato il recesso per questo ordine il %s. L'ordine è stato "
 "annullato. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi."
 
-#: includes/class-euwb-frontend.php:86
+#: includes/class-euwb-frontend.php:91
 #, php-format
 msgid ""
 "Hai esercitato il recesso per questo ordine il %s. La richiesta è stata "
@@ -726,7 +834,7 @@ msgstr ""
 "confermata dall'amministratore e il rimborso sarà elaborato nei prossimi 14 "
 "giorni lavorativi."
 
-#: includes/class-euwb-frontend.php:93
+#: includes/class-euwb-frontend.php:98
 #, php-format
 msgid ""
 "Hai richiesto il recesso per questo ordine il %s. La richiesta è in attesa "
@@ -735,7 +843,7 @@ msgstr ""
 "Hai richiesto il recesso per questo ordine il %s. La richiesta è in attesa "
 "di conferma da parte dell'amministratore."
 
-#: includes/class-euwb-frontend.php:100
+#: includes/class-euwb-frontend.php:105
 #, php-format
 msgid ""
 "Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà "
@@ -744,11 +852,11 @@ msgstr ""
 "Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà "
 "elaborato nei prossimi 14 giorni lavorativi."
 
-#: includes/class-euwb-frontend.php:108
+#: includes/class-euwb-frontend.php:113
 msgid "Il periodo di recesso di 14 giorni per questo ordine è scaduto."
 msgstr "Il periodo di recesso di 14 giorni per questo ordine è scaduto."
 
-#: includes/class-euwb-frontend.php:130
+#: includes/class-euwb-frontend.php:135
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:17
 #: includes/emails/templates/euwb-customer-confirmation.php:23
 #: includes/emails/templates/euwb-customer-intent-plain.php:17
@@ -756,27 +864,27 @@ msgstr "Il periodo di recesso di 14 giorni per questo ordine è scaduto."
 msgid "Istruzioni per la restituzione del bene"
 msgstr "Istruzioni per la restituzione del bene"
 
-#: includes/class-euwb-frontend.php:140
+#: includes/class-euwb-frontend.php:145
 msgid "Nome *"
 msgstr "Nome *"
 
-#: includes/class-euwb-frontend.php:142
+#: includes/class-euwb-frontend.php:147
 msgid "Cognome *"
 msgstr "Cognome *"
 
-#: includes/class-euwb-frontend.php:145
+#: includes/class-euwb-frontend.php:150
 msgid "Indirizzo e-mail *"
 msgstr "Indirizzo e-mail *"
 
-#: includes/class-euwb-frontend.php:147
+#: includes/class-euwb-frontend.php:152
 msgid "Motivo del recesso (facoltativo)"
 msgstr "Motivo del recesso (facoltativo)"
 
-#: includes/class-euwb-frontend.php:148
+#: includes/class-euwb-frontend.php:153
 msgid "Puoi lasciare vuoto questo campo."
 msgstr "Puoi lasciare vuoto questo campo."
 
-#: includes/class-euwb-frontend.php:154
+#: includes/class-euwb-frontend.php:159
 msgid ""
 "Cliccando sopra avvierai la procedura di recesso. Nel passaggio successivo "
 "ti verrà chiesta conferma."
@@ -784,11 +892,11 @@ msgstr ""
 "Cliccando sopra avvierai la procedura di recesso. Nel passaggio successivo "
 "ti verrà chiesta conferma."
 
-#: includes/class-euwb-frontend.php:160
+#: includes/class-euwb-frontend.php:165
 msgid "Sei sicuro di voler recedere dal contratto?"
 msgstr "Sei sicuro di voler recedere dal contratto?"
 
-#: includes/class-euwb-frontend.php:161
+#: includes/class-euwb-frontend.php:166
 msgid ""
 "Cliccando \"Conferma recesso qui\" invierai la dichiarazione di recesso. "
 "Riceverai un'email di conferma."
@@ -796,48 +904,36 @@ msgstr ""
 "Cliccando \"Conferma recesso qui\" invierai la dichiarazione di recesso. "
 "Riceverai un'email di conferma."
 
-#: includes/class-euwb-frontend.php:164
+#: includes/class-euwb-frontend.php:169
 msgid "Conferma recesso qui"
 msgstr "Conferma recesso qui"
 
-#: includes/class-euwb-frontend.php:167
+#: includes/class-euwb-frontend.php:172
 msgid "Annulla"
 msgstr "Annulla"
 
-#: includes/class-euwb-frontend.php:191 includes/class-euwb-frontend.php:196
-#: includes/class-euwb-frontend.php:228 includes/class-euwb-frontend.php:233
+#: includes/class-euwb-frontend.php:196 includes/class-euwb-frontend.php:201
+#: includes/class-euwb-frontend.php:234 includes/class-euwb-frontend.php:239
 msgid "Non autorizzato."
 msgstr "Non autorizzato."
 
-#: includes/class-euwb-frontend.php:200 includes/class-euwb-frontend.php:237
+#: includes/class-euwb-frontend.php:205 includes/class-euwb-frontend.php:243
 msgid "Il periodo di recesso è scaduto."
 msgstr "Il periodo di recesso è scaduto."
 
-#: includes/class-euwb-frontend.php:201 includes/class-euwb-frontend.php:238
+#: includes/class-euwb-frontend.php:206 includes/class-euwb-frontend.php:244
 msgid "Hai già richiesto il recesso per questo ordine."
 msgstr "Hai già richiesto il recesso per questo ordine."
 
-#: includes/class-euwb-frontend.php:208 includes/class-euwb-frontend.php:248
+#: includes/class-euwb-frontend.php:207 includes/class-euwb-frontend.php:245
+msgid "Il recesso non è disponibile per i prodotti di questo ordine."
+msgstr "Il recesso non è disponibile per i prodotti di questo ordine."
+
+#: includes/class-euwb-frontend.php:214 includes/class-euwb-frontend.php:255
 msgid "Compila tutti i campi obbligatori."
 msgstr "Compila tutti i campi obbligatori."
 
-#: includes/class-euwb-frontend.php:255
-msgid ""
-"Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso "
-"sarà elaborato nei prossimi giorni lavorativi."
-msgstr ""
-"Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso "
-"sarà elaborato nei prossimi giorni lavorativi."
-
-#: includes/class-euwb-frontend.php:258
-msgid ""
-"Richiesta di recesso inviata con successo. Riceverai un'email di conferma. "
-"L'amministratore elaborerà il rimborso nei prossimi giorni lavorativi."
-msgstr ""
-"Richiesta di recesso inviata con successo. Riceverai un'email di conferma. "
-"L'amministratore elaborerà il rimborso nei prossimi giorni lavorativi."
-
-#: includes/class-euwb-frontend.php:261
+#: includes/class-euwb-frontend.php:268
 msgid ""
 "Impossibile registrare la richiesta di recesso. Riprova o contatta il "
 "supporto."
