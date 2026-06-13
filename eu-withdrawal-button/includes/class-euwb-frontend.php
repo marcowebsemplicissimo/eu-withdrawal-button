@@ -258,11 +258,11 @@ class EUWB_Frontend {
         $flow_mode = get_option( 'euwb_flow_mode', 'standard' );
 
         if ( $flow_mode === 'direct' ) {
-            $withdrawal_id  = EUWB_Withdrawal::create_and_confirm( $order_id, $data );
-            $success_message = __( 'Recesso confermato con successo. Riceverai un\'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.', 'eu-withdrawal-button' );
+            $withdrawal_id   = EUWB_Withdrawal::create_and_confirm( $order_id, $data );
+            $success_message = get_option( 'euwb_success_message_direct', __( "Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.", 'eu-withdrawal-button' ) );
         } else {
-            $withdrawal_id  = EUWB_Withdrawal::create( $order_id, $data );
-            $success_message = __( 'Richiesta di recesso inviata con successo. Riceverai un\'email di conferma. L\'amministratore elaborerà il rimborso nei prossimi giorni lavorativi.', 'eu-withdrawal-button' );
+            $withdrawal_id   = EUWB_Withdrawal::create( $order_id, $data );
+            $success_message = get_option( 'euwb_success_message_standard', __( "Richiesta di recesso inviata con successo. Riceverai un'email di presa in carico. La tua richiesta sarà valutata dall'amministratore.", 'eu-withdrawal-button' ) );
         }
 
         if ( ! $withdrawal_id ) wp_send_json_error( __( 'Impossibile registrare la richiesta di recesso. Riprova o contatta il supporto.', 'eu-withdrawal-button' ) );

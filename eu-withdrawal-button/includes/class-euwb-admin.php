@@ -399,6 +399,8 @@ class EUWB_Admin {
         $default_intent_body  = __( "Gentile {customer_name},\n\nabbiamo ricevuto la tua richiesta di recesso per l'ordine #{order_number} del {order_date}.\n\nLa richiesta è attualmente in fase di elaborazione. Riceverai un'email di conferma non appena sarà processata.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' );
         $default_confirm_subj = __( 'Conferma di recesso – Ordine #{order_number}', 'eu-withdrawal-button' );
         $default_confirm_body = __( "Gentile {customer_name},\n\nil tuo recesso per l'ordine #{order_number} del {order_date} è stato confermato.\n\nIl rimborso sarà elaborato nei prossimi 14 giorni lavorativi con lo stesso metodo di pagamento utilizzato all'acquisto.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' );
+        $default_success_standard = __( "Richiesta di recesso inviata con successo. Riceverai un'email di presa in carico. La tua richiesta sarà valutata dall'amministratore.", 'eu-withdrawal-button' );
+        $default_success_direct   = __( "Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.", 'eu-withdrawal-button' );
 
         $saved = false;
         if ( isset( $_POST['euwb_save_settings'] ) && check_admin_referer( 'euwb_settings' ) ) {
@@ -410,6 +412,8 @@ class EUWB_Admin {
             update_option( 'euwb_intro_text', wp_kses_post( $_POST['euwb_intro_text'] ?? $default_intro ) );
             update_option( 'euwb_btn_label', sanitize_text_field( $_POST['euwb_btn_label'] ?? $default_btn_label ) );
             update_option( 'euwb_form_instructions', sanitize_text_field( $_POST['euwb_form_instructions'] ?? $default_form_instr ) );
+            update_option( 'euwb_success_message_standard', sanitize_text_field( $_POST['euwb_success_message_standard'] ?? $default_success_standard ) );
+            update_option( 'euwb_success_message_direct',   sanitize_text_field( $_POST['euwb_success_message_direct'] ?? $default_success_direct ) );
             update_option( 'euwb_intent_email_subject',       sanitize_text_field( $_POST['euwb_intent_email_subject'] ?? $default_intent_subj ) );
             update_option( 'euwb_intent_email_body',          wp_kses_post( $_POST['euwb_intent_email_body'] ?? $default_intent_body ) );
             update_option( 'euwb_confirmation_email_subject', sanitize_text_field( $_POST['euwb_confirmation_email_subject'] ?? $default_confirm_subj ) );
@@ -429,7 +433,9 @@ class EUWB_Admin {
         $email      = get_option( 'euwb_admin_email', get_option( 'admin_email' ) );
         $intro_text = get_option( 'euwb_intro_text', $default_intro );
         $btn_label  = get_option( 'euwb_btn_label', $default_btn_label );
-        $form_instr = get_option( 'euwb_form_instructions', $default_form_instr );
+        $form_instr       = get_option( 'euwb_form_instructions', $default_form_instr );
+        $success_standard = get_option( 'euwb_success_message_standard', $default_success_standard );
+        $success_direct   = get_option( 'euwb_success_message_direct', $default_success_direct );
 
         $active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'generale';
         ?>
@@ -576,6 +582,20 @@ class EUWB_Admin {
                             <td>
                                 <input type="text" id="euwb_btn_label" name="euwb_btn_label" value="<?php echo esc_attr( $btn_label ); ?>" class="regular-text">
                                 <p class="description"><?php esc_html_e( 'Testo del pulsante che il cliente clicca per avviare la procedura di recesso.', 'eu-withdrawal-button' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="euwb_success_message_standard"><?php esc_html_e( 'Messaggio di successo (flusso standard)', 'eu-withdrawal-button' ); ?></label></th>
+                            <td>
+                                <input type="text" id="euwb_success_message_standard" name="euwb_success_message_standard" value="<?php echo esc_attr( $success_standard ); ?>" class="large-text">
+                                <p class="description"><?php esc_html_e( 'Mostrato al cliente dopo l\'invio della richiesta in attesa di approvazione (flusso standard).', 'eu-withdrawal-button' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="euwb_success_message_direct"><?php esc_html_e( 'Messaggio di successo (flusso diretto)', 'eu-withdrawal-button' ); ?></label></th>
+                            <td>
+                                <input type="text" id="euwb_success_message_direct" name="euwb_success_message_direct" value="<?php echo esc_attr( $success_direct ); ?>" class="large-text">
+                                <p class="description"><?php esc_html_e( 'Mostrato al cliente quando il recesso viene confermato immediatamente (flusso diretto).', 'eu-withdrawal-button' ); ?></p>
                             </td>
                         </tr>
                     </table>
