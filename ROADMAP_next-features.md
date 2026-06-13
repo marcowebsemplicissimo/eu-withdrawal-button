@@ -85,7 +85,43 @@
 
 ---
 
-## Feature 8 – Email admin come WC_Email nativa
+## ~~Tweak – Messaggi di successo frontend configurabili~~ ✅ COMPLETATO (2026-06-13)
+
+- Due nuove option: `euwb_success_message_standard` e `euwb_success_message_direct`.
+- **Impostazioni admin** — tab **Generale**, due nuovi campi testo sotto la label del pulsante: "Messaggio di successo (flusso standard)" e "Messaggio di successo (flusso diretto)".
+- `EUWB_Frontend::ajax_initiate()` — i messaggi di successo vengono letti dalle option invece che essere hardcoded; fallback al testo di default se l'option è vuota.
+
+---
+
+## ~~Tweak – Lightbox per il motivo del recesso nella tabella admin~~ ✅ COMPLETATO (2026-06-13)
+
+- La colonna **Motivo** nella tabella del registro recessi sostituisce il testo troncato con un pulsante **"Mostra"** (icona dashicons-visibility).
+- Click sul pulsante apre una modal/lightbox (`#euwb-reason-modal`) con header "Motivo del recesso" e testo integrale preservando i line break (`white-space: pre-wrap`).
+- Chiusura via pulsante ✕, click sul backdrop, o tasto `Escape`.
+- CSS modale in `euwb-admin.css`; logica JS in `euwb.js`. La colonna mostra `—` se il motivo è assente.
+- Accessibilità: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, focus sul pulsante ✕ all'apertura.
+
+---
+
+## Feature 8 – Selezione item dell'ordine per il recesso parziale
+
+### Obiettivo
+
+Permettere al cliente di indicare per quali prodotti (righe d'ordine) intende esercitare il diritto di recesso, anziché applicarlo all'intero ordine. Utile quando un ordine contiene più articoli ma il cliente vuole recedere solo da alcuni.
+
+### Cosa implementare
+
+- **Frontend** — nel form di recesso, dopo l'intro e prima dello step 1, mostrare la lista degli `order_items` dell'ordine con checkbox per ciascun prodotto (nome, quantità, prezzo). Almeno un item deve essere selezionato per procedere.
+- **Validazione AJAX** — `ajax_initiate()` riceve l'array `selected_items[]` (array di `order_item_id`); validare che gli ID appartengano effettivamente all'ordine e che l'array non sia vuoto.
+- **Persistenza** — salvare la lista degli item selezionati come meta del recesso (es. `euwb_selected_items`, array serializzato) in `EUWB_Withdrawal::create()`.
+- **Tabella admin** — nella lightbox del messaggio (o in una colonna/sezione dedicata) mostrare gli item selezionati con nome prodotto, quantità e subtotale.
+- **Email** — includere la lista degli item selezionati nel riepilogo delle email cliente (intent + confirmation) e nelle notifiche admin, accanto o sotto la tabella ordine esistente.
+- **Flusso diretto** — la stessa selezione item deve funzionare anche in modalità `direct` (passata a `create_and_confirm()`).
+- **Compatibilità esclusioni tassonomia** — la verifica `order_has_excluded_taxonomy()` dovrebbe poter operare solo sugli item selezionati (recesso parziale), non sull'intero ordine.
+
+---
+
+## Feature 9 – Email admin come WC_Email nativa
 
 ### Obiettivo
 
