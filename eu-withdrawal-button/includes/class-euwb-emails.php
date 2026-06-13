@@ -101,7 +101,7 @@ class EUWB_Emails {
 <html>
 <head><meta charset="UTF-8"><title><?php echo esc_html( $title ); ?></title></head>
 <body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:24px;">
-  <h2 style="color:#1a1a1a;"><?php echo esc_html( $site_name ); ?> – <?php esc_html_e( 'Richiesta di recesso ricevuta', 'eu-withdrawal-button' ); ?></h2>
+  <h2 style="color:#1a1a1a;"><?php echo esc_html( wp_specialchars_decode( $site_name, ENT_QUOTES ) ); ?> – <?php esc_html_e( 'Richiesta di recesso ricevuta', 'eu-withdrawal-button' ); ?></h2>
   <p><?php printf( esc_html__( 'Gentile %s,', 'eu-withdrawal-button' ), esc_html( "$first_name $last_name" ) ); ?></p>
   <p><?php printf( esc_html__( 'Abbiamo ricevuto la tua richiesta di recesso relativa all\'ordine #%1$s, inviata il %2$s, ai sensi dell\'Art. 11a della Direttiva UE 2023/2673 (che modifica la Direttiva 2011/83/UE sui diritti dei consumatori).', 'eu-withdrawal-button' ), esc_html( $order_num ), esc_html( $date ) ); ?></p>
   <p><?php esc_html_e( 'La tua richiesta è attualmente in fase di elaborazione da parte del nostro team. Riceverai un\'email di conferma non appena sarà processata.', 'eu-withdrawal-button' ); ?></p>
@@ -161,7 +161,7 @@ class EUWB_Emails {
 <html>
 <head><meta charset="UTF-8"><title><?php echo esc_html( $title ); ?></title></head>
 <body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:24px;">
-  <h2 style="color:#1a1a1a;"><?php echo esc_html( $site_name ); ?> – <?php esc_html_e( 'Conferma di recesso', 'eu-withdrawal-button' ); ?></h2>
+  <h2 style="color:#1a1a1a;"><?php echo esc_html( wp_specialchars_decode( $site_name, ENT_QUOTES ) ); ?> – <?php esc_html_e( 'Conferma di recesso', 'eu-withdrawal-button' ); ?></h2>
   <p><?php printf( esc_html__( 'Gentile %s,', 'eu-withdrawal-button' ), esc_html( "$first_name $last_name" ) ); ?></p>
   <p><?php printf( esc_html__( 'Confermiamo che il tuo recesso relativo all\'ordine #%1$s è stato registrato con successo in data %2$s, ai sensi dell\'Art. 11a della Direttiva UE 2023/2673 (che modifica la Direttiva 2011/83/UE sui diritti dei consumatori).', 'eu-withdrawal-button' ), esc_html( $order_num ), esc_html( $date ) ); ?></p>
   <table style="width:100%;border-collapse:collapse;margin:20px 0;">
