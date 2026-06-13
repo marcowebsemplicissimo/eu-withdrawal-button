@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: EU Withdrawal Button\n"
-"POT-Creation-Date: 2026-06-13 15:00+0200\n"
-"PO-Revision-Date: 2026-06-13 15:00+0200\n"
+"POT-Creation-Date: 2026-06-13 15:10+0200\n"
+"PO-Revision-Date: 2026-06-13 15:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -135,7 +135,7 @@ msgid "ID ordine non valido."
 msgstr "Invalid order ID."
 
 #: includes/class-euwb-admin.php:118 includes/class-euwb-admin.php:411
-#: includes/class-euwb-frontend.php:192 includes/class-euwb-frontend.php:230
+#: includes/class-euwb-frontend.php:195 includes/class-euwb-frontend.php:233
 msgid "Ordine non trovato."
 msgstr "Presale not found."
 
@@ -310,7 +310,7 @@ msgstr ""
 "Termination (ID: %d) manually revoked by administrator. Customer: %s %s "
 "<%s>. Original request dated: %s."
 
-#: includes/class-euwb-admin.php:421 includes/class-euwb-frontend.php:123
+#: includes/class-euwb-admin.php:421 includes/class-euwb-frontend.php:126
 #, php-format
 msgid ""
 "Hai il diritto di recedere dal presente contratto entro %1$d giorni senza "
@@ -320,11 +320,11 @@ msgstr ""
 "giving any reason. The withdrawal period expires in %2$d days."
 
 #: includes/class-euwb-admin.php:422 includes/class-euwb-frontend.php:43
-#: includes/class-euwb-frontend.php:157
+#: includes/class-euwb-frontend.php:160
 msgid "Recedi dal contratto qui"
 msgstr "Withdraw from the contract here"
 
-#: includes/class-euwb-admin.php:423 includes/class-euwb-frontend.php:142
+#: includes/class-euwb-admin.php:423 includes/class-euwb-frontend.php:145
 msgid ""
 "Per esercitare il diritto di recesso, compilare il modulo sottostante e fare "
 "clic sul pulsante."
@@ -369,13 +369,14 @@ msgstr "Withdrawal Confirmation – Order #{order_number}"
 #: includes/class-euwb-admin.php:427
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:5
 #: includes/emails/templates/euwb-customer-confirmation.php:5
+#, php-format
 msgid ""
 "Gentile {customer_name},\n"
 "\n"
 "il tuo recesso per l'ordine #{order_number} del {order_date} è stato "
 "confermato.\n"
 "\n"
-"Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi con lo stesso "
+"Il rimborso sarà elaborato nei prossimi %d giorni lavorativi con lo stesso "
 "metodo di pagamento utilizzato all'acquisto.\n"
 "\n"
 "Ai sensi dell'Art. 11a della Direttiva UE 2023/2673."
@@ -385,12 +386,12 @@ msgstr ""
 "Your cancellation for order #{order_number} of {order_date} has been "
 "confirmed.\n"
 "\n"
-"The refund will be processed within the next 14 business days using the same "
+"The refund will be processed within the next %d business days using the same "
 "payment method used for the purchase.\n"
 "\n"
 "Pursuant to Art. 11a of EU Directive 2023/2673."
 
-#: includes/class-euwb-admin.php:428 includes/class-euwb-frontend.php:265
+#: includes/class-euwb-admin.php:428 includes/class-euwb-frontend.php:268
 msgid ""
 "Richiesta di recesso inviata con successo. Riceverai un'email di presa in "
 "carico. La tua richiesta sarà valutata dall'amministratore."
@@ -398,7 +399,7 @@ msgstr ""
 "Your cancellation request has been sent successfully. You will receive an "
 "email confirming receipt. Your request will be reviewed by the administrator."
 
-#: includes/class-euwb-admin.php:429 includes/class-euwb-frontend.php:262
+#: includes/class-euwb-admin.php:429 includes/class-euwb-frontend.php:265
 msgid ""
 "Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso "
 "sarà elaborato nei prossimi giorni lavorativi."
@@ -821,24 +822,24 @@ msgstr ""
 #: includes/class-euwb-frontend.php:84
 #, php-format
 msgid ""
-"Hai esercitato il recesso per questo ordine il %s. L'ordine è stato "
-"annullato. Il rimborso sarà elaborato nei prossimi 14 giorni lavorativi."
+"Hai esercitato il recesso per questo ordine il %1$s. L'ordine è stato "
+"annullato. Il rimborso sarà elaborato nei prossimi %2$d giorni lavorativi."
 msgstr ""
-"You returned this order on %s. The order has been cancelled. Your refund "
-"will be processed within the next 14 business days."
+"You returned this order on %1$s. The order has been cancelled. Your refund "
+"will be processed within the next %2$d business days."
 
-#: includes/class-euwb-frontend.php:91
+#: includes/class-euwb-frontend.php:92
 #, php-format
 msgid ""
-"Hai esercitato il recesso per questo ordine il %s. La richiesta è stata "
-"confermata dall'amministratore e il rimborso sarà elaborato nei prossimi 14 "
-"giorni lavorativi."
+"Hai esercitato il recesso per questo ordine il %1$s. La richiesta è stata "
+"confermata dall'amministratore e il rimborso sarà elaborato nei prossimi "
+"%2$d giorni lavorativi."
 msgstr ""
-"You returned this order on %s. Your request has been confirmed by the "
-"administrator, and your refund will be processed within the next 14 business "
-"days."
+"You returned this order on %1$s. Your request has been confirmed by the "
+"administrator and your refund will be processed within the next %2$d "
+"business days."
 
-#: includes/class-euwb-frontend.php:98
+#: includes/class-euwb-frontend.php:100
 #, php-format
 msgid ""
 "Hai richiesto il recesso per questo ordine il %s. La richiesta è in attesa "
@@ -847,20 +848,21 @@ msgstr ""
 "You requested a cancellation for this order on %s. Your request is pending "
 "confirmation from the administrator."
 
-#: includes/class-euwb-frontend.php:105
+#: includes/class-euwb-frontend.php:107
 #, php-format
 msgid ""
-"Hai già esercitato il recesso per questo ordine il %s. Il rimborso sarà "
-"elaborato nei prossimi 14 giorni lavorativi."
+"Hai già esercitato il recesso per questo ordine il %1$s. Il rimborso sarà "
+"elaborato nei prossimi %2$d giorni lavorativi."
 msgstr ""
-"You have already exercised your right of withdrawal for this order on %s. "
-"Your refund will be processed within the next 14 business days."
+"You have already exercised your right of withdrawal for this order on %1$s. "
+"Your refund will be processed within the next %2$d business days."
 
-#: includes/class-euwb-frontend.php:113
-msgid "Il periodo di recesso di 14 giorni per questo ordine è scaduto."
-msgstr "The 14-day cooling-off period for this order has expired."
+#: includes/class-euwb-frontend.php:116
+#, php-format
+msgid "Il periodo di recesso di %d giorni per questo ordine è scaduto."
+msgstr "The %d day cooling-off period for this order has expired."
 
-#: includes/class-euwb-frontend.php:135
+#: includes/class-euwb-frontend.php:138
 #: includes/emails/templates/euwb-customer-confirmation-plain.php:17
 #: includes/emails/templates/euwb-customer-confirmation.php:23
 #: includes/emails/templates/euwb-customer-intent-plain.php:17
@@ -868,27 +870,27 @@ msgstr "The 14-day cooling-off period for this order has expired."
 msgid "Istruzioni per la restituzione del bene"
 msgstr "Instructions for returning the goods"
 
-#: includes/class-euwb-frontend.php:145
+#: includes/class-euwb-frontend.php:148
 msgid "Nome *"
 msgstr "Name *"
 
-#: includes/class-euwb-frontend.php:147
+#: includes/class-euwb-frontend.php:150
 msgid "Cognome *"
 msgstr "Surname *"
 
-#: includes/class-euwb-frontend.php:150
+#: includes/class-euwb-frontend.php:153
 msgid "Indirizzo e-mail *"
 msgstr "Email address *"
 
-#: includes/class-euwb-frontend.php:152
+#: includes/class-euwb-frontend.php:155
 msgid "Motivo del recesso (facoltativo)"
 msgstr "Reason for withdrawal (optional)"
 
-#: includes/class-euwb-frontend.php:153
+#: includes/class-euwb-frontend.php:156
 msgid "Puoi lasciare vuoto questo campo."
 msgstr "You can leave this field blank."
 
-#: includes/class-euwb-frontend.php:159
+#: includes/class-euwb-frontend.php:162
 msgid ""
 "Cliccando sopra avvierai la procedura di recesso. Nel passaggio successivo "
 "ti verrà chiesta conferma."
@@ -896,11 +898,11 @@ msgstr ""
 "Clicking above will start the cancellation process. In the next step, you "
 "will be asked for confirmation."
 
-#: includes/class-euwb-frontend.php:165
+#: includes/class-euwb-frontend.php:168
 msgid "Sei sicuro di voler recedere dal contratto?"
 msgstr "Are you sure you want to withdraw from the contract?"
 
-#: includes/class-euwb-frontend.php:166
+#: includes/class-euwb-frontend.php:169
 msgid ""
 "Cliccando \"Conferma recesso qui\" invierai la dichiarazione di recesso. "
 "Riceverai un'email di conferma."
@@ -908,36 +910,36 @@ msgstr ""
 "By clicking \"Confirm withdrawal here,\" you will submit your withdrawal "
 "declaration. You will receive a confirmation email."
 
-#: includes/class-euwb-frontend.php:169
+#: includes/class-euwb-frontend.php:172
 msgid "Conferma recesso qui"
 msgstr "Confirm withdrawal here"
 
-#: includes/class-euwb-frontend.php:172
+#: includes/class-euwb-frontend.php:175
 msgid "Annulla"
 msgstr "Cancel"
 
-#: includes/class-euwb-frontend.php:196 includes/class-euwb-frontend.php:201
-#: includes/class-euwb-frontend.php:234 includes/class-euwb-frontend.php:239
+#: includes/class-euwb-frontend.php:199 includes/class-euwb-frontend.php:204
+#: includes/class-euwb-frontend.php:237 includes/class-euwb-frontend.php:242
 msgid "Non autorizzato."
 msgstr "Unauthorized."
 
-#: includes/class-euwb-frontend.php:205 includes/class-euwb-frontend.php:243
+#: includes/class-euwb-frontend.php:208 includes/class-euwb-frontend.php:246
 msgid "Il periodo di recesso è scaduto."
 msgstr "The withdrawal period has expired."
 
-#: includes/class-euwb-frontend.php:206 includes/class-euwb-frontend.php:244
+#: includes/class-euwb-frontend.php:209 includes/class-euwb-frontend.php:247
 msgid "Hai già richiesto il recesso per questo ordine."
 msgstr "You have already requested a return for this order."
 
-#: includes/class-euwb-frontend.php:207 includes/class-euwb-frontend.php:245
+#: includes/class-euwb-frontend.php:210 includes/class-euwb-frontend.php:248
 msgid "Il recesso non è disponibile per i prodotti di questo ordine."
 msgstr "Returns are not available for products in this order."
 
-#: includes/class-euwb-frontend.php:214 includes/class-euwb-frontend.php:255
+#: includes/class-euwb-frontend.php:217 includes/class-euwb-frontend.php:258
 msgid "Compila tutti i campi obbligatori."
 msgstr "Please fill in all required fields."
 
-#: includes/class-euwb-frontend.php:268
+#: includes/class-euwb-frontend.php:271
 msgid ""
 "Impossibile registrare la richiesta di recesso. Riprova o contatta il "
 "supporto."

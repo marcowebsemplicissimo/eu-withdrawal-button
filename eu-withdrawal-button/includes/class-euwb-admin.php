@@ -424,7 +424,7 @@ class EUWB_Admin {
         $default_intent_subj  = __( 'Richiesta di recesso ricevuta – Ordine #{order_number}', 'eu-withdrawal-button' );
         $default_intent_body  = __( "Gentile {customer_name},\n\nabbiamo ricevuto la tua richiesta di recesso per l'ordine #{order_number} del {order_date}.\n\nLa richiesta è attualmente in fase di elaborazione. Riceverai un'email di conferma non appena sarà processata.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' );
         $default_confirm_subj = __( 'Conferma di recesso – Ordine #{order_number}', 'eu-withdrawal-button' );
-        $default_confirm_body = __( "Gentile {customer_name},\n\nil tuo recesso per l'ordine #{order_number} del {order_date} è stato confermato.\n\nIl rimborso sarà elaborato nei prossimi 14 giorni lavorativi con lo stesso metodo di pagamento utilizzato all'acquisto.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' );
+        $default_confirm_body = sprintf( __( "Gentile {customer_name},\n\nil tuo recesso per l'ordine #{order_number} del {order_date} è stato confermato.\n\nIl rimborso sarà elaborato nei prossimi %d giorni lavorativi con lo stesso metodo di pagamento utilizzato all'acquisto.\n\nAi sensi dell'Art. 11a della Direttiva UE 2023/2673.", 'eu-withdrawal-button' ), (int) get_option( 'euwb_return_window', 14 ) );
         $default_success_standard = __( "Richiesta di recesso inviata con successo. Riceverai un'email di presa in carico. La tua richiesta sarà valutata dall'amministratore.", 'eu-withdrawal-button' );
         $default_success_direct   = __( "Recesso confermato con successo. Riceverai un'email di conferma. Il rimborso sarà elaborato nei prossimi giorni lavorativi.", 'eu-withdrawal-button' );
 
